@@ -5,8 +5,10 @@ import android.os.Bundle;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-//import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLng;
 //import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 
 public class MapsActivity extends FragmentActivity {
 
@@ -63,12 +65,12 @@ public class MapsActivity extends FragmentActivity {
         mMap.setMyLocationEnabled(true);
     //    mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
         mMap.setTrafficEnabled(true);
+
         // Instantiates a new CircleOptions object and defines the center and radius
         CircleOptions circleOptions = new CircleOptions()
-                .center(new LatLng(35.9975, 78.9423));
-                .radius(1000)); // In meters
-
+                .center(new LatLng(35.9975, -78.9423))
+                .radius(1000); // In meters
 // Get back the mutable Circle
-        Circle circle = myMap.addCircle(circleOptions);
+        Circle circle = mMap.addCircle(circleOptions);
     }
 }
