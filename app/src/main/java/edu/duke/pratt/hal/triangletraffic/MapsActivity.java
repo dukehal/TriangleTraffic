@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 //import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Circle;
@@ -64,14 +65,14 @@ public class MapsActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        static final LatLng CAMERONINDOOR = new LatLng(35.9975, -78.9423);
+        final LatLng CAMERONINDOOR = new LatLng(35.9975, -78.9423);
 
 
         mMap.setMyLocationEnabled(true);
         mMap.addMarker(new MarkerOptions()
                 .position(CAMERONINDOOR)
                 .title("Cameron Indoor Stadium")
-                .);
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.basketball_ball)));
         mMap.setTrafficEnabled(true);
 
 
