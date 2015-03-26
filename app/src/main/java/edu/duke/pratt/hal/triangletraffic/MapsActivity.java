@@ -1,5 +1,6 @@
 package edu.duke.pratt.hal.triangletraffic;
 
+import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -69,7 +70,10 @@ public class MapsActivity extends FragmentActivity {
         // Instantiates a new CircleOptions object and defines the center and radius
         CircleOptions circleOptions = new CircleOptions()
                 .center(new LatLng(35.9975, -78.9423))
-                .radius(1000); // In meters
+                .radius(3000) // In meters
+                .strokeColor(Color.RED)
+                .strokeWidth(5)
+                .fillColor(0x50ff0000);
 // Get back the mutable Circle
         Circle circle = mMap.addCircle(circleOptions);
     }
