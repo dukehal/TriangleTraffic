@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.LatLng;
 //import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity {
 
@@ -63,18 +64,26 @@ public class MapsActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
+        static final LatLng CAMERONINDOOR = new LatLng(35.9975, -78.9423);
+
+
         mMap.setMyLocationEnabled(true);
-    //    mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        mMap.addMarker(new MarkerOptions()
+                .position(CAMERONINDOOR)
+                .title("Cameron Indoor Stadium")
+                .);
         mMap.setTrafficEnabled(true);
+
 
         // Instantiates a new CircleOptions object and defines the center and radius
         CircleOptions circleOptions = new CircleOptions()
-                .center(new LatLng(35.9975, -78.9423))
+                .center(CAMERONINDOOR)
                 .radius(3000) // In meters
                 .strokeColor(Color.RED)
                 .strokeWidth(5)
                 .fillColor(0x50ff0000);
-// Get back the mutable Circle
+        // Get back the mutable Circle
         Circle circle = mMap.addCircle(circleOptions);
+
     }
 }
