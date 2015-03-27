@@ -78,7 +78,6 @@ public class MapsActivity extends FragmentActivity {
 
         Marker marker = mMap.addMarker(markerOptions);
 
-
         // Instantiates a new CircleOptions object and defines the center and radius
         CircleOptions circleOptions = new CircleOptions()
                 .center(CAMERONINDOOR)
