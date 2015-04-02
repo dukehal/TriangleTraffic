@@ -1,0 +1,8 @@
+Cameron Indoor;35.997502;-78.942249;115 Whitford Dr, Durham, NC 27708;Arena;Duke University;9314;3
+Wallace Wade;35.996148;-78.941863;290 Frank Basset Dr, Durham, NC 27708;Stadium;Duke University;33941;3
+DPAC;35.993416;-78.902215;123 Vivian Street, Durham, NC 27701;Concert Hall;0;2712;3
+Dean E. Smith Center;35.899442;-79.043981;300 Skipper Bowles Dr, Chapel Hill, NC 27514;Arena;UNC;21750;3
+Baldwin Auditorium;36.009022;-78.914661;1336 Campus Dr, Durham, NC 27705;Concert Hall;Duke University;685;3
+Griffith Theater;36.001051;-78.941073;Bryan University Center, Durham, NC 27710;Theater;Duke University;500;3
+PNC Arena;35.803173;-78.721837;1400 Edwards Mill Rd, Raleigh, NC 27607;Arena;NC State;19772;3
+Durham Bulls Stadium;35.991563;-78.903989;409 Blackwell St, Durham, NC 27701;Stadium;0;10000;3
