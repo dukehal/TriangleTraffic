@@ -117,9 +117,19 @@ public class MapsActivity extends FragmentActivity {
 
             MarkerOptions markerOptions = new MarkerOptions();
             if (!venues.isEmpty()) {
-                markerOptions.position(positions[i])
-                        .title(venues.get(i).name())
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.basketball_ball));
+                if (venues.get(i).type().equals("Arena") || venues.get(i).type().equals("Stadium")) {
+                    markerOptions.position(positions[i])
+                            .title(venues.get(i).name())
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.basketball_ball));
+                } else if (venues.get(i).type().equals("Concert Hall") || venues.get(i).type().equals("Theater")) {
+                    markerOptions.position(positions[i])
+                            .title(venues.get(i).name())
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.theater));
+                } else {
+                    markerOptions.position(positions[i])
+                            .title("Arena type not working!!")
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.basketball_ball));
+                }
             } else {
                 markerOptions.position(positions[i])
                         .title("List not working")
