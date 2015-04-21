@@ -1,28 +1,37 @@
 package edu.duke.pratt.hal.triangletraffic;
 
+import android.app.ActionBar;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Color;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-//import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends ActionBarActivity implements OnMarkerClickListener {
     ArrayList<VenueInfo> venues = new ArrayList<VenueInfo>();
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private ArrayList<Marker> myMarkers = new ArrayList<>();
+    ActionBar. Tab Tab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +120,7 @@ public class MapsActivity extends FragmentActivity {
         final LatLng [] positions = new LatLng[venues.size()];
         mMap.setTrafficEnabled(true);
         mMap.setMyLocationEnabled(true);
+        mMap.setOnMarkerClickListener(this);
 
         for(int i = 0; i<venues.size();i++) {
             positions[i] = new LatLng(venues.get(i).lat(), venues.get(i).lon());
@@ -136,7 +146,7 @@ public class MapsActivity extends FragmentActivity {
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.basketball_ball));
             }
 
-            Marker marker = mMap.addMarker(markerOptions);
+            myMarkers.add(mMap.addMarker(markerOptions));
 
             // Instantiates a new CircleOptions object and defines the center and radius
             CircleOptions circleOptions = new CircleOptions()
@@ -148,6 +158,48 @@ public class MapsActivity extends FragmentActivity {
             // Get back the mutable Circle
             Circle circle = mMap.addCircle(circleOptions);
         }
+    }
 
+    @Override
+    public boolean onMarkerClick(Marker myMarker) {
+        boolean isMarker = false;
+
+        int i = 0;
+        while(i<myMarkers.size()) {
+            if(myMarker.equals(myMarkers.get(i))) {
+                isMarker = true;
+                i = myMarkers.size();
+            }
+            i++;
+        }
+
+        if (isMarker) {
+            Intent intent = new Intent(this, test.class);
+            startActivity(intent);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_test, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, test.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
