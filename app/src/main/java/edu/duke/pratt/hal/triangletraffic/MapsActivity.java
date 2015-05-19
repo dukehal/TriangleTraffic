@@ -4,6 +4,8 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -11,8 +13,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -22,25 +26,30 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
+import com.google.android.gms.plus.Plus;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MapsActivity extends ActionBarActivity implements OnMarkerClickListener {
+public class MapsActivity extends ActionBarActivity implements OnMarkerClickListener,GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,LocationListener {
     ArrayList<VenueInfo> venues = new ArrayList<VenueInfo>();
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public ArrayList<Marker> myMarkers = new ArrayList<>();
-    ActionBar. Tab Tab;
     VenueInfo markerInfo;
     HashMap <String, Integer> mMarkers = new HashMap<String, Integer>();
+    GoogleApiClient client;
+    Location location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         AssetManager assetManager = getAssets();
+        buildGoogleApiClient();
 
         // Defined Array values to show in ListView
         InfoRead info = new InfoRead();
@@ -98,11 +107,15 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-
+//        while(location == null) {
+//            location = LocationServices.FusedLocationApi.getLastLocation(client);
+//        }
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 14.0f));
         final LatLng [] positions = new LatLng[venues.size()];
         mMap.setTrafficEnabled(true);
         mMap.setMyLocationEnabled(true);
         mMap.setOnMarkerClickListener(this);
+
 
         for(int i = 0; i<venues.size();i++) {
             positions[i] = new LatLng(venues.get(i).lat(), venues.get(i).lon());
@@ -187,4 +200,45 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         return super.onOptionsItemSelected(item);
     }
 
+    protected synchronized void buildGoogleApiClient() {
+        client = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
 }

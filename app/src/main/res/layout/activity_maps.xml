@@ -8,7 +8,7 @@
     class="com.google.android.gms.maps.SupportMapFragment"
     map:mapType="normal"
     map:uiCompass="true"
-    map:cameraTargetLat="35.891867"
+    map:cameraTargetLat="35.89"
     map:cameraTargetLng="-78.840182"
     map:cameraZoom="10"
     map:uiRotateGestures="true"
