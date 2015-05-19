@@ -34,7 +34,7 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" >
+            android:label="Triangle Traffic" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,12 +42,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".test"
-            android:label="@string/title_activity_test" >
+            android:name=".infoWindow"
+            android:label="Triangle Traffic" >
         </activity>
         <activity
-            android:name=".infoActivity"
-            android:label="@string/title_activity_info" >
+            android:name=".SettingsActivity"
+            android:label="Settings" >
         </activity>
     </application>
 

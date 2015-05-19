@@ -17,12 +17,17 @@ import java.util.ArrayList;
 
 public class InfoRead {
     ArrayList<VenueInfo> venueList = new ArrayList<>();
+    ArrayList<EventInfo> eventList = new ArrayList<>();
 
     public InfoRead(){}
 
-    public InfoRead(ArrayList<VenueInfo> v){
+    public InfoRead(ArrayList<VenueInfo> v, ArrayList<EventInfo> e){
         for(int i = 0; i<v.size(); i++) {
             venueList.add(v.get(i));
+        }
+
+        for(int i = 0; i<v.size(); i++) {
+            eventList.add(e.get(i));
         }
     }
 
@@ -52,4 +57,29 @@ public class InfoRead {
         }
         return venueList;
     }
+
+    public ArrayList<EventInfo> getEventInfo(InputStreamReader fileReader) throws IOException {
+        BufferedReader inputStream = null;
+
+        try {
+            inputStream = new BufferedReader(fileReader);
+            String l;
+            while ((l = inputStream.readLine()) != null) {
+                EventInfo events = new EventInfo();
+                String[] splitter = l.split(";");
+                events.setName(splitter[0]);
+                events.setTime(splitter[1]);
+                events.setDate(splitter[2]);
+                eventList.add(events);
+            }
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        }
+        return eventList;
+    }
+
+
+
 }

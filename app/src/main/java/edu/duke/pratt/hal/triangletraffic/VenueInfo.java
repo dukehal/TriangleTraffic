@@ -10,6 +10,7 @@ public class VenueInfo {
     String venueType;
     String association;
     double traffic;
+    VenueInfo markerInfo;
 
 
     public VenueInfo() {
@@ -17,7 +18,7 @@ public class VenueInfo {
     }
 
     public VenueInfo(String n, String a, double lat, double lon, int cap,
-                     String type, String assoc, double tl) {
+                     String type, String assoc, double tl, VenueInfo mInfo) {
         name = n;
         address = a;
         latitude = lat;
@@ -26,6 +27,7 @@ public class VenueInfo {
         venueType = type;
         association = assoc;
         traffic = tl;
+        markerInfo = mInfo;
     }
 
     public String name() {
@@ -91,4 +93,13 @@ public class VenueInfo {
     public void setTrafficLevel(double tl) {
         traffic = tl;
     }
+
+    public VenueInfo markerInfo() {
+        return markerInfo;
+    }
+
+    public void setMarkerInfo(VenueInfo mInfo) {
+        markerInfo = mInfo;
+    }
+
 }
