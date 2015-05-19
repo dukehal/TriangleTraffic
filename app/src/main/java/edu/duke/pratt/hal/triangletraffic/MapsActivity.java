@@ -58,7 +58,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         try {
             inputStream = assetManager.open("InitialExampleDatabase.txt");
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            venues.addAll(info.getInfo(inputStreamReader));
+            venues.addAll(info.getVenueInfo(inputStreamReader));
         } catch(IOException ie) {
             ie.printStackTrace();
         }

@@ -31,7 +31,7 @@ public class InfoRead {
         }
     }
 
-    public ArrayList<VenueInfo> getInfo(InputStreamReader fileReader) throws IOException {
+    public ArrayList<VenueInfo> getVenueInfo(InputStreamReader fileReader) throws IOException {
         BufferedReader inputStream = null;
 
         try {

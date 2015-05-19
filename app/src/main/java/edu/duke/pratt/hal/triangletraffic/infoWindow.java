@@ -1,5 +1,6 @@
 package edu.duke.pratt.hal.triangletraffic;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -7,8 +8,10 @@ import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -30,9 +33,9 @@ public class infoWindow extends ActionBarActivity implements OnMapReadyCallback 
 
     @Override
     public void onMapReady(GoogleMap map) {
-
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(36, -78.94), 16));
         map.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
+                .position(new LatLng(36, -78.94))
                 .title("Cameron Indoor Stadium"));
     }
 
@@ -53,7 +56,8 @@ public class infoWindow extends ActionBarActivity implements OnMapReadyCallback 
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
