@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -62,14 +63,13 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         } catch(IOException ie) {
             ie.printStackTrace();
         }
-
-        setUpMapIfNeeded();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        setUpMapIfNeeded();
+        client.connect();
+        //setUpMapIfNeeded();
     }
 
     /**
@@ -110,7 +110,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 //        while(location == null) {
 //            location = LocationServices.FusedLocationApi.getLastLocation(client);
 //        }
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 14.0f));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 16));
         final LatLng [] positions = new LatLng[venues.size()];
         mMap.setTrafficEnabled(true);
         mMap.setMyLocationEnabled(true);
@@ -206,10 +206,19 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+        client.connect();
     }
 
     @Override
     public void onConnected(Bundle connectionHint) {
+        location = LocationServices.FusedLocationApi.getLastLocation(client);
+        if(location != null) {
+            Log.w("info", Double.toString(location.getLatitude()));
+            Log.w("info", Double.toString(location.getLongitude()));
+        } else {
+            Log.w("info", "Unable to get location coordinates");
+        }
+        setUpMapIfNeeded();
     }
 
     @Override
