@@ -1,13 +1,10 @@
 package edu.duke.pratt.hal.triangletraffic;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -27,7 +24,6 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
-import com.google.android.gms.plus.Plus;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -107,9 +103,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-//        while(location == null) {
-//            location = LocationServices.FusedLocationApi.getLastLocation(client);
-//        }
+        location = LocationServices.FusedLocationApi.getLastLocation(client);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 16));
         final LatLng [] positions = new LatLng[venues.size()];
         mMap.setTrafficEnabled(true);
@@ -171,7 +165,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         }
 
         if (isMarker) {
-            Intent intent = new Intent(this, infoWindow.class);
+            Intent intent = new Intent(this, InfoActivity.class);
             startActivity(intent);
         }
         return true;
@@ -209,9 +203,12 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         client.connect();
     }
 
+    public GoogleApiClient getClient() {
+        return client;
+    }
+
     @Override
     public void onConnected(Bundle connectionHint) {
-        location = LocationServices.FusedLocationApi.getLastLocation(client);
         if(location != null) {
             Log.w("info", Double.toString(location.getLatitude()));
             Log.w("info", Double.toString(location.getLongitude()));

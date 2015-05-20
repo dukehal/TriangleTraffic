@@ -42,7 +42,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".infoWindow"
+            android:name=".InfoActivity"
             android:label="Triangle Traffic" >
         </activity>
         <activity
