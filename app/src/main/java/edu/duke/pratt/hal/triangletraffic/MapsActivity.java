@@ -34,6 +34,7 @@ import java.util.HashMap;
 public class MapsActivity extends ActionBarActivity implements OnMarkerClickListener,GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,LocationListener {
     ArrayList<VenueInfo> venues = new ArrayList<VenueInfo>();
+    ArrayList<EventInfo> events = new ArrayList<EventInfo>();
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public ArrayList<Marker> myMarkers = new ArrayList<>();
     VenueInfo markerInfo;
@@ -51,14 +52,18 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         // Defined Array values to show in ListView
         InfoRead info = new InfoRead();
         InputStream inputStream = null;
+        InputStream eventInputStream = null;
 
         try {
             inputStream = assetManager.open("InitialExampleDatabase.txt");
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            venues.addAll(info.getVenueInfo(inputStreamReader));
+            eventInputStream = assetManager.open("InitialEvents.txt");
+            InputStreamReader eventInputStreamReader = new InputStreamReader(eventInputStream);
+            venues.addAll(info.getVenueInfo(inputStreamReader, eventInputStreamReader));
         } catch(IOException ie) {
             ie.printStackTrace();
         }
+
     }
 
     @Override

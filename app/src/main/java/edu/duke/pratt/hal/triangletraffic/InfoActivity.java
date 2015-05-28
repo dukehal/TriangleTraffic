@@ -2,6 +2,7 @@ package edu.duke.pratt.hal.triangletraffic;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.location.Location;
 
 import android.support.v7.app.ActionBarActivity;
@@ -26,6 +27,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,12 +41,14 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
     Location currentLocation;
     GoogleApiClient client;
     ArrayList<VenueInfo> venues = new ArrayList<VenueInfo>();
+    ArrayList<EventInfo> events = new ArrayList<EventInfo>();
     private LocationRequest locationRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_window);
+
         venues = (ArrayList<VenueInfo>)getIntent().getSerializableExtra("Venue_Information");
         int i = getIntent().getIntExtra("Marker", 0);
         eventMarker = venues.get(i);
@@ -62,8 +68,6 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         t.setText(eventMarker.address());
 
         createLocationRequest();
-
-
     }
 
     @Override
@@ -163,6 +167,4 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         Log.w("current lat", Double.toString(currentLocation.getLatitude()));
         Log.w("current long", Double.toString(currentLocation.getLongitude()));
     }
-
-
 }

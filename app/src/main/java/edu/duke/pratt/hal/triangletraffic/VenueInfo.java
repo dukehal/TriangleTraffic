@@ -1,6 +1,7 @@
 package edu.duke.pratt.hal.triangletraffic;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class VenueInfo implements Serializable {
 
@@ -12,7 +13,7 @@ public class VenueInfo implements Serializable {
     String venueType;
     String association;
     double traffic;
-    VenueInfo markerInfo;
+    ArrayList<EventInfo> eventList;
 
 
     public VenueInfo() {
@@ -20,7 +21,7 @@ public class VenueInfo implements Serializable {
     }
 
     public VenueInfo(String n, String a, double lat, double lon, int cap,
-                     String type, String assoc, double tl, VenueInfo mInfo) {
+                     String type, String assoc, double tl, ArrayList<EventInfo> eInfo) {
         name = n;
         address = a;
         latitude = lat;
@@ -29,7 +30,7 @@ public class VenueInfo implements Serializable {
         venueType = type;
         association = assoc;
         traffic = tl;
-        markerInfo = mInfo;
+        eventList = eInfo;
     }
 
     public String name() {
@@ -96,12 +97,12 @@ public class VenueInfo implements Serializable {
         traffic = tl;
     }
 
-    public VenueInfo markerInfo() {
-        return markerInfo;
+    public ArrayList<EventInfo> eInfo() {
+        return eventList;
     }
 
-    public void setMarkerInfo(VenueInfo mInfo) {
-        markerInfo = mInfo;
+    public void setEvents(ArrayList<EventInfo> eInfo) {
+        eventList = eInfo;
     }
 
 }

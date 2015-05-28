@@ -31,9 +31,8 @@ public class InfoRead {
         }
     }
 
-    public ArrayList<VenueInfo> getVenueInfo(InputStreamReader fileReader) throws IOException {
+    public ArrayList<VenueInfo> getVenueInfo(InputStreamReader fileReader, InputStreamReader eventFileReader) throws IOException {
         BufferedReader inputStream = null;
-
         try {
             inputStream = new BufferedReader(fileReader);
             String l;
@@ -55,31 +54,29 @@ public class InfoRead {
                 inputStream.close();
             }
         }
-        return venueList;
-    }
 
-    public ArrayList<EventInfo> getEventInfo(InputStreamReader fileReader) throws IOException {
-        BufferedReader inputStream = null;
+        BufferedReader eventInputStream = null;
 
         try {
-            inputStream = new BufferedReader(fileReader);
+            eventInputStream = new BufferedReader(fileReader);
             String l;
-            while ((l = inputStream.readLine()) != null) {
+            while ((l = eventInputStream.readLine()) != null) {
                 EventInfo events = new EventInfo();
                 String[] splitter = l.split(";");
-                events.setName(splitter[0]);
-                events.setTime(splitter[1]);
+                events.setEvent(splitter[1]);
                 events.setDate(splitter[2]);
-                eventList.add(events);
+                events.setTime(splitter[3]);
+                for(int i = 0; i<venueList.size(); i++) {
+                    if (splitter[0] == venueList.get(i).name()) {
+                        venueList.get(i).eventList.add(events);
+                    }
+                }
             }
         } finally {
-            if (inputStream != null) {
-                inputStream.close();
+            if (eventInputStream != null) {
+                eventInputStream.close();
             }
         }
-        return eventList;
+        return venueList;
     }
-
-
-
 }
