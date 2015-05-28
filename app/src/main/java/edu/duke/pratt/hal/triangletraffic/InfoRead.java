@@ -58,7 +58,7 @@ public class InfoRead {
         BufferedReader eventInputStream = null;
 
         try {
-            eventInputStream = new BufferedReader(fileReader);
+            eventInputStream = new BufferedReader(eventFileReader);
             String l;
             while ((l = eventInputStream.readLine()) != null) {
                 EventInfo events = new EventInfo();
