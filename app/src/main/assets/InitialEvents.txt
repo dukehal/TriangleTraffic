@@ -4,3 +4,10 @@ Wallace Wade;Duke FB vs. Georgia Tech;9/26/2015;TBA
 Wallace Wade;Duke FB vs. Boston College;10/3/2015;TBA
 Wallace Wade;Duke FB vs. Miami;10/31/2015;TBA
 Wallace Wade;Duke FB vs. Pitt;11/14/2015;TBA
+Kenan Memorial Stadium; UNC FB vs. NC A&T;9/12/2015;1800
+Kenan Memorial Stadium; UNC FB vs. Illinois;9/19/2015;1200
+Kenan Memorial Stadium; UNC FB vs. Delaware;9/26/2015;TBA
+Kenan Memorial Stadium; UNC FB vs. Wake Forest;10/17/2015;TBA
+Kenan Memorial Stadium; UNC FB vs. Virginia;10/24/2015;TBA
+Kenan Memorial Stadium; UNC FB vs. Duke;11/7/2015;TBA
+Kenan Memorial Stadium; UNC FB vs. Miami;11/14/2015;TBA
