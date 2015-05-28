@@ -6,3 +6,4 @@ Baldwin Auditorium;36.009022;-78.914661;1336 Campus Dr, Durham, NC 27705;Concert
 Griffith Theater;36.001051;-78.941073;Bryan University Center, Durham, NC 27710;Theater;Duke University;500;3
 PNC Arena;35.803173;-78.721837;1400 Edwards Mill Rd, Raleigh, NC 27607;Arena;NC State;19772;7
 Durham Bulls Stadium;35.991563;-78.903989;409 Blackwell St, Durham, NC 27701;Stadium;0;10000;4
+Kenan Memorial Stadium;35.906544;-79.047040;104 Stadium Dr, Chapel Hill, NC 27514;Stadium;UNC;62980;7
