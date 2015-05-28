@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -21,39 +22,57 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 
 public class InfoActivity extends ActionBarActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     VenueInfo eventMarker;
     Location currentLocation;
     GoogleApiClient client;
+    ArrayList<VenueInfo> venues = new ArrayList<VenueInfo>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_window);
+        venues = (ArrayList<VenueInfo>)getIntent().getSerializableExtra("Venue_Information");
+        int i = getIntent().getIntExtra("Marker", 0);
+        eventMarker = venues.get(i);
         buildGoogleApiClient();
+        TextView t = (TextView)findViewById(R.id.textView);
+        t.setText(eventMarker.name());
+        t = (TextView)findViewById(R.id.textView7);
+        t.setText(eventMarker.type());
+        t = (TextView)findViewById(R.id.textView8);
+        if(eventMarker.type() == "0") {
+            t.setText("None");
+        }
+        else {
+            t.setText(eventMarker.assoc());
+        }
+        t = (TextView)findViewById(R.id.textView10);
+        t.setText(eventMarker.address());
+
+
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
-        currentLocation = getCurrentLocation();
-        if(currentLocation == null) {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(0, 0), 16));
-        } else {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(),
-                    currentLocation.getLongitude()), 16));
-        }
+//        currentLocation = getCurrentLocation();
+//        if(currentLocation == null) {
+//            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(0, 0), 16));
+//        } else {
+//            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(),
+//                    currentLocation.getLongitude()), 16));
+//        }
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(eventMarker.lat(), eventMarker.lon()), 16));
         map.setMyLocationEnabled(true);
-//        map.getUiSettings().setScrollGesturesEnabled(false);
         map.getUiSettings().setMyLocationButtonEnabled(false);
-//        map.getUiSettings().setRotateGesturesEnabled(false);
-//        map.getUiSettings().setTiltGesturesEnabled(false);
-//        map.getUiSettings().setZoomGesturesEnabled(false);
         map.getUiSettings().setAllGesturesEnabled(false);
         map.addMarker(new MarkerOptions()
-                .position(new LatLng(36, -78.94))
-                .title("Cameron Indoor Stadium"));
+                .position(new LatLng(eventMarker.lat(),eventMarker.lon()))
+                .title(eventMarker.name()));
     }
 
     @Override

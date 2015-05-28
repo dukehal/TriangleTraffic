@@ -166,6 +166,8 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
         if (isMarker) {
             Intent intent = new Intent(this, InfoActivity.class);
+            intent.putExtra("Venue_Information", venues);
+            intent.putExtra("Marker", i);
             startActivity(intent);
         }
         return true;

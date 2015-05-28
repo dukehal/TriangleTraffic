@@ -1,6 +1,8 @@
 package edu.duke.pratt.hal.triangletraffic;
 
-public class VenueInfo {
+import java.io.Serializable;
+
+public class VenueInfo implements Serializable {
 
     String name;
     String address;
