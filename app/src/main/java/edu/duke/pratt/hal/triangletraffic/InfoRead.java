@@ -1,6 +1,5 @@
 package edu.duke.pratt.hal.triangletraffic;
 
-import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,12 +7,7 @@ import java.util.ArrayList;
  *
  * Created by Josh on 3/27/2015.
  */
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 public class InfoRead {
     ArrayList<VenueInfo> venueList = new ArrayList<>();
@@ -37,17 +31,17 @@ public class InfoRead {
             inputStream = new BufferedReader(fileReader);
             String l;
             while ((l = inputStream.readLine()) != null) {
-                VenueInfo venues = new VenueInfo();
+                VenueInfo venue = new VenueInfo();
                 String[] splitter = l.split(";");
-                venues.setName(splitter[0]);
-                venues.setLat(Double.parseDouble(splitter[1]));
-                venues.setLon(Double.parseDouble(splitter[2]));
-                venues.setAddress(splitter[3]);
-                venues.setType(splitter[4]);
-                venues.setAssoc(splitter[5]);
-                venues.setCap(Integer.parseInt(splitter[6]));
-                venues.setTrafficLevel(Double.parseDouble(splitter[7]));
-                venueList.add(venues);
+                venue.setName(splitter[0]);
+                venue.setLat(Double.parseDouble(splitter[1]));
+                venue.setLon(Double.parseDouble(splitter[2]));
+                venue.setAddress(splitter[3]);
+                venue.setType(splitter[4]);
+                venue.setAssoc(splitter[5]);
+                venue.setCap(Integer.parseInt(splitter[6]));
+                venue.setTrafficLevel(Double.parseDouble(splitter[7]));
+                venueList.add(venue);
             }
         } finally {
             if (inputStream != null) {
@@ -61,14 +55,15 @@ public class InfoRead {
             eventInputStream = new BufferedReader(eventFileReader);
             String l;
             while ((l = eventInputStream.readLine()) != null) {
-                EventInfo events = new EventInfo();
+                EventInfo event = new EventInfo();
                 String[] splitter = l.split(";");
-                events.setEvent(splitter[1]);
-                events.setDate(splitter[2]);
-                events.setTime(splitter[3]);
+                event.setVenue(splitter[0]);
+                event.setEvent(splitter[1]);
+                event.setDate(splitter[2]);
+                event.setTime(splitter[3]);
                 for(int i = 0; i<venueList.size(); i++) {
                     if (splitter[0] == venueList.get(i).name()) {
-                        venueList.get(i).eventList.add(events);
+                        venueList.get(i).eventList.add(event);
                     }
                 }
             }

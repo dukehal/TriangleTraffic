@@ -1,5 +1,12 @@
 package edu.duke.pratt.hal.triangletraffic;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -103,6 +110,78 @@ public class VenueInfo implements Serializable {
 
     public void setEvents(ArrayList<EventInfo> eInfo) {
         eventList = eInfo;
+    }
+
+
+    public static ArrayList<VenueInfo> getVenueInfo(Context context) {
+        // Defined Array values to show in ListView
+        InfoRead info = new InfoRead();
+        InputStream inputStream = null;
+        InputStream eventInputStream = null;
+
+        AssetManager assetManager = context.getAssets();
+
+        ArrayList<VenueInfo> venues = new ArrayList<>();
+
+
+        try {
+
+            inputStream = assetManager.open("InitialExampleDatabase.txt");
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            eventInputStream = assetManager.open("InitialEvents.txt");
+            InputStreamReader eventInputStreamReader = new InputStreamReader(eventInputStream);
+
+            String l;
+            BufferedReader bufferedVenueReader = new BufferedReader(inputStreamReader);
+            BufferedReader bufferedEventReader = new BufferedReader(eventInputStreamReader);
+
+
+            while ((l = bufferedVenueReader.readLine()) != null) {
+                VenueInfo venue = new VenueInfo();
+                String[] splitter = l.split(";");
+                venue.setName(splitter[0]);
+                venue.setLat(Double.parseDouble(splitter[1]));
+                venue.setLon(Double.parseDouble(splitter[2]));
+                venue.setAddress(splitter[3]);
+                venue.setType(splitter[4]);
+                venue.setAssoc(splitter[5]);
+                venue.setCap(Integer.parseInt(splitter[6]));
+                venue.setTrafficLevel(Double.parseDouble(splitter[7]));
+
+
+
+
+
+                venues.add(venue);
+            }
+
+
+
+            while ((l = bufferedEventReader.readLine()) != null) {
+                EventInfo event = new EventInfo();
+                String[] splitter = l.split(";");
+                event.setVenue(splitter[0]);
+                event.setEvent(splitter[1]);
+                event.setDate(splitter[2]);
+                event.setTime(splitter[3]);
+                for(int i = 0; i<venues.size(); i++) {
+                    if (splitter[0] == venues.get(i).name()) {
+                        venues.get(i).eventList.add(event);
+                    }
+                }
+            }
+
+
+            return venues;
+
+
+
+        } catch(IOException ie) {
+            ie.printStackTrace();
+        }
+
+        return venues;
+
     }
 
 }

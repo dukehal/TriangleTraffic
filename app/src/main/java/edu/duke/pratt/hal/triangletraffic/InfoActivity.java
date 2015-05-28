@@ -1,8 +1,6 @@
 package edu.duke.pratt.hal.triangletraffic;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.location.Location;
 
 import android.support.v7.app.ActionBarActivity;
@@ -10,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -19,25 +19,17 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class InfoActivity extends ActionBarActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
-    VenueInfo eventMarker;
+    VenueInfo venueInfo;
     Location currentLocation;
     GoogleApiClient client;
     ArrayList<VenueInfo> venues = new ArrayList<VenueInfo>();
@@ -49,23 +41,73 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_window);
 
-        venues = (ArrayList<VenueInfo>)getIntent().getSerializableExtra("Venue_Information");
-        int i = getIntent().getIntExtra("Marker", 0);
-        eventMarker = venues.get(i);
+        //venues = (ArrayList<VenueInfo>)getIntent().getSerializableExtra("Venue_Information");
+
+        venues = VenueInfo.getVenueInfo(this);
+
+        int venueIndex = getIntent().getIntExtra("Marker", 0);
+        Log.w("infoActivity size", Integer.toString(venues.size()));
+        Log.w("infoActivity index", Integer.toString(venueIndex));
+        //Log.w("infoActivity size", Integer.toString(venues.size()));
+        venueInfo = venues.get(venueIndex);
+
         buildGoogleApiClient();
         TextView t = (TextView)findViewById(R.id.textView);
-        t.setText(eventMarker.name());
+        t.setText(venueInfo.name());
         t = (TextView)findViewById(R.id.textView7);
-        t.setText(eventMarker.type());
+        t.setText(venueInfo.type());
         t = (TextView)findViewById(R.id.textView8);
-        if(eventMarker.type() == "0") {
+        if(venueInfo.type() == "0") {
             t.setText("None");
         }
         else {
-            t.setText(eventMarker.assoc());
+            t.setText(venueInfo.assoc());
         }
         t = (TextView)findViewById(R.id.textView10);
-        t.setText(eventMarker.address());
+        t.setText(venueInfo.address());
+
+//      load events in scrollable table:
+//        XmlPullParser parser = getResources().getXml(R.xml.event_data_attributes);
+//        AttributeSet attributes = Xml.asAttributeSet(parser);
+
+        ArrayList<EventInfo> eventInfoList = venueInfo.eInfo();
+
+
+        TableLayout eventTable = (TableLayout)findViewById(R.id.eventTable);
+        TableRow eventRow = new TableRow(this);
+
+
+
+        for (int i = 0; i < eventInfoList.size(); i++) {
+
+            EventInfo eventInfo = eventInfoList.get(i);
+
+            TextView timeUntil = new TextView(this);
+            timeUntil.setText(eventInfo.time());
+            eventRow.addView(timeUntil);
+
+            TextView eventDate = new TextView(this);
+            eventDate.setText(eventInfo.date());
+            eventRow.addView(eventDate);
+
+            TextView eventTime = new TextView(this);
+            eventTime.setText(eventInfo.time());
+            eventRow.addView(eventTime);
+
+            TextView eventName = new TextView(this);
+            eventName.setText(eventInfo.name());
+            eventRow.addView(eventName);
+
+
+            eventTable.addView(eventRow);
+
+        }
+
+
+
+
+
+
 
         createLocationRequest();
     }
@@ -79,13 +121,13 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
 //            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(),
 //                    currentLocation.getLongitude()), 16));
 //        }
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(eventMarker.lat(), eventMarker.lon()), 16));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(venueInfo.lat(), venueInfo.lon()), 16));
         map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.getUiSettings().setAllGesturesEnabled(false);
         map.addMarker(new MarkerOptions()
-                .position(new LatLng(eventMarker.lat(),eventMarker.lon()))
-                .title(eventMarker.name()))
+                .position(new LatLng(venueInfo.lat(), venueInfo.lon()))
+                .title(venueInfo.name()))
                 .showInfoWindow();
     }
 
@@ -167,4 +209,10 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         Log.w("current lat", Double.toString(currentLocation.getLatitude()));
         Log.w("current long", Double.toString(currentLocation.getLongitude()));
     }
+
+//    private void setUpVenueInformation() {
+//        venues = VenueInfo.getVenueInfo(this);
+//    }
+
+
 }

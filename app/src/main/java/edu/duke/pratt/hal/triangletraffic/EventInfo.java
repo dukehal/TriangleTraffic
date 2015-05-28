@@ -7,19 +7,27 @@ import java.io.Serializable;
  */
 public class EventInfo implements Serializable {
 
-    String name;
-    String time;
-    String date;
-    String event;
+    private String venue;
+    private String name;
+    private String time;
+    private String date;
+    private String event;
 
     public EventInfo(){}
 
-    public EventInfo(String n, String t, String d, String e) {
+    public EventInfo(String v, String n, String t, String d, String e) {
+        venue = v;
         name = n;
         time = t;
         date = d;
         event = e;
     }
+
+    public String venue() {
+        return venue;
+    }
+
+    public void setVenue(String v) { venue = v; }
 
     public String name() {
         return name;
@@ -45,9 +53,9 @@ public class EventInfo implements Serializable {
         date = d;
     }
 
-    public String event() {return event;}
+    public String event() { return event; }
 
-    public void setEvent(String e) {event = e;}
+    public void setEvent(String e) { event = e; }
 
 
 
