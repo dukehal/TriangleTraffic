@@ -3,14 +3,18 @@ package edu.duke.pratt.hal.triangletraffic;
 import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
+
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,15 +26,18 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class InfoActivity extends ActionBarActivity implements OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     VenueInfo eventMarker;
     Location currentLocation;
     GoogleApiClient client;
     ArrayList<VenueInfo> venues = new ArrayList<VenueInfo>();
+    private LocationRequest locationRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +61,8 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         t = (TextView)findViewById(R.id.textView10);
         t.setText(eventMarker.address());
 
+        createLocationRequest();
+
 
     }
 
@@ -72,7 +81,8 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         map.getUiSettings().setAllGesturesEnabled(false);
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(eventMarker.lat(),eventMarker.lon()))
-                .title(eventMarker.name()));
+                .title(eventMarker.name()))
+                .showInfoWindow();
     }
 
     @Override
@@ -98,9 +108,9 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         return super.onOptionsItemSelected(item);
     }
 
-    private Location getCurrentLocation() {
-        return LocationServices.FusedLocationApi.getLastLocation(client);
-    }
+//    private Location getCurrentLocation() {
+//        return LocationServices.FusedLocationApi.getLastLocation(client);
+//    }
 
 //    private VenueInfo getMarkerInfo() {
 //        MapsActivity activity = (MapsActivity) getParent();
@@ -118,6 +128,9 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     @Override
     public void onConnected(Bundle bundle) {
+        createLocationRequest();
+        startLocationUpdates();
+
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -130,6 +143,26 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        
     }
+
+    protected void createLocationRequest() {
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    protected void startLocationUpdates() {
+        LocationServices.FusedLocationApi.requestLocationUpdates(client, locationRequest, this);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        currentLocation = location;
+        Log.w("current lat", Double.toString(currentLocation.getLatitude()));
+        Log.w("current long", Double.toString(currentLocation.getLongitude()));
+    }
+
+
 }
