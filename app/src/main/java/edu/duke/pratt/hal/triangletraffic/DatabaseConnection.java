@@ -15,7 +15,7 @@ public class DatabaseConnection {
     public DatabaseConnection(Context context) {
 
         String venues_information_file = "venues_information.txt";
-        String events_information_file = "venues_information.txt";
+        String events_information_file = "events_information.txt";
         AssetManager am = context.getAssets();
 
         try {
