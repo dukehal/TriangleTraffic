@@ -1,15 +1,17 @@
 package edu.duke.pratt.hal.triangletraffic;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
 /**
  * Created by tedzhu on 5/28/15.
  */
-public class Venue {
+public class Venue extends DatabaseModel {
 
     private String name;
     private String address;
-    private double lattitude;
+    private double latitude;
     private double longitude;
     private int capacity;
     private String venueType;
@@ -17,7 +19,27 @@ public class Venue {
     private double traffic;
     private ArrayList<Event> events;
 
+    // Database Model Static and Contructor Definitions (return type cast to relevant subclass)
 
+    protected static HashMap<Integer, Venue> map = new HashMap<>();
+
+    public Venue(int id) {
+        this.map.put(id, this);
+    }
+
+    public static Venue find(int id) {
+        return (Venue)Venue.map.get(id);
+    }
+
+    public static Collection<Venue> asCollection() {
+        return (Collection<Venue>)(Collection<?>)Venue.map.values();
+    }
+
+    public static ArrayList<Venue> asArrayList() {
+        return new ArrayList<Venue>(Venue.asCollection());
+    }
+
+    // End Database Model Static Definitions
 
     public String getName() {
         return name;
@@ -35,12 +57,12 @@ public class Venue {
         this.address = address;
     }
 
-    public double getLattitude() {
-        return lattitude;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLattitude(double lattitude) {
-        this.lattitude = lattitude;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
     public double getLongitude() {
@@ -91,6 +113,14 @@ public class Venue {
         this.events = events;
     }
 
+    public void loadEventsAssociation() {
+        this.events = new ArrayList<>();
+        for (Event event : Event.asCollection()) {
+            if (event.getVenueId() == this.getId()) {
+                this.events.add(event);
+            }
+        }
+    }
 
 
 }

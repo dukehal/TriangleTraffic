@@ -126,9 +126,9 @@ public class VenueInfo implements Serializable {
 
         try {
 
-            inputStream = assetManager.open("InitialExampleDatabase.txt");
+            inputStream = assetManager.open("venues_information.txt");
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            eventInputStream = assetManager.open("InitialEvents.txt");
+            eventInputStream = assetManager.open("events_information.txt");
             InputStreamReader eventInputStreamReader = new InputStreamReader(eventInputStream);
 
             String l;

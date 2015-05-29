@@ -33,8 +33,7 @@ import java.util.HashMap;
 
 public class MapsActivity extends ActionBarActivity implements OnMarkerClickListener,GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,LocationListener {
-    ArrayList<VenueInfo> venues = new ArrayList<VenueInfo>();
-    ArrayList<EventInfo> events = new ArrayList<EventInfo>();
+    ArrayList<Venue> venues;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public ArrayList<Marker> myMarkers = new ArrayList<>();
     VenueInfo markerInfo;
@@ -49,20 +48,9 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         AssetManager assetManager = getAssets();
         buildGoogleApiClient();
 
-        // Defined Array values to show in ListView
-        InfoRead info = new InfoRead();
-        InputStream inputStream = null;
-        InputStream eventInputStream = null;
+        DatabaseConnection dbc = new DatabaseConnection(this);
 
-        try {
-            inputStream = assetManager.open("InitialExampleDatabase.txt");
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            eventInputStream = assetManager.open("InitialEvents.txt");
-            InputStreamReader eventInputStreamReader = new InputStreamReader(eventInputStream);
-            venues.addAll(info.getVenueInfo(inputStreamReader, eventInputStreamReader));
-        } catch(IOException ie) {
-            ie.printStackTrace();
-        }
+        venues = Venue.asArrayList();
 
     }
 
@@ -117,17 +105,17 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
 
         for(int i = 0; i<venues.size();i++) {
-            positions[i] = new LatLng(venues.get(i).lat(), venues.get(i).lon());
+            positions[i] = new LatLng(venues.get(i).getLatitude(), venues.get(i).getLongitude());
 
             MarkerOptions markerOptions = new MarkerOptions();
             if (!venues.isEmpty()) {
-                if (venues.get(i).type().equals("Arena") || venues.get(i).type().equals("Stadium")) {
+                if (venues.get(i).getVenueType().equals("Arena") || venues.get(i).getVenueType().equals("Stadium")) {
                     markerOptions.position(positions[i])
-                            .title(venues.get(i).name())
+                            .title(venues.get(i).getName())
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.basketball_ball));
-                } else if (venues.get(i).type().equals("Concert Hall") || venues.get(i).type().equals("Theater")) {
+                } else if (venues.get(i).getVenueType().equals("Concert Hall") || venues.get(i).getVenueType().equals("Theater")) {
                     markerOptions.position(positions[i])
-                            .title(venues.get(i).name())
+                            .title(venues.get(i).getName())
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.theater));
                 } else {
                     markerOptions.position(positions[i])
@@ -146,7 +134,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
             // Instantiates a new CircleOptions object and defines the center and radius
             CircleOptions circleOptions = new CircleOptions()
                     .center(positions[i])
-                    .radius(venues.get(i).trafficLevel()*1000) // In meters
+                    .radius(venues.get(i).getTraffic()*1000) // In meters
                     .strokeColor(Color.RED)
                     .strokeWidth(5)
                     .fillColor(0x50ff0000);
@@ -171,7 +159,6 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
         if (isMarker) {
             Intent intent = new Intent(this, InfoActivity.class);
-            intent.putExtra("Venue_Information", venues);
             intent.putExtra("Marker", i);
             startActivity(intent);
         }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -29,11 +30,10 @@ import java.util.ArrayList;
 
 public class InfoActivity extends ActionBarActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
-    VenueInfo venueInfo;
+    Venue venueInfo;
     Location currentLocation;
     GoogleApiClient client;
-    ArrayList<VenueInfo> venues = new ArrayList<VenueInfo>();
-    ArrayList<EventInfo> events = new ArrayList<EventInfo>();
+    ArrayList<Venue> venues;
     private LocationRequest locationRequest;
 
     @Override
@@ -41,36 +41,33 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_window);
 
-        //venues = (ArrayList<VenueInfo>)getIntent().getSerializableExtra("Venue_Information");
+        DatabaseConnection dbc = new DatabaseConnection(this);
 
-        venues = VenueInfo.getVenueInfo(this);
+        venues = Venue.asArrayList();
 
         int venueIndex = getIntent().getIntExtra("Marker", 0);
-        Log.w("infoActivity size", Integer.toString(venues.size()));
-        Log.w("infoActivity index", Integer.toString(venueIndex));
-        //Log.w("infoActivity size", Integer.toString(venues.size()));
         venueInfo = venues.get(venueIndex);
 
         buildGoogleApiClient();
         TextView t = (TextView)findViewById(R.id.textView);
-        t.setText(venueInfo.name());
+        t.setText(venueInfo.getName());
         t = (TextView)findViewById(R.id.textView7);
-        t.setText(venueInfo.type());
+        t.setText(venueInfo.getVenueType());
         t = (TextView)findViewById(R.id.textView8);
-        if(venueInfo.type() == "0") {
+        if(venueInfo.getVenueType() == "0") {
             t.setText("None");
         }
         else {
-            t.setText(venueInfo.assoc());
+            t.setText(venueInfo.getAssociation());
         }
         t = (TextView)findViewById(R.id.textView10);
-        t.setText(venueInfo.address());
+        t.setText(venueInfo.getAddress());
 
 //      load events in scrollable table:
 //        XmlPullParser parser = getResources().getXml(R.xml.event_data_attributes);
 //        AttributeSet attributes = Xml.asAttributeSet(parser);
 
-        ArrayList<EventInfo> eventInfoList = venueInfo.eInfo();
+        ArrayList<Event> eventInfoList = venueInfo.getEvents();
 
 
         TableLayout eventTable = (TableLayout)findViewById(R.id.eventTable);
@@ -80,26 +77,32 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         for (int i = 0; i < eventInfoList.size(); i++) {
 
-            EventInfo eventInfo = eventInfoList.get(i);
+            Event eventInfo = eventInfoList.get(i);
 
             TextView timeUntil = new TextView(this);
-            timeUntil.setText(eventInfo.time());
+            timeUntil.setText(eventInfo.getTime());
             eventRow.addView(timeUntil);
 
             TextView eventDate = new TextView(this);
-            eventDate.setText(eventInfo.date());
+            eventDate.setText(eventInfo.getDate());
             eventRow.addView(eventDate);
 
             TextView eventTime = new TextView(this);
-            eventTime.setText(eventInfo.time());
+            eventTime.setText(eventInfo.getTime());
             eventRow.addView(eventTime);
 
             TextView eventName = new TextView(this);
-            eventName.setText(eventInfo.name());
+            eventName.setText(eventInfo.getName());
             eventRow.addView(eventName);
 
+            //  eventTable.addView(eventRow);
 
-            eventTable.addView(eventRow);
+            // Guys, I get this error: The specified child already has a parent. You must call removeView() on the child's parent first.
+            //    when the above line is uncommented.
+            // Everything else about connecting to Venue and Event information works.
+            // Josh F, can you see if you get this error when you uncomment the above line?
+            // - Ted
+
 
         }
 
@@ -121,13 +124,13 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
 //            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(),
 //                    currentLocation.getLongitude()), 16));
 //        }
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(venueInfo.lat(), venueInfo.lon()), 16));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(venueInfo.getLatitude(), venueInfo.getLongitude()), 16));
         map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.getUiSettings().setAllGesturesEnabled(false);
         map.addMarker(new MarkerOptions()
-                .position(new LatLng(venueInfo.lat(), venueInfo.lon()))
-                .title(venueInfo.name()))
+                .position(new LatLng(venueInfo.getLatitude(), venueInfo.getLongitude()))
+                .title(venueInfo.getName()))
                 .showInfoWindow();
     }
 
