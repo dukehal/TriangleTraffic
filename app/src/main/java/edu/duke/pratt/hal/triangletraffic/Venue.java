@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-/**
- * Created by tedzhu on 5/28/15.
- */
+
 public class Venue extends DatabaseModel {
 
     private String name;
@@ -19,7 +17,7 @@ public class Venue extends DatabaseModel {
     private double traffic;
     private ArrayList<Event> events;
 
-    // Database Model Static and Contructor Definitions (return type cast to relevant subclass)
+    // Database Model Static and Constructor Definitions (return type cast to relevant subclass)
 
     protected static HashMap<Integer, Venue> map = new HashMap<>();
 

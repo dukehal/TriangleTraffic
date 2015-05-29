@@ -2,17 +2,13 @@ package edu.duke.pratt.hal.triangletraffic;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 
-/**
- * Created by tedzhu on 5/28/15.
- */
+
 public class DatabaseConnection {
 
 
@@ -21,6 +17,7 @@ public class DatabaseConnection {
         String venues_information_file = "venues_information.txt";
         String events_information_file = "venues_information.txt";
         AssetManager am = context.getAssets();
+
         try {
             InputStream venuesInputStream = am.open(venues_information_file);
             InputStream eventsInputStream = am.open(events_information_file);
@@ -39,10 +36,6 @@ public class DatabaseConnection {
             while ((line = eventsLineByLine.readLine()) != null) {
                 generateEvent(line);
             }
-
-            Log.w("classname Venue", Venue.asCollection().iterator().next().getClass().getName());
-            Log.w("classname Event", Event.asCollection().iterator().next().getClass().getName());
-            Log.w("classname Venue", Venue.asCollection().iterator().next().getClass().getName());
 
             // Connect Events to their associated Venue.
             for ( Event event : Event.asCollection() ) {

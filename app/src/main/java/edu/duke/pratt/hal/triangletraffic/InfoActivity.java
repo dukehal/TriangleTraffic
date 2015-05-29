@@ -41,7 +41,7 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_window);
 
-        DatabaseConnection dbc = new DatabaseConnection(this);
+        new DatabaseConnection(this);
 
         venues = Venue.asArrayList();
 
@@ -161,10 +161,6 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
 //        return LocationServices.FusedLocationApi.getLastLocation(client);
 //    }
 
-//    private VenueInfo getMarkerInfo() {
-//        MapsActivity activity = (MapsActivity) getParent();
-//        return
-//    }
 
     protected synchronized void buildGoogleApiClient() {
         client = new GoogleApiClient.Builder(this)
@@ -212,10 +208,6 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         Log.w("current lat", Double.toString(currentLocation.getLatitude()));
         Log.w("current long", Double.toString(currentLocation.getLongitude()));
     }
-
-//    private void setUpVenueInformation() {
-//        venues = VenueInfo.getVenueInfo(this);
-//    }
 
 
 }

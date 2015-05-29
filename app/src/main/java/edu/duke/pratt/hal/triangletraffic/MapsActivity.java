@@ -36,7 +36,6 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     ArrayList<Venue> venues;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public ArrayList<Marker> myMarkers = new ArrayList<>();
-    VenueInfo markerInfo;
     HashMap <String, Integer> mMarkers = new HashMap<String, Integer>();
     GoogleApiClient client;
     Location location;
@@ -48,7 +47,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         AssetManager assetManager = getAssets();
         buildGoogleApiClient();
 
-        DatabaseConnection dbc = new DatabaseConnection(this);
+        new DatabaseConnection(this);
 
         venues = Venue.asArrayList();
 

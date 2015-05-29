@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-/**
- * Created by tedzhu on 5/28/15.
- */
+
 public class Event extends DatabaseModel {
 
     // Database Fields
@@ -20,7 +18,7 @@ public class Event extends DatabaseModel {
     private Venue venue;
 
 
-    // Database Model Static and Contructor Definitions (return type cast to relevant subclass)
+    // Database Model Static and Constructor Definitions (return type cast to relevant subclass)
 
     public Event(int id) {
         this.map.put(id, this);
