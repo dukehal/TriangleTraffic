@@ -22,6 +22,7 @@ public class Event extends DatabaseModel {
 
     public Event(int id) {
         this.map.put(id, this);
+        this.setId(id);
     }
 
     protected static HashMap<Integer, Event> map = new HashMap<>();

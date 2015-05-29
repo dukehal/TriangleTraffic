@@ -78,6 +78,7 @@ public class DatabaseConnection {
 
 
         Event event = new Event(Integer.parseInt(data[0]));
+        event.setVenueId(Integer.parseInt(data[1]));
         event.setName(data[2]);
         event.setDate(data[3]);
         event.setTime(data[4]);

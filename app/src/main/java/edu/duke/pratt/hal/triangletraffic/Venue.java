@@ -23,6 +23,7 @@ public class Venue extends DatabaseModel {
 
     public Venue(int id) {
         this.map.put(id, this);
+        this.setId(id);
     }
 
     public static Venue find(int id) {

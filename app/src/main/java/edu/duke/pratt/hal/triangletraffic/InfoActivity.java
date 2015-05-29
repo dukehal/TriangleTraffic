@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -68,57 +69,57 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
 //        AttributeSet attributes = Xml.asAttributeSet(parser);
 
         ArrayList<Event> eventInfoList = venueInfo.getEvents();
-
-
         TableLayout eventTable = (TableLayout)findViewById(R.id.eventTable);
-
-
-
-
         for (int i = 0; i < eventInfoList.size(); i++) {
 
             TableRow eventRow = new TableRow(this);
+            TableRow.LayoutParams eventRowParams = new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,1f);
+//            int leftMargin=10;
+//            int topMargin=2;
+//            int rightMargin=10;
+//            int bottomMargin=2;
+//            eventRowParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
+            eventRow.setLayoutParams(eventRowParams);
 
             Event eventInfo = eventInfoList.get(i);
 
             TextView timeUntil = new TextView(this);
             timeUntil.setText(eventInfo.getTime());
+            timeUntil.setTextSize(20);
+            timeUntil.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 3f));
             eventRow.addView(timeUntil);
 
             TextView eventDate = new TextView(this);
             eventDate.setText(eventInfo.getDate());
+            eventDate.setTextSize(20);
+            eventDate.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 3f));
             eventRow.addView(eventDate);
 
             TextView eventTime = new TextView(this);
             eventTime.setText(eventInfo.getTime());
+            eventTime.setTextSize(20);
+            eventTime.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 3f));
             eventRow.addView(eventTime);
 
             TextView eventName = new TextView(this);
             eventName.setText(eventInfo.getName());
+            eventName.setTextSize(20);
+            eventName.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 0.5f));
             eventRow.addView(eventName);
 
             eventTable.addView(eventRow);
 
         }
-
-
-
-
-
-
-
         createLocationRequest();
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
-//        currentLocation = getCurrentLocation();
-//        if(currentLocation == null) {
-//            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(0, 0), 16));
-//        } else {
-//            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(),
-//                    currentLocation.getLongitude()), 16));
-//        }
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(venueInfo.getLatitude(), venueInfo.getLongitude()), 16));
         map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(false);
@@ -152,11 +153,6 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         return super.onOptionsItemSelected(item);
     }
 
-//    private Location getCurrentLocation() {
-//        return LocationServices.FusedLocationApi.getLastLocation(client);
-//    }
-
-
     protected synchronized void buildGoogleApiClient() {
         client = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -183,7 +179,7 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        
+
     }
 
     protected void createLocationRequest() {
