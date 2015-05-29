@@ -71,11 +71,13 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
 
 
         TableLayout eventTable = (TableLayout)findViewById(R.id.eventTable);
-        TableRow eventRow = new TableRow(this);
+
 
 
 
         for (int i = 0; i < eventInfoList.size(); i++) {
+
+            TableRow eventRow = new TableRow(this);
 
             Event eventInfo = eventInfoList.get(i);
 
@@ -95,14 +97,7 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
             eventName.setText(eventInfo.getName());
             eventRow.addView(eventName);
 
-            //  eventTable.addView(eventRow);
-
-            // Guys, I get this error: The specified child already has a parent. You must call removeView() on the child's parent first.
-            //    when the above line is uncommented.
-            // Everything else about connecting to Venue and Event information works.
-            // Josh F, can you see if you get this error when you uncomment the above line?
-            // - Ted
-
+            eventTable.addView(eventRow);
 
         }
 
