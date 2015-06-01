@@ -6,6 +6,7 @@ import android.location.Location;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -87,6 +88,7 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
             TextView timeUntil = new TextView(this);
             timeUntil.setText(eventInfo.getTime());
             timeUntil.setTextSize(20);
+            timeUntil.setGravity(Gravity.CENTER);
             timeUntil.setLayoutParams(new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 3f));
             eventRow.addView(timeUntil);
@@ -94,6 +96,7 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
             TextView eventDate = new TextView(this);
             eventDate.setText(eventInfo.getDate());
             eventDate.setTextSize(20);
+            eventDate.setGravity(Gravity.CENTER);
             eventDate.setLayoutParams(new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 3f));
             eventRow.addView(eventDate);
@@ -101,6 +104,7 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
             TextView eventTime = new TextView(this);
             eventTime.setText(eventInfo.getTime());
             eventTime.setTextSize(20);
+            eventTime.setGravity(Gravity.CENTER);
             eventTime.setLayoutParams(new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 3f));
             eventRow.addView(eventTime);
@@ -108,6 +112,7 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
             TextView eventName = new TextView(this);
             eventName.setText(eventInfo.getName());
             eventName.setTextSize(20);
+            eventName.setGravity(Gravity.CENTER);
             eventName.setLayoutParams(new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 0.5f));
             eventRow.addView(eventName);
