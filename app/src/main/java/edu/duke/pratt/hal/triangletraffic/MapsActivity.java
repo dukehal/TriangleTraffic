@@ -96,7 +96,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
      */
     private void setUpMap() {
         location = LocationServices.FusedLocationApi.getLastLocation(client);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 16));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 12));
         final LatLng [] positions = new LatLng[venues.size()];
         mMap.setTrafficEnabled(true);
         mMap.setMyLocationEnabled(true);

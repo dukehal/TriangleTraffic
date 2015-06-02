@@ -97,7 +97,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5 mi"
+                    android:text="Calculating..."
                     android:id="@+id/distanceValue"
                     android:textSize="25dp"
                     android:layout_below="@+id/distanceLabel"
@@ -105,8 +105,7 @@
                     android:layout_alignEnd="@+id/distanceLabel"
                     android:layout_column="2"
                     android:layout_gravity="right"
-                    android:paddingRight="10dp"
-                    android:textColor="#ff000000" />
+                    android:paddingRight="10dp" />
             </TableRow>
         </TableLayout>
 

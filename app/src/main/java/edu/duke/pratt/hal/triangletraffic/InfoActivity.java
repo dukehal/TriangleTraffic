@@ -1,6 +1,7 @@
 package edu.duke.pratt.hal.triangletraffic;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 
 import android.support.v7.app.ActionBarActivity;
@@ -212,6 +213,17 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         currentLocation = location;
         Log.w("current lat", Double.toString(currentLocation.getLatitude()));
         Log.w("current long", Double.toString(currentLocation.getLongitude()));
+
+        float[] results = new float[2];
+        Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(), venueInfo.getLatitude(), venueInfo.getLongitude(), results);
+
+        Distance distance = new Distance(results[0]);
+
+        TextView distanceValue = (TextView)findViewById(R.id.distanceValue);
+
+        distanceValue.setText(distance.getDisplayString());
+        distanceValue.setTextColor(Color.parseColor("#000000"));
+
     }
 
 
