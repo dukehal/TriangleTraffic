@@ -24,6 +24,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -123,15 +124,31 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         createLocationRequest();
     }
 
+
     @Override
     public void onMapReady(GoogleMap map) {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(venueInfo.getLatitude(), venueInfo.getLongitude()), 16));
         map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.getUiSettings().setAllGesturesEnabled(false);
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(venueInfo.getLatitude(), venueInfo.getLongitude()))
-                .title(venueInfo.getName()))
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        if (venueInfo.getVenueType().equals("Arena") || venueInfo.getVenueType().equals("Stadium")) {
+            markerOptions.position(new LatLng(venueInfo.getLatitude(), venueInfo.getLongitude()));
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.basketball_ball));
+            markerOptions.title(venueInfo.getName());
+        } else if (venueInfo.getVenueType().equals("Concert Hall") || venueInfo.getVenueType().equals("Theater")) {
+            markerOptions.position(new LatLng(venueInfo.getLatitude(), venueInfo.getLongitude()));
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.theater));
+            markerOptions.title(venueInfo.getName());
+        } else {
+            markerOptions.position(new LatLng(venueInfo.getLatitude(), venueInfo.getLongitude()));
+            markerOptions.title("Arena type not working!!");
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.basketball_ball));
+        }
+
+
+        map.addMarker(markerOptions)
                 .showInfoWindow();
     }
 
