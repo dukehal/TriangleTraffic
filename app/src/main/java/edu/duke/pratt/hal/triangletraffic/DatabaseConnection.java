@@ -76,12 +76,11 @@ public class DatabaseConnection {
 
         String[] data = databaseRow.split(";");
 
-
         Event event = new Event(Integer.parseInt(data[0]));
         event.setVenueId(Integer.parseInt(data[1]));
         event.setName(data[2]);
         event.setUnixTimeMillis(Long.parseLong(data[3]));
-        event.setTBA(Boolean.parseBoolean(data[4]));
+        event.setTBA(data[4].equals("1"));
 
         return event;
 

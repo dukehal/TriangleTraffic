@@ -84,7 +84,7 @@ public class Event extends DatabaseModel {
 
     public String getDateString() {
         Date utilDate = new Date(this.unixTimeMillis);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d");
         return dateFormat.format(utilDate);
     }
 
@@ -93,9 +93,13 @@ public class Event extends DatabaseModel {
     }
 
     public String getTimeString() {
-        Date utilDate = new Date(this.unixTimeMillis);
-        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma");
-        return timeFormat.format(utilDate).replace("AM", "am").replace("PM","pm");
+        if (this.isTBA()) {
+            return "TBA";
+        } else {
+            Date utilDate = new Date(this.unixTimeMillis);
+            SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma");
+            return timeFormat.format(utilDate).replace("AM", "am").replace("PM", "pm");
+        }
     }
 
     public String getTimeUntilString() {
