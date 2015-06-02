@@ -123,15 +123,15 @@ public class Event extends DatabaseModel implements Comparable<Event> {
         String result = "";
 
         if (days > 0) {
-            result += days + " " + ((days == 1) ? "day" : "days") + " ";
+            result += days + " d ";
         }
 
         if (hours > 0 && (days < 7)) {
-            result += hours + " " + ((hours == 1) ? "hour" : "hours") + " ";
+            result += hours + " hr ";
         }
 
         if (minutes > 0 && (days == 0)) {
-            result += minutes + " " + ((minutes == 1) ? "minute" : "minutes") + " ";
+            result += minutes + " min ";
         }
 
         result = result.substring(0, result.length() - 1);
