@@ -85,7 +85,7 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
             Event eventInfo = eventInfoList.get(i);
 
             TextView timeUntil = new TextView(this);
-            timeUntil.setText(eventInfo.getTimeString());
+            timeUntil.setText(eventInfo.getTimeUntilString());
             timeUntil.setTextSize(20);
             timeUntil.setGravity(Gravity.CENTER);
             timeUntil.setLayoutParams(new TableRow.LayoutParams(
