@@ -81,7 +81,7 @@ public class DatabaseConnection {
         event.setVenueId(Integer.parseInt(data[1]));
         event.setName(data[2]);
         event.setUnixMilliTime(Long.parseLong(data[3]));
-        event.setTBA(Boolean.parseBoolean(data[4]));
+        event.setTBA(data[4].equals("1"));
 
         return event;
 
