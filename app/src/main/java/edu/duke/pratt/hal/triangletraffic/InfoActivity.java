@@ -65,10 +65,6 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         t = (TextView)findViewById(R.id.venueAddress);
         t.setText(venueInfo.getAddress());
 
-//      load events in scrollable table:
-//        XmlPullParser parser = getResources().getXml(R.xml.event_data_attributes);
-//        AttributeSet attributes = Xml.asAttributeSet(parser);
-
         ArrayList<Event> eventInfoList = venueInfo.getEvents();
         Collections.sort(eventInfoList);
         TableLayout eventTable = (TableLayout)findViewById(R.id.eventTable);
@@ -77,11 +73,7 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
             TableRow eventRow = new TableRow(this);
             TableRow.LayoutParams eventRowParams = new TableRow.LayoutParams(
                     TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT,1f);
-//            int leftMargin=10;
-//            int topMargin=2;
-//            int rightMargin=10;
-//            int bottomMargin=2;
-//            eventRowParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
+
             eventRow.setLayoutParams(eventRowParams);
 
             Event eventInfo = eventInfoList.get(i);
