@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class InfoActivity extends ActionBarActivity implements OnMapReadyCallback,
@@ -69,6 +70,7 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
 //        AttributeSet attributes = Xml.asAttributeSet(parser);
 
         ArrayList<Event> eventInfoList = venueInfo.getEvents();
+        Collections.sort(eventInfoList);
         TableLayout eventTable = (TableLayout)findViewById(R.id.eventTable);
         for (int i = 0; i < eventInfoList.size(); i++) {
 

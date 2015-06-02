@@ -1,5 +1,7 @@
 package edu.duke.pratt.hal.triangletraffic;
 
+import android.util.Log;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,7 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 
-public class Event extends DatabaseModel {
+public class Event extends DatabaseModel implements Comparable<Event> {
 
     // Database Fields
     private int venueId;
@@ -103,21 +105,20 @@ public class Event extends DatabaseModel {
     }
 
     public String getTimeUntilString() {
-        int dMillis = (int) (this.unixTimeMillis - System.currentTimeMillis());
+        Long dMillis = this.unixTimeMillis - System.currentTimeMillis();
 
-        int milliseconds_in_second = 1000;
-        int milliseconds_in_minute = milliseconds_in_second * 60;
-        int milliseconds_in_hour   = milliseconds_in_minute * 60;
-        int milliseconds_in_day    = milliseconds_in_hour   * 24;
+        Long milliseconds_in_second = 1000L;
+        Long milliseconds_in_minute = milliseconds_in_second * 60;
+        Long milliseconds_in_hour   = milliseconds_in_minute * 60;
+        Long milliseconds_in_day    = milliseconds_in_hour   * 24;
 
-        int days = dMillis / milliseconds_in_day;
+        Long days = dMillis / milliseconds_in_day;
         dMillis -= days * milliseconds_in_day;
 
-        int hours = dMillis / milliseconds_in_hour;
+        Long hours = dMillis / milliseconds_in_hour;
         dMillis -= hours * milliseconds_in_hour;
 
-        int minutes = dMillis / milliseconds_in_minute;
-        dMillis -= minutes * milliseconds_in_minute;
+        Long minutes = dMillis / milliseconds_in_minute;
 
         String result = "";
 
@@ -125,11 +126,11 @@ public class Event extends DatabaseModel {
             result += days + " " + ((days == 1) ? "day" : "days") + " ";
         }
 
-        if (hours > 0) {
+        if (hours > 0 && (days < 7)) {
             result += hours + " " + ((hours == 1) ? "hour" : "hours") + " ";
         }
 
-        if (minutes > 0) {
+        if (minutes > 0 && (days == 0)) {
             result += minutes + " " + ((minutes == 1) ? "minute" : "minutes") + " ";
         }
 
@@ -156,4 +157,9 @@ public class Event extends DatabaseModel {
         this.venue = Venue.find(this.venueId);
     }
 
+
+    @Override
+    public int compareTo(Event event) {
+        return (int) (this.getUnixTimeMillis()/1000 - event.getUnixTimeMillis()/1000);
+    }
 }
