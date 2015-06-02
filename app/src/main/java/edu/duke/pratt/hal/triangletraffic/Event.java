@@ -13,7 +13,7 @@ public class Event extends DatabaseModel {
     private int venueId;
     private String name;
     private String description;
-    private long unixMilliTime;
+    private long unixTimeMillis;
     private boolean tba;
     // Associations
     private Venue venue;
@@ -66,12 +66,12 @@ public class Event extends DatabaseModel {
         this.description = description;
     }
 
-    public long getUnixMilliTime() {
-        return unixMilliTime;
+    public long getUnixTimeMillis() {
+        return unixTimeMillis;
     }
 
-    public void setUnixMilliTime(long unixMilliTime) {
-        this.unixMilliTime = unixMilliTime;
+    public void setUnixTimeMillis(long unixTimeMillis) {
+        this.unixTimeMillis = unixTimeMillis;
     }
 
     public boolean isTBA() {
@@ -83,7 +83,7 @@ public class Event extends DatabaseModel {
     }
 
     public String getDateString() {
-        Date utilDate = new Date(this.unixMilliTime);
+        Date utilDate = new Date(this.unixTimeMillis);
         SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
         return dateFormat.format(utilDate);
     }
@@ -93,9 +93,47 @@ public class Event extends DatabaseModel {
     }
 
     public String getTimeString() {
-        Date utilDate = new Date(this.unixMilliTime);
+        Date utilDate = new Date(this.unixTimeMillis);
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma");
         return timeFormat.format(utilDate).replace("AM", "am").replace("PM","pm");
+    }
+
+    public String getTimeUntilString() {
+        int dMillis = (int) (this.unixTimeMillis - System.currentTimeMillis());
+
+        int milliseconds_in_second = 1000;
+        int milliseconds_in_minute = milliseconds_in_second * 60;
+        int milliseconds_in_hour   = milliseconds_in_minute * 60;
+        int milliseconds_in_day    = milliseconds_in_hour   * 24;
+
+        int days = dMillis / milliseconds_in_day;
+        dMillis -= days * milliseconds_in_day;
+
+        int hours = dMillis / milliseconds_in_hour;
+        dMillis -= hours * milliseconds_in_hour;
+
+        int minutes = dMillis / milliseconds_in_minute;
+        dMillis -= minutes * milliseconds_in_minute;
+
+        String result = "";
+
+        if (days > 0) {
+            result += days + " " + ((days == 1) ? "day" : "days") + " ";
+        }
+
+        if (hours > 0) {
+            result += hours + " " + ((hours == 1) ? "hour" : "hours") + " ";
+        }
+
+        if (minutes > 0) {
+            result += minutes + " " + ((minutes == 1) ? "minute" : "minutes") + " ";
+        }
+
+        result = result.substring(0, result.length() - 1);
+
+        return result;
+
+
     }
 
     public void setTime(String time) {

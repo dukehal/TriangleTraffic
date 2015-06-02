@@ -80,7 +80,7 @@ public class DatabaseConnection {
         Event event = new Event(Integer.parseInt(data[0]));
         event.setVenueId(Integer.parseInt(data[1]));
         event.setName(data[2]);
-        event.setUnixMilliTime(Long.parseLong(data[3]));
+        event.setUnixTimeMillis(Long.parseLong(data[3]));
         event.setTBA(Boolean.parseBoolean(data[4]));
 
         return event;
