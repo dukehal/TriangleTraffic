@@ -1,7 +1,9 @@
 package edu.duke.pratt.hal.triangletraffic;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -11,9 +13,8 @@ public class Event extends DatabaseModel {
     private int venueId;
     private String name;
     private String description;
-    private String date;
-    private String time;
-
+    private long unixMilliTime;
+    private boolean tba;
     // Associations
     private Venue venue;
 
@@ -65,20 +66,40 @@ public class Event extends DatabaseModel {
         this.description = description;
     }
 
-    public String getDate() {
-        return date;
+    public long getUnixMilliTime() {
+        return unixMilliTime;
+    }
+
+    public void setUnixMilliTime(long unixMilliTime) {
+        this.unixMilliTime = unixMilliTime;
+    }
+
+    public boolean isTBA() {
+        return tba;
+    }
+
+    public void setTBA(boolean tba) {
+        this.tba = tba;
+    }
+
+    public String getDateString() {
+        Date utilDate = new Date(this.unixMilliTime);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("M/d/yyyy");
+        return dateFormat.format(utilDate);
     }
 
     public void setDate(String date) {
-        this.date = date;
+        return;
     }
 
-    public String getTime() {
-        return time;
+    public String getTimeString() {
+        Date utilDate = new Date(this.unixMilliTime);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma");
+        return timeFormat.format(utilDate).replace("AM", "am").replace("PM","pm");
     }
 
     public void setTime(String time) {
-        this.time = time;
+        return;
     }
 
     public Venue getVenue() {

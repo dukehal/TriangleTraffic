@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -87,27 +85,27 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
             Event eventInfo = eventInfoList.get(i);
 
             TextView timeUntil = new TextView(this);
-            timeUntil.setText(eventInfo.getTime());
+            timeUntil.setText(eventInfo.getTimeString());
             timeUntil.setTextSize(20);
             timeUntil.setGravity(Gravity.CENTER);
             timeUntil.setLayoutParams(new TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 3f));
+                    0, TableRow.LayoutParams.MATCH_PARENT, 1f));
             eventRow.addView(timeUntil);
 
             TextView eventDate = new TextView(this);
-            eventDate.setText(eventInfo.getDate());
+            eventDate.setText(eventInfo.getDateString());
             eventDate.setTextSize(20);
             eventDate.setGravity(Gravity.CENTER);
             eventDate.setLayoutParams(new TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 3f));
+                    0, TableRow.LayoutParams.MATCH_PARENT, 1f));
             eventRow.addView(eventDate);
 
             TextView eventTime = new TextView(this);
-            eventTime.setText(eventInfo.getTime());
+            eventTime.setText(eventInfo.getTimeString());
             eventTime.setTextSize(20);
             eventTime.setGravity(Gravity.CENTER);
             eventTime.setLayoutParams(new TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 3f));
+                    0, TableRow.LayoutParams.MATCH_PARENT, 1f));
             eventRow.addView(eventTime);
 
             TextView eventName = new TextView(this);
@@ -115,7 +113,7 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
             eventName.setTextSize(20);
             eventName.setGravity(Gravity.CENTER);
             eventName.setLayoutParams(new TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 0.5f));
+                    0, TableRow.LayoutParams.MATCH_PARENT, 1f));
             eventRow.addView(eventName);
 
             eventTable.addView(eventRow);
