@@ -7,3 +7,4 @@
 7;PNC Arena;35.803173;-78.721837;1400 Edwards Mill Rd, Raleigh, NC 27607;Arena;NC State;19772;7
 8;Durham Bulls Stadium;35.991563;-78.903989;409 Blackwell St, Durham, NC 27701;Stadium;0;10000;4
 9;Kenan Memorial Stadium;35.906544;-79.047040;104 Stadium Dr, Chapel Hill, NC 27514;Stadium;UNC;62980;7
+10;Carter–Finley Stadium;35.800434;-78.720053;4600 Trinity Rd, Raleigh, NC 27607;Stadium;NC State;60000;7
