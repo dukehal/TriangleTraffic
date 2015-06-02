@@ -95,7 +95,7 @@ public class Event extends DatabaseModel {
     public String getTimeString() {
         Date utilDate = new Date(this.unixMilliTime);
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mma");
-        return timeFormat.format(utilDate);
+        return timeFormat.format(utilDate).replace("AM", "am").replace("PM","pm");
     }
 
     public void setTime(String time) {
