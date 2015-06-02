@@ -51,18 +51,18 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         venueInfo = venues.get(venueIndex);
 
         buildGoogleApiClient();
-        TextView t = (TextView)findViewById(R.id.textView);
+        TextView t = (TextView)findViewById(R.id.venueName);
         t.setText(venueInfo.getName());
-        t = (TextView)findViewById(R.id.textView7);
+        t = (TextView)findViewById(R.id.venueType);
         t.setText(venueInfo.getVenueType());
-        t = (TextView)findViewById(R.id.textView8);
+        t = (TextView)findViewById(R.id.venueAffiliation);
         if(venueInfo.getVenueType() == "0") {
             t.setText("None");
         }
         else {
             t.setText(venueInfo.getAssociation());
         }
-        t = (TextView)findViewById(R.id.textView10);
+        t = (TextView)findViewById(R.id.venueAddress);
         t.setText(venueInfo.getAddress());
 
 //      load events in scrollable table:
