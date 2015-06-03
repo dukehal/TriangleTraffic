@@ -83,11 +83,16 @@ public class SettingsActivity extends PreferenceActivity {
         getPreferenceScreen().addPreference(fakeHeader);
         addPreferencesFromResource(R.xml.pref_general);
 
-        PreferenceManager.setDefaultValues(this,R.xml.pref_general,false);
+        fakeHeader = new PreferenceCategory(this);
+        fakeHeader.setTitle(R.string.pref_header_notifications);
+        getPreferenceScreen().addPreference(fakeHeader);
+        addPreferencesFromResource(R.xml.pref_notifications);
+
+        PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
+        PreferenceManager.setDefaultValues(this, R.xml.pref_notifications, false);
 
         bindPreferenceSummaryToValue(findPreference("radius_list"));
         bindPreferenceSummaryToValue(findPreference("timing_list"));
-        bindPreferenceSummaryToValue(findPreference("mode_list"));
     }
 
     /**
@@ -230,7 +235,24 @@ public class SettingsActivity extends PreferenceActivity {
             // guidelines.
             bindPreferenceSummaryToValue(findPreference("radius_list"));
             bindPreferenceSummaryToValue(findPreference("timing_list"));
-            bindPreferenceSummaryToValue(findPreference("mode_list"));
+        }
+    }
+
+    /**
+     * This fragment shows notification preferences only. It is used when the
+     * activity is showing a two-pane settings UI.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class NotificationPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_notifications);
+
+            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
+            // to their values. When their values change, their summaries are
+            // updated to reflect the new value, per the Android Design
+            // guidelines.
         }
     }
 }

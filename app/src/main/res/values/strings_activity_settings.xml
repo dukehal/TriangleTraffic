@@ -50,14 +50,11 @@
         <item>-1</item>
     </string-array>
 
-    <string-array name="pref_mode_list_titles">
-        <item>Text</item>
-        <item>Audio</item>
-        <item>Vibrate</item>
-    </string-array>
-    <string-array name="pref_mode_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
-    </string-array>
+    <string name="pref_header_notifications">Notification Method</string>
+
+    <string name="pref_text_mode_title">Text</string>
+
+    <string name="pref_audio_mode_title">Audio</string>
+
+    <string name="pref_vibrate_mode_title">Text</string>
 </resources>
