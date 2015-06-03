@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CheckBox;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -65,6 +66,10 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         }
         t = (TextView)findViewById(R.id.venueAddress);
         t.setText(venueInfo.getAddress());
+
+        CheckBox checkBox = (CheckBox) findViewById(R.id.checkBox);
+
+        checkBox.setChecked(true);
 
         ArrayList<Event> eventInfoList = venueInfo.getEvents();
         Collections.sort(eventInfoList);
@@ -225,6 +230,5 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         distanceValue.setTextColor(Color.parseColor("#000000"));
 
     }
-
 
 }
