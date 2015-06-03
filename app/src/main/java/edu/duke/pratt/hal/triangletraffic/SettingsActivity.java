@@ -38,7 +38,7 @@ import java.util.List;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends PreferenceActivity {
     /**
      * Determines whether to always show the simplified settings UI, where
      * settings are presented in a single list. When false, settings are shown
@@ -181,37 +181,37 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                         .getString(preference.getKey(), ""));
     }
 
-        @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals("radius_list")) {
-            Preference connectionPref = findPreference(key);
-            // Set summary to be the user-description for the selected value
-            connectionPref.setSummary(sharedPreferences.getString(key, ""));
-        } else if (key.equals("timing_list")) {
-            Preference connectionPref = findPreference(key);
-            // Set summary to be the user-description for the selected value
-            connectionPref.setSummary(sharedPreferences.getString(key, ""));
-        } else if (key.equals("mode_list")) {
-            Preference connectionPref = findPreference(key);
-            // Set summary to be the user-description for the selected value
-            connectionPref.setSummary(sharedPreferences.getString(key, ""));
-        }
+//        @Override
+//    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+//        if (key.equals("radius_list")) {
+//            Preference connectionPref = findPreference(key);
+//            // Set summary to be the user-description for the selected value
+//            connectionPref.setSummary(sharedPreferences.getString(key, ""));
+//        } else if (key.equals("timing_list")) {
+//            Preference connectionPref = findPreference(key);
+//            // Set summary to be the user-description for the selected value
+//            connectionPref.setSummary(sharedPreferences.getString(key, ""));
+//        } else if (key.equals("mode_list")) {
+//            Preference connectionPref = findPreference(key);
+//            // Set summary to be the user-description for the selected value
+//            connectionPref.setSummary(sharedPreferences.getString(key, ""));
+//        }
+//
+//    }
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getPreferenceScreen().getSharedPreferences()
-                .registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(this);
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        getPreferenceScreen().getSharedPreferences()
+//                .registerOnSharedPreferenceChangeListener(this);
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        getPreferenceScreen().getSharedPreferences()
+//                .unregisterOnSharedPreferenceChangeListener(this);
+//    }
 
     /**
      * This fragment shows general preferences only. It is used when the
