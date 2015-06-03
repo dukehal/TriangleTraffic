@@ -1,11 +1,14 @@
 package edu.duke.pratt.hal.triangletraffic;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.preference.ListPreference;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -32,32 +35,56 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MapsActivity extends ActionBarActivity implements OnMarkerClickListener,GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,LocationListener {
+        GoogleApiClient.OnConnectionFailedListener,LocationListener, SharedPreferences.OnSharedPreferenceChangeListener {
     ArrayList<Venue> venues;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public ArrayList<Marker> myMarkers = new ArrayList<>();
     HashMap <String, Integer> mMarkers = new HashMap<String, Integer>();
     GoogleApiClient client;
     Location location;
+    int radiusPref;
+    SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        AssetManager assetManager = getAssets();
         buildGoogleApiClient();
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        radiusPref = Integer.parseInt(sharedPref.getString("radius_list", "0"));
 
         new DatabaseConnection(this);
+        SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+                sharedPref = prefs;
+                if(key.equals("radius_list")) {
+                    sharedPref.registerOnSharedPreferenceChangeListener(this);
+                    radiusPref = Integer.parseInt(sharedPref.getString("radius_list", "0"));
+                }
+                Log.w("are you getting this?", Integer.toString(radiusPref));
+            }
+        };
+        sharedPref.registerOnSharedPreferenceChangeListener(listener);
 
         venues = Venue.asArrayList();
-
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
+//        Log.w("are you getting this?", Integer.toString(radiusPref));
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPref.registerOnSharedPreferenceChangeListener(this);
+
         client.connect();
         //setUpMapIfNeeded();
+    }
+
+    protected void onPause() {
+        super.onPause();
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPref.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     /**
@@ -96,12 +123,15 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
      */
     private void setUpMap() {
         location = LocationServices.FusedLocationApi.getLastLocation(client);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 12));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 12));
         final LatLng [] positions = new LatLng[venues.size()];
         mMap.setTrafficEnabled(true);
         mMap.setMyLocationEnabled(true);
         mMap.setOnMarkerClickListener(this);
 
+//        Log.w("radius", Integer.toString(radiusPref));
+//        Log.w("radius2", sharedPref.getString("radius_list", "0"));
+//        int radiusPref = 1;
 
         for(int i = 0; i<venues.size();i++) {
             positions[i] = new LatLng(venues.get(i).getLatitude(), venues.get(i).getLongitude());
@@ -133,7 +163,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
             // Instantiates a new CircleOptions object and defines the center and radius
             CircleOptions circleOptions = new CircleOptions()
                     .center(positions[i])
-                    .radius(venues.get(i).getTraffic()*1000) // In meters
+                    .radius(Math.abs(radiusPref)*1000) // In meters
                     .strokeColor(Color.RED)
                     .strokeWidth(5)
                     .fillColor(0x50ff0000);
@@ -240,4 +270,30 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     public void onProviderDisabled(String provider) {
 
     }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Log.w("No", Integer.toString(radiusPref));
+
+    }
+
+//    @Override
+//    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+//        if(key.equals("radius_list")) {
+//            radiusPref = Integer.parseInt(sharedPref.getString("radius_list", "0"));
+//            final LatLng [] positions = new LatLng[venues.size()];
+//            for(int i = 0; i<venues.size();i++) {
+//                positions[i] = new LatLng(venues.get(i).getLatitude(), venues.get(i).getLongitude());
+//                CircleOptions circleOptions = new CircleOptions()
+//                        .center(positions[i])
+//                        .radius(Math.abs(radiusPref) * 1000) // In meters
+//                        .strokeColor(Color.RED)
+//                        .strokeWidth(5)
+//                        .fillColor(0x50ff0000);
+//                // Get back the mutable Circle
+//                Circle circle = mMap.addCircle(circleOptions);
+//            }
+//        }
+//        Log.w("are you getting this?", Integer.toString(radiusPref));
+//    }
 }
