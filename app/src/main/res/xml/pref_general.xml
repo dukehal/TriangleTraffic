@@ -26,7 +26,7 @@
         android:title="Radius"
         android:defaultValue="1"
         android:entries="@array/pref_radius_list_titles"
-        android:entryValues="@array/pref_timing_list_values"
+        android:entryValues="@array/pref_radius_list_values"
         android:negativeButtonText="@null"
         android:positiveButtonText="@null" />
 

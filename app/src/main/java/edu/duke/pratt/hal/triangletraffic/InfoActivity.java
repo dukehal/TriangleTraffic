@@ -57,11 +57,11 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         t = (TextView)findViewById(R.id.venueType);
         t.setText(venueInfo.getVenueType());
         t = (TextView)findViewById(R.id.venueAffiliation);
-        if(venueInfo.getVenueType() == "0") {
-            t.setText("None");
+        if(!venueInfo.getAssociation().equals("0")) {
+            t.setText(venueInfo.getAssociation());
         }
         else {
-            t.setText(venueInfo.getAssociation());
+            t.setText("None");
         }
         t = (TextView)findViewById(R.id.venueAddress);
         t.setText(venueInfo.getAddress());
