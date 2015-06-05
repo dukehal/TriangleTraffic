@@ -5,4 +5,8 @@
     <header
         android:fragment="edu.duke.pratt.hal.triangletraffic.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_general" />
+
+    <header
+        android:fragment="edu.duke.pratt.hal.triangletraffic.SettingsActivity$GeneralPreferenceFragment"
+        android:title="@string/pref_header_notifications" />
 </preference-headers>

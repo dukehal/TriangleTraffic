@@ -44,6 +44,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     Location location;
     int radiusPref;
     SharedPreferences sharedPref;
+    SharedPreferences.OnSharedPreferenceChangeListener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,36 +55,36 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         radiusPref = Integer.parseInt(sharedPref.getString("radius_list", "0"));
 
         new DatabaseConnection(this);
-        SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        venues = Venue.asArrayList();
+
+        listener = new SharedPreferences.OnSharedPreferenceChangeListener(){
             public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
                 sharedPref = prefs;
-                if(key.equals("radius_list")) {
+                if (key.equals("radius_list")) {
+                    Log.w("key equals radius list", Integer.toString(radiusPref));
                     sharedPref.registerOnSharedPreferenceChangeListener(this);
                     radiusPref = Integer.parseInt(sharedPref.getString("radius_list", "0"));
+                    Log.w("keyequalsradius2", Integer.toString(radiusPref));
+                    setUpMap();
                 }
                 Log.w("are you getting this?", Integer.toString(radiusPref));
             }
         };
         sharedPref.registerOnSharedPreferenceChangeListener(listener);
-
-        venues = Venue.asArrayList();
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-//        Log.w("are you getting this?", Integer.toString(radiusPref));
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.registerOnSharedPreferenceChangeListener(this);
 
         client.connect();
-        //setUpMapIfNeeded();
     }
 
     protected void onPause() {
         super.onPause();
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+//        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.unregisterOnSharedPreferenceChangeListener(this);
     }
 
@@ -122,6 +123,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
+        mMap.clear();
         location = LocationServices.FusedLocationApi.getLastLocation(client);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 12));
         final LatLng [] positions = new LatLng[venues.size()];
@@ -242,58 +244,23 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
-
-    }
+    public void onConnectionSuspended(int i) {}
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
+    public void onConnectionFailed(ConnectionResult connectionResult) {}
 
     @Override
-    public void onLocationChanged(Location location) {
-
-    }
+    public void onLocationChanged(Location location) {}
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
+    public void onStatusChanged(String provider, int status, Bundle extras) {}
 
     @Override
-    public void onProviderEnabled(String provider) {
-
-    }
+    public void onProviderEnabled(String provider) {}
 
     @Override
-    public void onProviderDisabled(String provider) {
-
-    }
+    public void onProviderDisabled(String provider) {}
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.w("No", Integer.toString(radiusPref));
-
-    }
-
-//    @Override
-//    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-//        if(key.equals("radius_list")) {
-//            radiusPref = Integer.parseInt(sharedPref.getString("radius_list", "0"));
-//            final LatLng [] positions = new LatLng[venues.size()];
-//            for(int i = 0; i<venues.size();i++) {
-//                positions[i] = new LatLng(venues.get(i).getLatitude(), venues.get(i).getLongitude());
-//                CircleOptions circleOptions = new CircleOptions()
-//                        .center(positions[i])
-//                        .radius(Math.abs(radiusPref) * 1000) // In meters
-//                        .strokeColor(Color.RED)
-//                        .strokeWidth(5)
-//                        .fillColor(0x50ff0000);
-//                // Get back the mutable Circle
-//                Circle circle = mMap.addCircle(circleOptions);
-//            }
-//        }
-//        Log.w("are you getting this?", Integer.toString(radiusPref));
-//    }
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {}
 }
