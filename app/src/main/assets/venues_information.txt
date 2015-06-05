@@ -8,3 +8,9 @@
 8;Durham Bulls Stadium;35.991563;-78.903989;409 Blackwell St, Durham, NC 27701;Stadium;0;10000;4
 9;Kenan Memorial Stadium;35.906544;-79.047040;104 Stadium Dr, Chapel Hill, NC 27514;Stadium;UNC;62980;7
 10;Carter–Finley Stadium;35.800434;-78.720053;4600 Trinity Rd, Raleigh, NC 27607;Stadium;NC State;60000;7
+11;Red Hat Amphitheater;35.773702;-78.643066;500 S McDowell St, Raleigh, NC 27601;Amphitheater;0;5990;5
+12;Lincoln Theatre;35.773888;-78.637370;126 E Cabarrus St, Raleigh, NC 27601;Theater;0;1225;3
+13;TWC Arena;35.225043;-80.839993;333 E Trade St, Charlotte, NC 28202;Arena;Charlotte Hornets;20200;6
+14;Bank of America Stadium;35.225674;-80.852863;800 S Mint St, Charlotte, NC 28202;Stadium;Carolina Panthers;73298;7
+15;Walnut Creek Amphitheatre;35.749417;-78.576329;3801 Rock Quarry Rd, Raleigh, NC 27610;Amphitheater;0;20500;4
+16;Koka Booth Amphitheatre;35.728885;-78.795431;8003 Regency Pkwy, Cary, NC 27518;Amphitheater;0;7000;3
