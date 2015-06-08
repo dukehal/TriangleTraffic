@@ -62,33 +62,8 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         int venueIndex = getIntent().getIntExtra("Marker", 0);
         venueInfo = venues.get(venueIndex);
-        venueInfo.save(this);
-
-        String venue_notifications_file = "venue_notifications.txt";
-
-        try {
-            InputStream inputStream = openFileInput(venue_notifications_file);
-
-            if ( inputStream != null ) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    stringBuilder.append(receiveString);
-                }
-
-                inputStream.close();
-                String ret = stringBuilder.toString();
-                Log.w("it's working!", ret);
-            }
-        }
-        catch (FileNotFoundException e) {
-            Log.e("login activity", "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.e("login activity", "Can not read file: " + e.toString());
-        }
+        venueInfo.save(this,venues);
+        venueInfo.readNotifications(this);
 
 ////        File file = new File(this.getFilesDir(), venue_notifications_file);
 //        File file = new File(venue_notifications_file);

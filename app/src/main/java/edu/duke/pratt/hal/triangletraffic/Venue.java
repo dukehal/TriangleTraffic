@@ -7,6 +7,7 @@ import android.util.Log;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -135,12 +136,18 @@ public class Venue extends DatabaseModel {
         this.notifications = notifications;
     }
 
-    public void save(Context context) {
+    public void save(Context context, ArrayList<Venue> venueArrayList) {
         String venue_notifications_file = "venue_notifications.txt";
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
                     context.openFileOutput(venue_notifications_file, Context.MODE_PRIVATE));
-            outputStreamWriter.write("what's up!");
+            for(int i = 0; i < venueArrayList.size(); i++) {
+                if(venueArrayList.get(i).getNotification() == true) {
+                    outputStreamWriter.write("true");
+                } else {
+                    outputStreamWriter.write("false");
+                }
+            }
             outputStreamWriter.close();
         }
         catch (IOException e) {
@@ -185,6 +192,34 @@ public class Venue extends DatabaseModel {
 ////        } catch (IOException e) {
 ////            e.printStackTrace();
 ////        }
+    }
+
+    public void readNotifications(Context context) {
+
+        String venue_notifications_file = "venue_notifications.txt";
+
+        try {
+            InputStream inputStream = context.openFileInput(venue_notifications_file);
+
+            if (inputStream != null) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((receiveString = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(receiveString);
+                }
+
+                inputStream.close();
+                String ret = stringBuilder.toString();
+                Log.w("it's working!", ret);
+            }
+        } catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
     }
 
     public void loadEventsAssociation() {
