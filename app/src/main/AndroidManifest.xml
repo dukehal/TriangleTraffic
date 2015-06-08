@@ -49,6 +49,10 @@
             android:name=".SettingsActivity"
             android:label="Settings" >
         </activity>
+        <activity
+            android:name=".VenuesActivity"
+            android:label="@string/title_activity_venues" >
+        </activity>
     </application>
 
 </manifest>
