@@ -12,22 +12,21 @@
     tools:context="edu.duke.pratt.hal.triangletraffic.VenuesActivity"
     android:transitionGroup="true">
 
-        <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/venue_notifications_toggle"
-            android:checked="true"
-            android:id="@+id/toggleNotifications"
-            android:layout_centerHorizontal="true"
-            android:clickable="true"
-            android:enabled="false">
-        </ToggleButton>
+    <!--<ToggleButton-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/venue_notifications_toggle"-->
+        <!--android:checked="true"-->
+        <!--android:id="@+id/toggleNotifications"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:clickable="true"-->
+        <!--android:enabled="false">-->
+    <!--</ToggleButton>-->
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:id="@+id/scrollView2"
-        android:layout_alignBottom="@+id/toggleNotifications"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
