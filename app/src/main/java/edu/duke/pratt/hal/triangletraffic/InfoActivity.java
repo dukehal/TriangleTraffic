@@ -1,6 +1,8 @@
 package edu.duke.pratt.hal.triangletraffic;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.location.Location;
 
@@ -28,6 +30,14 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -49,8 +59,68 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         venues = Venue.asArrayList();
 
+
         int venueIndex = getIntent().getIntExtra("Marker", 0);
         venueInfo = venues.get(venueIndex);
+        venueInfo.save(this);
+
+        String venue_notifications_file = "venue_notifications.txt";
+
+        try {
+            InputStream inputStream = openFileInput(venue_notifications_file);
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString);
+                }
+
+                inputStream.close();
+                String ret = stringBuilder.toString();
+                Log.w("it's working!", ret);
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+
+////        File file = new File(this.getFilesDir(), venue_notifications_file);
+//        File file = new File(venue_notifications_file);
+//
+//        try {
+//            FileWriter writer = new FileWriter(file);
+//            writer.append("what's up?");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        if(file.exists()) {
+//            Log.w("File Exists", "File Exists!");
+//        }
+//
+//        try {
+//            InputStream inputStream = this.openFileInput(venue_notifications_file);
+//            BufferedReader venuesLineByLine = new BufferedReader(new InputStreamReader(inputStream));
+//
+//            String line;
+//
+//            if((line = venuesLineByLine.readLine()) == null) {
+//                Log.w("line2", "not working");
+//            }
+//            while ((line = venuesLineByLine.readLine()) != null) {
+//                Log.w("line", line);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+
 
         buildGoogleApiClient();
         TextView t = (TextView)findViewById(R.id.venueName);
