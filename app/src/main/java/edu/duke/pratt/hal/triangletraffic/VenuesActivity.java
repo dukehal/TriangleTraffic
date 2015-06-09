@@ -1,22 +1,38 @@
 package edu.duke.pratt.hal.triangletraffic;
 
+import android.location.Location;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 
-public class VenuesActivity extends ActionBarActivity {
+public class VenuesActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private ArrayList<Venue> venues;
+    private GoogleApiClient client;
+    private LocationRequest locationRequest;
+    private Location currentLocation;
+    private HashMap<Venue, TableRow> venueToTableRow = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,26 +52,33 @@ public class VenuesActivity extends ActionBarActivity {
             tableLayout.addView(row);
         }
 
+        buildGoogleApiClient();
+
     }
 
     private TableRow getVenueRow(Venue venue) {
 
-        TableRow tableRow = new TableRow(this);
+        //TableRow tableRow = new TableRow(this);
 
-        // Add ToggleButton.
-        CheckBox checkBox = new CheckBox(this);
-        tableRow.addView(checkBox);
+        TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.activity_venue_row, null);
+        venueToTableRow.put(venue, tableRow);
 
-        // Add Name.
-        TextView name = new TextView(this);
-        name.setText(venue.getName());
-        tableRow.addView(name);
+        CheckBox notificationCheckbox = (CheckBox) tableRow.findViewById(R.id.notificationCheckBox);
+        TextView venueName = (TextView) tableRow.findViewById(R.id.venueName);
+        TextView venueDistance = (TextView) tableRow.findViewById(R.id.venueDistance);
+        TextView eventTimer = (TextView) tableRow.findViewById(R.id.eventTimer);
+        ImageView trafficStatusImage = (ImageView) tableRow.findViewById(R.id.trafficStatusImage);
 
-        // Add Association.
-        TextView association = new TextView(this);
-        association.setText(venue.getAssociation());
-        tableRow.addView(association);
+        venueName.setText(venue.getName());
+        venueDistance.setText("---");
 
+        if (venue.getEvents().size() > 0) {
+            Event nextEvent = venue.nextEvent();
+            eventTimer.setText(nextEvent.getLongTimeUntilString());
+        } else {
+            eventTimer.setText("No upcoming events.");
+
+        }
 
         return tableRow;
     }
@@ -81,4 +104,78 @@ public class VenuesActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+    protected void createLocationRequest() {
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    protected void startLocationUpdates() {
+        LocationServices.FusedLocationApi.requestLocationUpdates(client, locationRequest, this);
+    }
+
+
+    protected synchronized void buildGoogleApiClient() {
+        client = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        client.connect();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+        createLocationRequest();
+        startLocationUpdates();
+
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        currentLocation = location;
+        
+        for (Venue venue : venues) {
+            Distance distance = venue.distanceFrom(currentLocation);
+            TableRow tableRow = venueToTableRow.get(venue);
+            TextView venueDistance = (TextView) tableRow.findViewById(R.id.venueDistance);
+            venueDistance.setText(distance.getDisplayString());
+
+        }
+
+
+    }
 }
+
+
+
+//        // Add ToggleButton.
+//        CheckBox checkBox = new CheckBox(this);
+//        tableRow.addView(checkBox);
+//
+//        // Add Name.
+//        TextView name = new TextView(this);
+//        name.setText(venue.getName());
+//        tableRow.addView(name);
+//
+//        // Add Association.
+//        TextView association = new TextView(this);
+//        association.setText(venue.getAssociation());
+//        tableRow.addView(association);
