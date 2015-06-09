@@ -42,4 +42,9 @@ public class Distance {
         return "Not Imperial.";
 
     }
+
+    public double getMeters() {
+        return this.meters;
+    }
+
 }

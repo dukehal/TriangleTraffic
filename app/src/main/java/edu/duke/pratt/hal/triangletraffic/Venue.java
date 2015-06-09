@@ -19,6 +19,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 
@@ -241,6 +242,23 @@ public class Venue extends DatabaseModel {
         } else {
             return null;
         }
+    }
+
+    public static ArrayList<Venue> sortedVenuesByDistanceTo (final Location location) {
+        ArrayList<Venue> result = new ArrayList<>(Venue.asArrayList());
+
+        class VenueByLocationComparator implements Comparator<Venue> {
+            @Override
+            public int compare(Venue lhs, Venue rhs) {
+                double distance1 = lhs.distanceFrom(location).getMeters();
+                double distance2 = rhs.distanceFrom(location).getMeters();
+                return (int) (distance1 - distance2);
+            }
+        }
+
+        Collections.sort(result, new VenueByLocationComparator());
+        return result;
+
     }
 }
 

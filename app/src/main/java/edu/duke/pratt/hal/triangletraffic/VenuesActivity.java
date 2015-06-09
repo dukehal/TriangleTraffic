@@ -33,6 +33,8 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
     private LocationRequest locationRequest;
     private Location currentLocation;
     private HashMap<Venue, TableRow> venueToTableRow = new HashMap<>();
+    private boolean tableIsSetup = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,17 +42,8 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
         setContentView(R.layout.activity_venue_list);
 
         new DatabaseConnection(this);
-        
-        this.venues = Venue.asArrayList();
 
-        // Get reference to the Venue Table.
-        TableLayout tableLayout = (TableLayout) findViewById(R.id.venueTable);
 
-        // Populate the Venue Table with venue rows.
-        for (Venue venue : this.venues) {
-            TableRow row = this.getVenueRow(venue);
-            tableLayout.addView(row);
-        }
 
         buildGoogleApiClient();
 
@@ -152,30 +145,37 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
 
         currentLocation = location;
         
-        for (Venue venue : venues) {
-            Distance distance = venue.distanceFrom(currentLocation);
-            TableRow tableRow = venueToTableRow.get(venue);
-            TextView venueDistance = (TextView) tableRow.findViewById(R.id.venueDistance);
-            venueDistance.setText(distance.getDisplayString());
+        if (!tableIsSetup) {
+
+            this.venues = Venue.sortedVenuesByDistanceTo(currentLocation);
+
+            // Get reference to the Venue Table.
+            TableLayout tableLayout = (TableLayout) findViewById(R.id.venueTable);
+
+            // Populate the Venue Table with venue rows.
+            for (Venue venue : this.venues) {
+                TableRow row = this.getVenueRow(venue);
+                tableLayout.addView(row);
+
+                Distance distance = venue.distanceFrom(currentLocation);
+                TableRow tableRow = venueToTableRow.get(venue);
+                TextView venueDistance = (TextView) tableRow.findViewById(R.id.venueDistance);
+                venueDistance.setText(distance.getDisplayString());
+            }
+
+            tableIsSetup = true;
+
+        } else {
+
+            for (Venue venue : venues) {
+                Distance distance = venue.distanceFrom(currentLocation);
+                TableRow tableRow = venueToTableRow.get(venue);
+                TextView venueDistance = (TextView) tableRow.findViewById(R.id.venueDistance);
+                venueDistance.setText(distance.getDisplayString());
+            }
 
         }
 
 
     }
 }
-
-
-
-//        // Add ToggleButton.
-//        CheckBox checkBox = new CheckBox(this);
-//        tableRow.addView(checkBox);
-//
-//        // Add Name.
-//        TextView name = new TextView(this);
-//        name.setText(venue.getName());
-//        tableRow.addView(name);
-//
-//        // Add Association.
-//        TextView association = new TextView(this);
-//        association.setText(venue.getAssociation());
-//        tableRow.addView(association);
