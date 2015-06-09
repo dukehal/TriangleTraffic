@@ -159,8 +159,6 @@ public class Venue extends DatabaseModel {
         this.notifications = notifications;
     }
 
-
-
     public void loadSettings(Context context) {
 
         String venue_notifications_file = "venue_notifications.txt";
@@ -192,8 +190,6 @@ public class Venue extends DatabaseModel {
     public void saveSettings(Context context, ArrayList<Venue> venueArrayList) {
         String venue_notifications_file = "venue_notifications.txt";
         try {
-
-
             FileOutputStream fileOutputStream = context.openFileOutput(venue_notifications_file, Context.MODE_PRIVATE);
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
 
@@ -211,10 +207,7 @@ public class Venue extends DatabaseModel {
         catch (IOException e) {
             Log.w("Exception", "File write failed: " + e.toString());
         }
-
     }
-
-
 
     public void loadEventsAssociation() {
         this.events = new ArrayList<>();
@@ -261,46 +254,3 @@ public class Venue extends DatabaseModel {
 
     }
 }
-
-
-
-
-//
-////        File file = null;
-////        if(context.getFilesDir() != null) {
-////            file = new File(context.getFilesDir(), venue_notifications_file);
-////        } else {
-//
-//        File file = new File(context.getFilesDir(), venue_notifications_file);
-//
-//        if(!file.exists()) {
-//            try {
-////                File.createTempFile(venue_notifications_file, null, context.getCacheDir());
-//                file.createNewFile();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        try {
-//            FileWriter writer = new FileWriter(file);
-//            writer.append("what's up?");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//
-////        try {
-////            OutputStream outputStream = context.openFileOutput(venue_notifications_file, Context.MODE_PRIVATE);
-////            BufferedWriter notificationsLineByLine = new BufferedWriter(new OutputStreamWriter(outputStream));
-////            notificationsLineByLine.write("what's up");
-////        } catch (IOException e) {
-////            e.printStackTrace();
-////        }
-////        try {
-////            FileWriter fileWriter = new FileWriter(file);
-////            fileWriter.write("what's up");
-////        } catch (IOException e) {
-////            e.printStackTrace();
-////        }

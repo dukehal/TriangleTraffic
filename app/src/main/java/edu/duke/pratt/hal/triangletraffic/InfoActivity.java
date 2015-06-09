@@ -55,10 +55,6 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         venueInfo.saveSettings(this, venues);
         venueInfo.loadSettings(this);
 
-
-
-
-
         buildGoogleApiClient();
         TextView t = (TextView)findViewById(R.id.venueName);
         t.setText(venueInfo.getName());

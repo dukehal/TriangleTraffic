@@ -1,14 +1,19 @@
 package edu.duke.pratt.hal.triangletraffic;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -16,6 +21,7 @@ import android.view.MenuItem;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,16 +41,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MapsActivity extends ActionBarActivity implements OnMarkerClickListener,GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,LocationListener, SharedPreferences.OnSharedPreferenceChangeListener {
+        GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener, SharedPreferences.OnSharedPreferenceChangeListener {
     ArrayList<Venue> venues;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public ArrayList<Marker> myMarkers = new ArrayList<>();
     HashMap <String, Integer> mMarkers = new HashMap<String, Integer>();
     GoogleApiClient client;
     Location location;
+    private LocationRequest locationRequest;
+    Location currentLocation;
     int radiusPref;
     SharedPreferences sharedPref;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -244,6 +253,8 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
             Log.w("info", "Unable to get location coordinates");
         }
         setUpMapIfNeeded();
+        createLocationRequest();
+        startLocationUpdates();
     }
 
     @Override
@@ -253,17 +264,62 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     public void onConnectionFailed(ConnectionResult connectionResult) {}
 
     @Override
-    public void onLocationChanged(Location location) {}
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-    @Override
-    public void onProviderEnabled(String provider) {}
-
-    @Override
-    public void onProviderDisabled(String provider) {}
-
-    @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {}
+
+    protected void createLocationRequest() {
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    protected void startLocationUpdates() {
+        LocationServices.FusedLocationApi.requestLocationUpdates(client, locationRequest, this);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        currentLocation = location;
+        Log.w("current lat", Double.toString(currentLocation.getLatitude()));
+        Log.w("current long", Double.toString(currentLocation.getLongitude()));
+        isTimeYet(venues.get(1).getEvents().get(0));
+
+        for(int i = 0; i<venues.size(); i++) {
+            float[] results = new float[2];
+            Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                    venues.get(i).getLatitude(), venues.get(i).getLongitude(),results);
+            if(results[0] <= 1) {
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(getApplicationContext())
+                                .setSmallIcon(R.drawable.basketball_ball)
+                                .setContentTitle("My notification")
+                                .setContentText("Hello World!");
+
+                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                if(alarmSound == null){
+                    alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                    if(alarmSound == null){
+                        alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    }
+                }
+
+                mBuilder.setSound(alarmSound);
+                mBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+
+                int mNotificationId = 001;
+// Gets an instance of the NotificationManager service
+                NotificationManager mNotifyMgr =
+                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                mBuilder.setDefaults(Notification.DEFAULT_SOUND);
+// Builds the notification and issues it.
+                mNotifyMgr.notify(mNotificationId, mBuilder.build());
+            }
+        }
+    }
+
+    public int isTimeYet(Event event) {
+        long eventTime = event.getUnixTimeMillis();
+        Log.w("event time?", Long.toString(eventTime));
+        return 0;
+    }
 }
