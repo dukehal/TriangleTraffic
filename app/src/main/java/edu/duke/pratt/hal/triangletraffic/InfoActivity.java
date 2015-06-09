@@ -238,36 +238,3 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
     }
 
 }
-
-
-
-
-////        File file = new File(this.getFilesDir(), venue_notifications_file);
-//        File file = new File(venue_notifications_file);
-//
-//        try {
-//            FileWriter writer = new FileWriter(file);
-//            writer.append("what's up?");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        if(file.exists()) {
-//            Log.w("File Exists", "File Exists!");
-//        }
-//
-//        try {
-//            InputStream inputStream = this.openFileInput(venue_notifications_file);
-//            BufferedReader venuesLineByLine = new BufferedReader(new InputStreamReader(inputStream));
-//
-//            String line;
-//
-//            if((line = venuesLineByLine.readLine()) == null) {
-//                Log.w("line2", "not working");
-//            }
-//            while ((line = venuesLineByLine.readLine()) != null) {
-//                Log.w("line", line);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }

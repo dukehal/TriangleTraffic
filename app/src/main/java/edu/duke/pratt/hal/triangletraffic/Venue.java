@@ -151,7 +151,7 @@ public class Venue extends DatabaseModel {
 //            return true;
 //        }
 //        return notifications;
-        return notifications;
+        return true;
     }
 
     // Sets the field, without saving preference to field.

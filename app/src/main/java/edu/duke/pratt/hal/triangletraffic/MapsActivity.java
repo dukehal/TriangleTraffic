@@ -11,6 +11,7 @@ import android.location.LocationListener;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.ListPreference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -46,14 +47,21 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public ArrayList<Marker> myMarkers = new ArrayList<>();
     HashMap <String, Integer> mMarkers = new HashMap<String, Integer>();
+    HashMap<Event, Long> eventsNotified = new HashMap<Event, Long>();
     GoogleApiClient client;
     Location location;
     private LocationRequest locationRequest;
     Location currentLocation;
-    int radiusPref;
+    double radiusPref;
+    long timePref;
+    boolean audioPref;
+    boolean textPref;
+    boolean vibratePref;
+    private long lastRecordedTime;
+    private Location lastRecordedLocation;
+
     SharedPreferences sharedPref;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +69,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         setContentView(R.layout.activity_maps);
         buildGoogleApiClient();
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        radiusPref = Integer.parseInt(sharedPref.getString("radius_list", "0"));
+        radiusPref = 1609.34*Double.parseDouble(sharedPref.getString("radius_list", "0"))/2; // TODO: Remove devide by 2;
 
         new DatabaseConnection(this);
         venues = Venue.asArrayList();
@@ -69,14 +77,32 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         listener = new SharedPreferences.OnSharedPreferenceChangeListener(){
             public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
                 sharedPref = prefs;
+                sharedPref.registerOnSharedPreferenceChangeListener(this);
                 if (key.equals("radius_list")) {
-                    Log.w("key equals radius list", Integer.toString(radiusPref));
-                    sharedPref.registerOnSharedPreferenceChangeListener(this);
-                    radiusPref = Integer.parseInt(sharedPref.getString("radius_list", "0"));
-                    Log.w("keyequalsradius2", Integer.toString(radiusPref));
+//                    Log.w("key equals radius list", Integer.toString(radiusPref));
+                    radiusPref = Double.parseDouble(sharedPref.getString("radius_list", "0"))*
+                            1609.34 / 2; // TODO: Remove devide by 2
+                    Log.w("keyequalsradius2", Double.toString(radiusPref));
                     setUpMap();
                 }
-                Log.w("are you getting this?", Integer.toString(radiusPref));
+                Log.w("are you getting this?", Double.toString(radiusPref));
+
+                if (key.equals("timing_list")) {
+                    int time = Integer.parseInt(sharedPref.getString("timing_list", "60"));
+                    timePref = time*60*1000;
+                }
+
+                if(key.equals("text_mode")) {
+                    textPref = Boolean.parseBoolean(sharedPref.getString("text_mode", "true"));
+                }
+
+                if(key.equals("audio_mode")) {
+                    audioPref = Boolean.parseBoolean(sharedPref.getString("audio_mode", "true"));
+                }
+
+                if(key.equals("vibrate_mode")) {
+                    vibratePref = Boolean.parseBoolean(sharedPref.getString("vibrate_mode", "true"));
+                }
             }
         };
         sharedPref.registerOnSharedPreferenceChangeListener(listener);
@@ -174,7 +200,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
             // Instantiates a new CircleOptions object and defines the center and radius
             CircleOptions circleOptions = new CircleOptions()
                     .center(positions[i])
-                    .radius(Math.abs(radiusPref)*1000) // In meters
+                    .radius(Math.abs(radiusPref)) // In meters
                     .strokeColor(Color.RED)
                     .strokeWidth(5)
                     .fillColor(0x50ff0000);
@@ -252,9 +278,9 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         } else {
             Log.w("info", "Unable to get location coordinates");
         }
-        setUpMapIfNeeded();
         createLocationRequest();
         startLocationUpdates();
+        setUpMapIfNeeded();
     }
 
     @Override
@@ -282,31 +308,45 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         currentLocation = location;
         Log.w("current lat", Double.toString(currentLocation.getLatitude()));
         Log.w("current long", Double.toString(currentLocation.getLongitude()));
-        isTimeYet(venues.get(1).getEvents().get(0));
 
-        for(int i = 0; i<venues.size(); i++) {
-            float[] results = new float[2];
-            Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(),
-                    venues.get(i).getLatitude(), venues.get(i).getLongitude(),results);
-            if(results[0] <= 1) {
+        if(lastRecordedLocation == null) {
+            lastRecordedLocation = currentLocation;
+            lastRecordedTime = System.currentTimeMillis();
+        } else {
+            Event eventNotified = shouldSendNotification();
+            if (eventNotified != null) {
+                StringBuilder notificationText = new StringBuilder();
+                notificationText.append(eventNotified.getName());
+                notificationText.append(" has an event today at ");
+                notificationText.append(eventNotified.getTimeString());
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(getApplicationContext())
                                 .setSmallIcon(R.drawable.basketball_ball)
-                                .setContentTitle("My notification")
-                                .setContentText("Hello World!");
+                                .setContentTitle("Triangle Traffic")
+                                .setContentText(notificationText)
+                                .setTicker(notificationText);
 
                 Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                if(alarmSound == null){
+                if (alarmSound == null) {
                     alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                    if(alarmSound == null){
+                    if (alarmSound == null) {
                         alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                     }
                 }
 
-                mBuilder.setSound(alarmSound);
-                mBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+                if (textPref) {
+                    mBuilder.setVisibility(NotificationCompat.VISIBILITY_PRIVATE);
+                }
 
-                int mNotificationId = 001;
+                if (audioPref) {
+                    mBuilder.setSound(alarmSound);
+                }
+
+                if (vibratePref) {
+                    mBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+                }
+
+                int mNotificationId = eventNotified.getVenueId();
 // Gets an instance of the NotificationManager service
                 NotificationManager mNotifyMgr =
                         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -317,9 +357,121 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         }
     }
 
-    public int isTimeYet(Event event) {
-        long eventTime = event.getUnixTimeMillis();
-        Log.w("event time?", Long.toString(eventTime));
-        return 0;
+    public Event shouldSendNotification() {
+        long eventTime;
+        long notificationTime;
+        long currentTime = System.currentTimeMillis();
+        float[] results = new float[2];
+        Double notificationRadius = radiusPref;
+        Event eventNotified = null;
+
+        for (Venue venue : venues) {
+            if (venue.getNotification()) {
+                ArrayList<Event> events = venue.getEvents();
+                Location.distanceBetween(lastRecordedLocation.getLatitude(), lastRecordedLocation.getLongitude(),
+                        venue.getLatitude(), venue.getLongitude(),results);
+                Distance lastRecordedDistance = new Distance(results[0]);
+
+                Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                        venue.getLatitude(), venue.getLongitude(),results);
+                Distance currentDistance = new Distance(results[0]);
+
+                boolean distanceCrossing = (lastRecordedDistance.getMeters() >= notificationRadius &&
+                        currentDistance.getMeters() <= notificationRadius);
+                boolean distanceCrossed = (lastRecordedDistance.getMeters() <= notificationRadius &&
+                        currentDistance.getMeters() <= notificationRadius);
+
+                for (Event event : events) {
+                    eventTime = event.getUnixTimeMillis();
+                    notificationTime = eventTime - timePref*60*1000;
+                    boolean timeCrossing = (lastRecordedTime <= notificationTime
+                            && notificationTime <= currentTime);
+                    boolean timeCrossed = (currentTime >= notificationTime &&
+                            lastRecordedTime >= notificationTime && currentTime <= eventTime);
+                    if (timeCrossing && distanceCrossed) {
+//                        if(eventsNotified.containsKey(event)) {
+//                            if(currentTime >= eventsNotified.get(event) + 10*60*1000) {
+//                                eventsNotified.put(event, currentTime);
+//                            } else {
+//                                eventNotified = event;
+//                            }
+//                        } else {
+                            eventsNotified.put(event, currentTime);
+                            eventNotified = event;
+//                        }
+                    } else if (distanceCrossing && timeCrossed) {
+//                        if(eventsNotified.containsKey(event)) {
+//                            if(currentTime >= eventsNotified.get(event) + 10*60*1000) {
+//                                eventsNotified.put(event, currentTime);
+//                            } else {
+//                                eventNotified = event;
+//                            }
+//                        } else {
+                            eventsNotified.put(event, currentTime);
+                            eventNotified = event;
+//                        }
+                    } else if (timeCrossing && distanceCrossing) {
+//                        if(eventsNotified.containsKey(event)) {
+//                            if(currentTime >= eventsNotified.get(event) + 10*60*1000) {
+//                                eventsNotified.put(event, currentTime);
+//                            } else {
+//                                eventNotified = event;
+//                            }
+//                        } else {
+                            eventsNotified.put(event, currentTime);
+                            eventNotified = event;
+//                        }
+                    } else {
+                        eventNotified = null;
+                    }
+                }
+            }
+        }
+
+        lastRecordedTime = currentTime;
+        lastRecordedLocation = currentLocation;
+        return eventNotified;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                NotificationCompat.Builder mBuilder =
+//                        new NotificationCompat.Builder(getApplicationContext())
+//                                .setSmallIcon(R.drawable.basketball_ball)
+//                                .setContentTitle("My notification 430")
+//                                .setContentText("Hello World!");
+//
+//                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+//                if (alarmSound == null) {
+//                    alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+//                    if (alarmSound == null) {
+//                        alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//                    }
+//                }
+//
+//                mBuilder.setSound(alarmSound);
+//                mBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+//
+//                int mNotificationId = 001;
+//// Gets an instance of the NotificationManager service
+//                NotificationManager mNotifyMgr =
+//                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                mBuilder.setDefaults(Notification.DEFAULT_SOUND);
+//// Builds the notification and issues it.
+//                mNotifyMgr.notify(mNotificationId, mBuilder.build());
+//            }
+//        }, 8000);
