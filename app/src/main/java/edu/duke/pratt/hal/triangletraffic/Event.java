@@ -137,8 +137,6 @@ public class Event extends DatabaseModel implements Comparable<Event> {
         result = result.substring(0, result.length() - 1);
 
         return result;
-
-
     }
 
     public void setTime(String time) {
@@ -156,7 +154,6 @@ public class Event extends DatabaseModel implements Comparable<Event> {
     public void loadVenueAssociation() {
         this.venue = Venue.find(this.venueId);
     }
-
 
     @Override
     public int compareTo(Event event) {
