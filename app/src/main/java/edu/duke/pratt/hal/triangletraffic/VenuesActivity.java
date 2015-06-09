@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -42,8 +43,8 @@ public class VenuesActivity extends ActionBarActivity {
         TableRow tableRow = new TableRow(this);
 
         // Add ToggleButton.
-        ToggleButton toggle = new ToggleButton(this);
-        tableRow.addView(toggle);
+        CheckBox checkBox = new CheckBox(this);
+        tableRow.addView(checkBox);
 
         // Add Name.
         TextView name = new TextView(this);
