@@ -1,8 +1,6 @@
 package edu.duke.pratt.hal.triangletraffic;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.location.Location;
 
@@ -30,14 +28,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -62,8 +52,8 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         int venueIndex = getIntent().getIntExtra("Marker", 0);
         venueInfo = venues.get(venueIndex);
-        venueInfo.save(this,venues);
-        venueInfo.readNotifications(this);
+        venueInfo.saveSettings(this, venues);
+        venueInfo.loadSettings(this);
 
         buildGoogleApiClient();
         TextView t = (TextView)findViewById(R.id.venueName);
@@ -181,6 +171,9 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
+        } else if (id == R.id.action_venues) {
+            Intent intent = new Intent(this, VenuesActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -245,3 +238,36 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
     }
 
 }
+
+
+
+
+////        File file = new File(this.getFilesDir(), venue_notifications_file);
+//        File file = new File(venue_notifications_file);
+//
+//        try {
+//            FileWriter writer = new FileWriter(file);
+//            writer.append("what's up?");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        if(file.exists()) {
+//            Log.w("File Exists", "File Exists!");
+//        }
+//
+//        try {
+//            InputStream inputStream = this.openFileInput(venue_notifications_file);
+//            BufferedReader venuesLineByLine = new BufferedReader(new InputStreamReader(inputStream));
+//
+//            String line;
+//
+//            if((line = venuesLineByLine.readLine()) == null) {
+//                Log.w("line2", "not working");
+//            }
+//            while ((line = venuesLineByLine.readLine()) != null) {
+//                Log.w("line", line);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }

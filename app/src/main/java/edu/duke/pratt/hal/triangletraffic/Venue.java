@@ -2,6 +2,7 @@ package edu.duke.pratt.hal.triangletraffic;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.location.Location;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -17,6 +18,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 
@@ -124,38 +126,39 @@ public class Venue extends DatabaseModel {
         return events;
     }
 
+    public ArrayList<Event> getPresentEvents() {
+        ArrayList<Event> presentEvents = new ArrayList<>();
+        for (Event event : this.events ) {
+            if (event.getUnixTimeMillis() > System.currentTimeMillis()) {
+                presentEvents.add(event);
+            }
+        }
+        return presentEvents;
+    }
+
     public void setEvents(ArrayList<Event> events) {
         this.events = events;
     }
 
+    // On resume, oncreate, will read notification.
+    // On pause, ondestroy will save notification.
+
     public boolean getNotification() {
+//        if (notifications != null) {
+//            return notifications;
+//        } else {
+//            return true;
+//        }
+//        return notifications;
         return notifications;
     }
 
+    // Sets the field, without saving preference to field.
     public void setNotification(boolean notification) {
         this.notifications = notifications;
     }
 
-    public void save(Context context, ArrayList<Venue> venueArrayList) {
-        String venue_notifications_file = "venue_notifications.txt";
-        try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-                    context.openFileOutput(venue_notifications_file, Context.MODE_PRIVATE));
-            for(int i = 0; i < venueArrayList.size(); i++) {
-                if(venueArrayList.get(i).getNotification() == true) {
-                    outputStreamWriter.write("true");
-                } else {
-                    outputStreamWriter.write("false");
-                }
-            }
-            outputStreamWriter.close();
-        }
-        catch (IOException e) {
-            Log.w("Exception", "File write failed: " + e.toString());
-        }
-    }
-
-    public void readNotifications(Context context) {
+    public void loadSettings(Context context) {
 
         String venue_notifications_file = "venue_notifications.txt";
 
@@ -183,12 +186,53 @@ public class Venue extends DatabaseModel {
         }
     }
 
+    public void saveSettings(Context context, ArrayList<Venue> venueArrayList) {
+        String venue_notifications_file = "venue_notifications.txt";
+        try {
+            FileOutputStream fileOutputStream = context.openFileOutput(venue_notifications_file, Context.MODE_PRIVATE);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+
+            // Find the line where settings for this venue is stored.
+            for(int i = 0; i < venueArrayList.size(); i++) {
+                if(venueArrayList.get(i).getNotification() == true) {
+                    outputStreamWriter.write("true");
+                } else {
+                    outputStreamWriter.write("false");
+                }
+            }
+            outputStreamWriter.close();
+
+        }
+        catch (IOException e) {
+            Log.w("Exception", "File write failed: " + e.toString());
+        }
+    }
+
     public void loadEventsAssociation() {
         this.events = new ArrayList<>();
         for (Event event : Event.asCollection()) {
             if (event.getVenueId() == this.getId()) {
                 this.events.add(event);
             }
+        }
+    }
+
+    public Distance distanceFrom(Location currentLocation) {
+
+        float[] results = new float[2];
+        Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(), this.getLatitude(), this.getLongitude(), results);
+
+        return new Distance(results[0]);
+
+    }
+
+    public Event nextEvent() {
+        ArrayList<Event> presentEvents = this.getPresentEvents();
+        Collections.sort(presentEvents);
+        if (presentEvents.size() > 0) {
+            return presentEvents.get(0);
+        } else {
+            return null;
         }
     }
 }

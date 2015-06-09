@@ -223,6 +223,9 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
+        } else if (id == R.id.action_venues) {
+            Intent intent = new Intent(this, VenuesActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
