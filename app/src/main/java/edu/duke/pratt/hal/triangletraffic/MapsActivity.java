@@ -338,6 +338,9 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         if (lastRecordedLocation == null) {
             lastRecordedLocation = location;
         }
+
+
+
         Log.w("current lat", Double.toString(currentLocation.getLatitude()));
         Log.w("current long", Double.toString(currentLocation.getLongitude()));
 
@@ -347,9 +350,14 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         String distanceString = (new Distance(dist)).getDisplayString();
         String bearingString = bear + " deg.";
 
-        dlog("(lat, lon): " + Double.toString(currentLocation.getLatitude()) +
-                ", " + Double.toString(currentLocation.getLongitude()) +
-                "    (dist, brg): " + distanceString + ", " + bearingString);
+        String logMessage = String.format("(lat, lon): %3.7f, %3.7f    \u0394(dist, brg): %s, % 7.3f deg.",
+                currentLocation.getLatitude(), currentLocation.getLongitude(), distanceString, bear);
+
+        dlog(logMessage);
+
+
+
+
 
         if(lastRecordedLocation == null) {
             lastRecordedLocation = currentLocation;
@@ -517,3 +525,9 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 //                mNotifyMgr.notify(mNotificationId, mBuilder.build());
 //            }
 //        }, 8000);
+
+
+
+//        dlog("(lat, lon): " + Double.toString(currentLocation.getLatitude()) +
+//                ", " + Double.toString(currentLocation.getLongitude()) +
+//                "    (dist, brg): " + distanceString + ", " + bearingString);
