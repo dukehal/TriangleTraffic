@@ -79,9 +79,13 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
         venueName.setText(venue.getName());
         venueDistance.setText("---");
 
-        if (venue.getEvents().size() > 0) {
+        if (venue.getPresentEvents().size() > 0) {
             Event nextEvent = venue.nextEvent();
-            eventTimer.setText(nextEvent.getLongTimeUntilString());
+            if (nextEvent !=  null) {
+                eventTimer.setText(nextEvent.getLongTimeUntilString());
+            } else {
+                eventTimer.setText("No upcoming events. (nextEvent null).");
+            }
         } else {
             eventTimer.setText("No upcoming events.");
 

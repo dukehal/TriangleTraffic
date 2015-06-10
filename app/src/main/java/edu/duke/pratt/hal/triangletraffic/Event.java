@@ -105,77 +105,94 @@ public class Event extends DatabaseModel implements Comparable<Event> {
     }
 
     public String getTimeUntilString() {
-        Long dMillis = this.unixTimeMillis - System.currentTimeMillis();
-
-        Long milliseconds_in_second = 1000L;
-        Long milliseconds_in_minute = milliseconds_in_second * 60;
-        Long milliseconds_in_hour   = milliseconds_in_minute * 60;
-        Long milliseconds_in_day    = milliseconds_in_hour   * 24;
-
-        Long days = dMillis / milliseconds_in_day;
-        dMillis -= days * milliseconds_in_day;
-
-        Long hours = dMillis / milliseconds_in_hour;
-        dMillis -= hours * milliseconds_in_hour;
-
-        Long minutes = dMillis / milliseconds_in_minute;
 
         String result = "";
+        Long dMillis = this.unixTimeMillis - System.currentTimeMillis();
 
-        if (days > 0) {
-            result += days + " d ";
+        if (dMillis >= 0) {
+
+            Long milliseconds_in_second = 1000L;
+            Long milliseconds_in_minute = milliseconds_in_second * 60;
+            Long milliseconds_in_hour = milliseconds_in_minute * 60;
+            Long milliseconds_in_day = milliseconds_in_hour * 24;
+
+            Long days = dMillis / milliseconds_in_day;
+            dMillis -= days * milliseconds_in_day;
+
+            Long hours = dMillis / milliseconds_in_hour;
+            dMillis -= hours * milliseconds_in_hour;
+
+            Long minutes = dMillis / milliseconds_in_minute;
+
+            if (days > 0) {
+                result += days + " d ";
+            }
+
+            if (hours > 0 && (days < 7)) {
+                result += hours + " hr ";
+            }
+
+            if (minutes >= 0 && (days == 0)) {
+                result += minutes + " min ";
+            }
+
+            result = result.substring(0, result.length() - 1);
+
+        } else {
+
+            result = "Past event.";
+
         }
-
-        if (hours > 0 && (days < 7)) {
-            result += hours + " hr ";
-        }
-
-        if (minutes > 0 && (days == 0)) {
-            result += minutes + " min ";
-        }
-
-        result = result.substring(0, result.length() - 1);
 
         return result;
     }
 
     public String getLongTimeUntilString() {
-        Long dMillis = this.unixTimeMillis - System.currentTimeMillis();
-
-        Long milliseconds_in_second = 1000L;
-        Long milliseconds_in_minute = milliseconds_in_second * 60;
-        Long milliseconds_in_hour   = milliseconds_in_minute * 60;
-        Long milliseconds_in_day    = milliseconds_in_hour   * 24;
-
-        Long days = dMillis / milliseconds_in_day;
-        dMillis -= days * milliseconds_in_day;
-
-        Long hours = dMillis / milliseconds_in_hour;
-        dMillis -= hours * milliseconds_in_hour;
-
-        Long minutes = dMillis / milliseconds_in_minute;
 
         String result = "";
-        String unit = "";
+        String unit;
+        Long dMillis = this.unixTimeMillis - System.currentTimeMillis();
 
-        if (days > 0) {
-            unit = (days == 1) ? " day " : " days ";
-            result += days + unit;
+        if (dMillis >= 0) {
+
+            Long milliseconds_in_second = 1000L;
+            Long milliseconds_in_minute = milliseconds_in_second * 60;
+            Long milliseconds_in_hour = milliseconds_in_minute * 60;
+            Long milliseconds_in_day = milliseconds_in_hour * 24;
+
+            Long days = dMillis / milliseconds_in_day;
+            dMillis -= days * milliseconds_in_day;
+
+            Long hours = dMillis / milliseconds_in_hour;
+            dMillis -= hours * milliseconds_in_hour;
+
+            Long minutes = dMillis / milliseconds_in_minute;
+
+            if (days > 0) {
+                unit = (days == 1) ? " day " : " days ";
+                result += days + unit;
+            }
+
+            if (hours > 0 && (days < 7)) {
+                unit = (hours == 1) ? " hour " : " hours ";
+                result += hours + unit;
+            }
+
+            if (minutes >= 0 && (days == 0)) {
+                unit = (minutes == 1) ? " minute " : " minutes ";
+                result += minutes + unit;
+            }
+
+            result = result.substring(0, result.length() - 1);
+
+        } else {
+
+            result = "Past event.";
+
         }
-
-        if (hours > 0 && (days < 7)) {
-            unit = (hours == 1) ? " hour " : " hours ";
-            result += hours + unit;
-        }
-
-        if (minutes > 0 && (days == 0)) {
-            unit = (minutes == 1) ? " minute " : " minutes ";
-            result += minutes + unit;
-        }
-
-        result = result.substring(0, result.length() - 1);
 
         return result;
+
     }
 
     public void setTime(String time) {

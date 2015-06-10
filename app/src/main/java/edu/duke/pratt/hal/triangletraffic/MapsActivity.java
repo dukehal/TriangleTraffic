@@ -8,6 +8,7 @@ import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
+import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -65,6 +66,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     boolean vibratePref;
     private long lastRecordedTime;
     private Location lastRecordedLocation;
+    private int locationUpdateCount = 0;
 
     SharedPreferences sharedPref;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
@@ -76,14 +78,16 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        dlog = (TextView) findViewById(R.id.dlog);
-        dlog.setMovementMethod(new ScrollingMovementMethod());
-
-        dlog("Hello 2!");
+        initializeDisplayLog();
 
         buildGoogleApiClient();
+
+        // Initialize preference variables.
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         radiusPref = 1609.34*Double.parseDouble(sharedPref.getString("radius_list", "0"));
+        radiusPref = 1609.34*Double.parseDouble(sharedPref.getString("radius_list", "0"));
+        long time = (long) Integer.parseInt(sharedPref.getString("timing_list", "60"));
+        timePref = time*60*1000;
 
         new DatabaseConnection(this);
         venues = Venue.asArrayList();
@@ -102,7 +106,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                 Log.w("are you getting this?", Double.toString(radiusPref));
 
                 if (key.equals("timing_list")) {
-                    int time = Integer.parseInt(sharedPref.getString("timing_list", "60"));
+                    long time = (long) Integer.parseInt(sharedPref.getString("timing_list", "60"));
                     timePref = time*60*1000;
                 }
 
@@ -122,16 +126,25 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         sharedPref.registerOnSharedPreferenceChangeListener(listener);
     }
 
+    private void initializeDisplayLog() {
+        dlog = (TextView) findViewById(R.id.dlog);
+        dlog.setMovementMethod(new ScrollingMovementMethod());
+        dlog("Display Log Initialized.");
+    }
+
     private void dlog(String text) {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat f = new SimpleDateFormat("h:mm:ss");
         String pre = f.format(cal.getTime());
-        dlog.append(" " + pre + "  " + text + "\n");
+        dlog.append(" (" + locationUpdateCount + ") " + pre + "  " + text + "\n");
         dlog.post(new Runnable() {
             public void run() {
                 final int scrollAmount = dlog.getLayout().getLineTop(dlog.getLineCount()) - dlog.getHeight();
-                if (scrollAmount > 0) { dlog.scrollTo(0, scrollAmount); }
-                else { dlog.scrollTo(0, 0); }
+                if (scrollAmount > 0) {
+                    dlog.scrollTo(0, scrollAmount);
+                } else {
+                    dlog.scrollTo(0, 0);
+                }
             }
         });
     }
@@ -334,6 +347,9 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
     @Override
     public void onLocationChanged(Location location) {
+
+        locationUpdateCount++;
+
         currentLocation = location;
         if (lastRecordedLocation == null) {
             lastRecordedLocation = location;
@@ -343,17 +359,32 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
         Log.w("current lat", Double.toString(currentLocation.getLatitude()));
         Log.w("current long", Double.toString(currentLocation.getLongitude()));
+        //sendMockNotification("Location changed: " + Double.toString(currentLocation.getLatitude()));
 
         Float dist = lastRecordedLocation.distanceTo(currentLocation);
         Float bear = lastRecordedLocation.bearingTo(currentLocation);
 
         String distanceString = (new Distance(dist)).getDisplayString();
-        String bearingString = bear + " deg.";
-
         String logMessage = String.format("(lat, lon): %3.7f, %3.7f    \u0394(dist, brg): %s, % 7.3f deg.",
                 currentLocation.getLatitude(), currentLocation.getLongitude(), distanceString, bear);
 
         dlog(logMessage);
+
+        NotificationInfo notificationToSend = shouldSendNotification();
+
+        if (notificationToSend != null) {
+
+            Event event = notificationToSend.getEvent();
+
+            if (notificationToSend.isDueToTimeCrossing()) {
+                dlog("sending time crossing notification...");
+                sendMockNotification("An event is due to occur in your location: " + event.getName());
+            } else if (notificationToSend.isDueToDistanceCrossing()) {
+                dlog("sending distance crossing notification...");
+                sendMockNotification("You crossed an area where an event is due to occur: " + event.getName());
+            }
+
+        }
 
 
 
@@ -363,7 +394,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
             lastRecordedLocation = currentLocation;
             lastRecordedTime = System.currentTimeMillis();
         } else {
-            Event eventNotified = shouldSendNotification();
+            Event eventNotified = null; //shouldSendNotification();
             if (eventNotified != null) {
                 StringBuilder notificationText = new StringBuilder();
                 notificationText.append(eventNotified.getName());
@@ -407,81 +438,139 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         }
     }
 
-    public Event shouldSendNotification() {
+    public NotificationInfo shouldSendNotification() {
+
         long eventTime;
         long notificationTime;
         long currentTime = System.currentTimeMillis();
-        float[] results = new float[2];
         Double notificationRadius = radiusPref;
+
+
+        float[] results = new float[2];
         Event eventNotified = null;
 
-        for (Venue venue : venues) {
-            if (venue.getNotification()) {
-                ArrayList<Event> events = venue.getEvents();
-                Location.distanceBetween(lastRecordedLocation.getLatitude(), lastRecordedLocation.getLongitude(),
-                        venue.getLatitude(), venue.getLongitude(),results);
-                Distance lastRecordedDistance = new Distance(results[0]);
+        // Make local copies of last recorded time and location.
+        Long lastRecordedTimeLocalCopy = lastRecordedTime;
+        Location lastRecordedLocationLocalCopy = lastRecordedLocation;
 
-                Location.distanceBetween(currentLocation.getLatitude(), currentLocation.getLongitude(),
-                        venue.getLatitude(), venue.getLongitude(),results);
-                Distance currentDistance = new Distance(results[0]);
-
-                boolean distanceCrossing = (lastRecordedDistance.getMeters() >= notificationRadius &&
-                        currentDistance.getMeters() <= notificationRadius);
-                boolean distanceCrossed = (lastRecordedDistance.getMeters() <= notificationRadius &&
-                        currentDistance.getMeters() <= notificationRadius);
-
-                for (Event event : events) {
-                    eventTime = event.getUnixTimeMillis();
-                    notificationTime = eventTime - timePref*60*1000;
-                    boolean timeCrossing = (lastRecordedTime <= notificationTime
-                            && notificationTime <= currentTime);
-                    boolean timeCrossed = (currentTime >= notificationTime &&
-                            lastRecordedTime >= notificationTime && currentTime <= eventTime);
-                    if (timeCrossing && distanceCrossed) {
-//                        if(eventsNotified.containsKey(event)) {
-//                            if(currentTime >= eventsNotified.get(event) + 10*60*1000) {
-//                                eventsNotified.put(event, currentTime);
-//                            } else {
-//                                eventNotified = event;
-//                            }
-//                        } else {
-                            eventsNotified.put(event, currentTime);
-                            eventNotified = event;
-//                        }
-                    } else if (distanceCrossing && timeCrossed) {
-//                        if(eventsNotified.containsKey(event)) {
-//                            if(currentTime >= eventsNotified.get(event) + 10*60*1000) {
-//                                eventsNotified.put(event, currentTime);
-//                            } else {
-//                                eventNotified = event;
-//                            }
-//                        } else {
-                            eventsNotified.put(event, currentTime);
-                            eventNotified = event;
-//                        }
-                    } else if (timeCrossing && distanceCrossing) {
-//                        if(eventsNotified.containsKey(event)) {
-//                            if(currentTime >= eventsNotified.get(event) + 10*60*1000) {
-//                                eventsNotified.put(event, currentTime);
-//                            } else {
-//                                eventNotified = event;
-//                            }
-//                        } else {
-                            eventsNotified.put(event, currentTime);
-                            eventNotified = event;
-//                        }
-                    } else {
-                        eventNotified = null;
-                    }
-                }
-            }
-        }
-
+        // Update global last recorded time and location before we enter for each loops.
         lastRecordedTime = currentTime;
         lastRecordedLocation = currentLocation;
-        return eventNotified;
+
+        for (Venue venue : venues) {
+
+            if (venue.getNotification()) {
+
+                ArrayList<Event> venueEvents = venue.getPresentEvents();
+
+                Location.distanceBetween(
+                        lastRecordedLocationLocalCopy.getLatitude(),
+                        lastRecordedLocationLocalCopy.getLongitude(),
+                        venue.getLatitude(),
+                        venue.getLongitude(),
+                        results);
+
+                Distance lastRecordedDistance = new Distance(results[0]);
+
+                Location.distanceBetween(
+                        currentLocation.getLatitude(),
+                        currentLocation.getLongitude(),
+                        venue.getLatitude(),
+                        venue.getLongitude(),
+                        results);
+
+                Distance currentDistance = new Distance(results[0]);
+
+                boolean distanceCrossing =
+                        (lastRecordedDistance.getMeters() >= notificationRadius &&
+                        currentDistance.getMeters() <= notificationRadius);
+
+                boolean distanceCrossed =
+                        (lastRecordedDistance.getMeters() <= notificationRadius &&
+                        currentDistance.getMeters() <= notificationRadius);
+
+                if (venue.getId()==2) {
+                    dlog("Wallace distanceCrossing: " + distanceCrossing + ",     Wallace distanceCrossed: " + distanceCrossed);
+                    String lastVsCurr = String.format("lastRecordedDistance: %.2f m,     currentDistance: %.2f m",
+                            lastRecordedDistance.getMeters(), currentDistance.getMeters());
+                    dlog(lastVsCurr);
+                    dlog("notificationRadius: " + notificationRadius + " m");
+                }
+
+
+                for (Event event : venueEvents) {
+
+                    eventTime = event.getUnixTimeMillis();
+                    notificationTime = eventTime - timePref;
+
+                    boolean timeCrossing =
+                            (lastRecordedTimeLocalCopy <= notificationTime
+                            && notificationTime <= currentTime);
+
+                    boolean timeCrossed =
+                            (currentTime >= notificationTime &&
+                            lastRecordedTimeLocalCopy >= notificationTime &&
+                            currentTime <= eventTime);
+
+                    if (event.getId() == 40) {
+                        dlog("Wallace timeCrossing: " + timeCrossing + ",     Wallace timeCrossed: " + timeCrossed);
+                        dlog("currentTime: " + currentTime + " us,     notificatonTime: " + notificationTime + " us");
+//                        dlog("lastRecordedTimeLC: " + lastRecordedTimeLocalCopy + " us");
+//                        dlog("       currentTime: " + currentTime + " us");
+//                        dlog("   notificatonTime: " + notificationTime + " us");
+//                        dlog("         eventTime: " + eventTime + " us");
+                    }
+
+                    if (timeCrossing && distanceCrossed) {
+                        // Notification due to time crossing.
+                        dlog("Pending new Time Crossing Notification.");
+                        return new NotificationInfo(event, true, false);
+
+                    } else if (distanceCrossing && timeCrossed) {
+                        // Notification due to distance crossing.
+                        dlog("Pending new Distance Crossing Notification.");
+                        return new NotificationInfo(event, false, true);
+
+                    } else if (timeCrossing && distanceCrossing) {
+                        // Notification due to both time and distance crossing.
+                        dlog("Pending new Distance AND Time Crossing Notification. (unlikely!)");
+                        return new NotificationInfo(event, true, true);
+
+                    } else {
+                        // No notification should be sent, continue to next iteration.
+                    }
+
+                } // End for each of event in venueEvents.
+
+            }
+
+        } // End of for each of venue in this.venues.
+
+
+        return null;
     }
+
+    private void sendMockNotification(String text) {
+        final TextView disp = (TextView) findViewById(R.id.mockNotificationDisplay);
+        disp.setText(text);
+        disp.setVisibility(View.VISIBLE);
+        disp.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                disp.setVisibility(View.INVISIBLE);
+            }
+        }, 10000);
+
+        // Play a notification sound.
+        try {
+            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+            r.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
 
