@@ -16,9 +16,11 @@ import android.preference.ListPreference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -38,7 +40,9 @@ import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class MapsActivity extends ActionBarActivity implements OnMarkerClickListener,GoogleApiClient.ConnectionCallbacks,
@@ -63,13 +67,21 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     SharedPreferences sharedPref;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
 
+    private TextView dlog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        dlog = (TextView) findViewById(R.id.dlog);
+        dlog.setMovementMethod(new ScrollingMovementMethod());
+
+        dlog("Hello 2!");
+
         buildGoogleApiClient();
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        radiusPref = 1609.34*Double.parseDouble(sharedPref.getString("radius_list", "0"))/2; // TODO: Remove devide by 2;
+        radiusPref = 1609.34*Double.parseDouble(sharedPref.getString("radius_list", "0"));
 
         new DatabaseConnection(this);
         venues = Venue.asArrayList();
@@ -81,7 +93,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                 if (key.equals("radius_list")) {
 //                    Log.w("key equals radius list", Integer.toString(radiusPref));
                     radiusPref = Double.parseDouble(sharedPref.getString("radius_list", "0"))*
-                            1609.34 / 2; // TODO: Remove devide by 2
+                            1609.34;
                     Log.w("keyequalsradius2", Double.toString(radiusPref));
                     setUpMap();
                 }
@@ -106,6 +118,13 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
             }
         };
         sharedPref.registerOnSharedPreferenceChangeListener(listener);
+    }
+
+    private void dlog(String text) {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat f = new SimpleDateFormat("h:mm:ss");
+        String pre = f.format(cal.getTime());
+        dlog.append(" " + pre + "  " + text + "\n");
     }
 
 
@@ -308,6 +327,16 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         currentLocation = location;
         Log.w("current lat", Double.toString(currentLocation.getLatitude()));
         Log.w("current long", Double.toString(currentLocation.getLongitude()));
+
+        Float dist = lastRecordedLocation.distanceTo(currentLocation);
+        Float bear = lastRecordedLocation.bearingTo(currentLocation);
+
+        String distanceString = (new Distance(dist)).getDisplayString();
+        String bearingString = bear + " deg.";
+
+        dlog("(lat, lon): " + Double.toString(currentLocation.getLatitude()) +
+                ", " + Double.toString(currentLocation.getLongitude()) +
+                "    (dist, brg): " + distanceString + ", " + bearingString);
 
         if(lastRecordedLocation == null) {
             lastRecordedLocation = currentLocation;
