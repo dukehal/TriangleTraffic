@@ -12,10 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -23,20 +23,18 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 
-public class VenuesActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class VenuesActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
 
     private ArrayList<Venue> venues;
     private GoogleApiClient client;
     private LocationRequest locationRequest;
     private Location currentLocation;
     private HashMap<Venue, TableRow> venueToTableRow = new HashMap<>();
+    private HashMap<View, Venue> venueClickRowToVenue = new HashMap<>();
     private boolean tableIsSetup = false;
 
 
@@ -51,7 +49,7 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
 
     }
 
-    private TableRow getVenueRow(Venue venue) {
+    private TableRow getVenueRow(final Venue venue) {
 
         //TableRow tableRow = new TableRow(this);
 
@@ -63,26 +61,20 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
         TextView venueDistance = (TextView) tableRow.findViewById(R.id.venueDistance);
         TextView eventTimer = (TextView) tableRow.findViewById(R.id.eventTimer);
         ImageView trafficStatusImage = (ImageView) tableRow.findViewById(R.id.trafficStatusImage);
-            Drawable statusImage = getResources().getDrawable(R.drawable.traffic_indication_circle);
-            // programatically change color:
-            statusImage.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
+        LinearLayout venueClickRow = (LinearLayout) tableRow.findViewById(R.id.venueClickRow);
 
-            trafficStatusImage.setImageDrawable(statusImage);
+
+        Drawable statusImage = getResources().getDrawable(R.drawable.traffic_indication_circle);
+        // programatically change color:
+        statusImage.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
+
+        trafficStatusImage.setImageDrawable(statusImage);
 
         ImageView venueInfoLink = (ImageView) tableRow.findViewById(R.id.venueInfoLink);
-            Drawable infoLink = getResources().getDrawable(R.drawable.ic_chevron_right_black_36dp);
-            venueInfoLink.setImageDrawable(infoLink);
-            // venueInfoLink.setOnClickListener(new View.OnClickListener() {
-
-            //    @Override
-            //    public void onClick(View view) {
-            //        Intent intent = new Intent(this, InfoActivity.class);
-            //        intent.putExtra("VenueID", i);
-            //        startActivity(intent);
-            //    }
-            //
-            // });
-
+        Drawable infoLink = getResources().getDrawable(R.drawable.ic_chevron_right_black_36dp);
+        venueInfoLink.setImageDrawable(infoLink);
+        venueClickRow.setOnClickListener(this);
+        venueClickRowToVenue.put(venueClickRow, venue);
 
         venueName.setText(venue.getName());
         venueDistance.setText("---");
@@ -198,5 +190,13 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
         }
 
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        Venue venue = venueClickRowToVenue.get(view);
+        Intent intent = new Intent(this, InfoActivity.class);
+        intent.putExtra("Venue ID", venue.getId());
+        startActivity(intent);
     }
 }
