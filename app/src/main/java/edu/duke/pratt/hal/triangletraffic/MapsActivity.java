@@ -16,9 +16,12 @@ import android.preference.ListPreference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -38,7 +41,9 @@ import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class MapsActivity extends ActionBarActivity implements OnMarkerClickListener,GoogleApiClient.ConnectionCallbacks,
@@ -48,6 +53,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     public ArrayList<Marker> myMarkers = new ArrayList<>();
     HashMap <String, Integer> mMarkers = new HashMap<String, Integer>();
     HashMap<Event, Long> eventsNotified = new HashMap<Event, Long>();
+    HashMap<Marker, Venue> markerToVenue = new HashMap<>();
     GoogleApiClient client;
     Location location;
     private LocationRequest locationRequest;
@@ -63,13 +69,21 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     SharedPreferences sharedPref;
     SharedPreferences.OnSharedPreferenceChangeListener listener;
 
+    private TextView dlog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        dlog = (TextView) findViewById(R.id.dlog);
+        dlog.setMovementMethod(new ScrollingMovementMethod());
+
+        dlog("Hello 2!");
+
         buildGoogleApiClient();
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        radiusPref = 1609.34*Double.parseDouble(sharedPref.getString("radius_list", "0"))/2; // TODO: Remove devide by 2;
+        radiusPref = 1609.34*Double.parseDouble(sharedPref.getString("radius_list", "0"));
 
         new DatabaseConnection(this);
         venues = Venue.asArrayList();
@@ -81,7 +95,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                 if (key.equals("radius_list")) {
 //                    Log.w("key equals radius list", Integer.toString(radiusPref));
                     radiusPref = Double.parseDouble(sharedPref.getString("radius_list", "0"))*
-                            1609.34 / 2; // TODO: Remove devide by 2
+                            1609.34;
                     Log.w("keyequalsradius2", Double.toString(radiusPref));
                     setUpMap();
                 }
@@ -139,6 +153,20 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                 mNotifyMgr.notify(mNotificationId, mBuilder.build());
             }
         }, 8000);
+    }
+
+    private void dlog(String text) {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat f = new SimpleDateFormat("h:mm:ss");
+        String pre = f.format(cal.getTime());
+        dlog.append(" " + pre + "  " + text + "\n");
+        dlog.post(new Runnable() {
+            public void run() {
+                final int scrollAmount = dlog.getLayout().getLineTop(dlog.getLineCount()) - dlog.getHeight();
+                if (scrollAmount > 0) { dlog.scrollTo(0, scrollAmount); }
+                else { dlog.scrollTo(0, 0); }
+            }
+        });
     }
 
 
@@ -229,6 +257,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
             Marker marker = mMap.addMarker(markerOptions);
             myMarkers.add(marker);
+            markerToVenue.put(marker, venues.get(i));
 
             // Instantiates a new CircleOptions object and defines the center and radius
             CircleOptions circleOptions = new CircleOptions()
@@ -258,7 +287,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
         if (isMarker) {
             Intent intent = new Intent(this, InfoActivity.class);
-            intent.putExtra("Marker", i);
+            intent.putExtra("Venue ID", markerToVenue.get(myMarker).getId());
             startActivity(intent);
         }
         return true;
@@ -339,8 +368,21 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     @Override
     public void onLocationChanged(Location location) {
         currentLocation = location;
+        if (lastRecordedLocation == null) {
+            lastRecordedLocation = location;
+        }
         Log.w("current lat", Double.toString(currentLocation.getLatitude()));
         Log.w("current long", Double.toString(currentLocation.getLongitude()));
+
+        Float dist = lastRecordedLocation.distanceTo(currentLocation);
+        Float bear = lastRecordedLocation.bearingTo(currentLocation);
+
+        String distanceString = (new Distance(dist)).getDisplayString();
+        String bearingString = bear + " deg.";
+
+        dlog("(lat, lon): " + Double.toString(currentLocation.getLatitude()) +
+                ", " + Double.toString(currentLocation.getLongitude()) +
+                "    (dist, brg): " + distanceString + ", " + bearingString);
 
         if(lastRecordedLocation == null) {
             lastRecordedLocation = currentLocation;
@@ -380,11 +422,11 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                 }
 
                 int mNotificationId = eventNotified.getVenueId();
-// Gets an instance of the NotificationManager service
+                // Gets an instance of the NotificationManager service
                 NotificationManager mNotifyMgr =
                         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 mBuilder.setDefaults(Notification.DEFAULT_SOUND);
-// Builds the notification and issues it.
+                // Builds the notification and issues it.
                 mNotifyMgr.notify(mNotificationId, mBuilder.build());
             }
         }

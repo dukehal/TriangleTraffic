@@ -20,8 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/notificationCheckBox"
-        android:button="@xml/customdrawablecheckbox"
-        android:paddingRight="5dp" />
+        android:button="@xml/customdrawablecheckbox" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -58,12 +57,13 @@
     </LinearLayout>
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:id="@+id/trafficStatusImage" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/venueInfoLink" />
+
 </TableRow>

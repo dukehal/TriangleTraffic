@@ -50,8 +50,8 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         venues = Venue.asArrayList();
 
 
-        int venueIndex = getIntent().getIntExtra("Marker", 0);
-        venueInfo = venues.get(venueIndex);
+        int venueIndex = getIntent().getIntExtra("Venue ID", 0);
+        venueInfo = Venue.find(venueIndex);
         venueInfo.saveSettings(this, venues);
         venueInfo.loadSettings(this);
 

@@ -7,8 +7,10 @@
     <string name="pref_header_general">General</string>
 
     <string-array name="pref_radius_list_titles">
-        <item>1 mile</item>
-        <item>2 miles</item>
+        <item>0.25 mile</item>
+        <item>0.50 mile</item>
+        <item>1.00 mile</item>
+        <item>2.00 miles</item>
         <item>3 miles</item>
         <item>4 miles</item>
         <item>5 miles</item>
@@ -16,6 +18,8 @@
     </string-array>
 
     <string-array name="pref_radius_list_values">
+        <item>0.25</item>
+        <item>0.5</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
