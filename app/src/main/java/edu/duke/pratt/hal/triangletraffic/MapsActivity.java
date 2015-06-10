@@ -121,38 +121,38 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         };
         sharedPref.registerOnSharedPreferenceChangeListener(listener);
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(getApplicationContext())
-                                .setSmallIcon(R.drawable.basketball_ball)
-                                .setContentTitle("My notification 430")
-                                .setContentText("Hello World!")
-                                .setTicker("TriangleTrafficApp");
-
-                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                if (alarmSound == null) {
-                    alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                    if (alarmSound == null) {
-                        alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    }
-                }
-
-                mBuilder.setSound(alarmSound);
-                mBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-                mBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-
-                int mNotificationId = 001;
-// Gets an instance of the NotificationManager service
-                NotificationManager mNotifyMgr =
-                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                mBuilder.setDefaults(Notification.DEFAULT_SOUND);
-// Builds the notification and issues it.
-                mNotifyMgr.notify(mNotificationId, mBuilder.build());
-            }
-        }, 8000);
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                NotificationCompat.Builder mBuilder =
+//                        new NotificationCompat.Builder(getApplicationContext())
+//                                .setSmallIcon(R.drawable.basketball_ball)
+//                                .setContentTitle("My notification 430")
+//                                .setContentText("Hello World!")
+//                                .setTicker("TriangleTrafficApp");
+//
+//                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+//                if (alarmSound == null) {
+//                    alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+//                    if (alarmSound == null) {
+//                        alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//                    }
+//                }
+//
+//                mBuilder.setSound(alarmSound);
+//                mBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+//                mBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+//
+//                int mNotificationId = 001;
+//// Gets an instance of the NotificationManager service
+//                NotificationManager mNotifyMgr =
+//                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                mBuilder.setDefaults(Notification.DEFAULT_SOUND);
+//// Builds the notification and issues it.
+//                mNotifyMgr.notify(mNotificationId, mBuilder.build());
+//            }
+//        }, 8000);
     }
 
     private void dlog(String text) {
@@ -390,10 +390,8 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         } else {
             Event eventNotified = shouldSendNotification();
             if (eventNotified != null) {
-                StringBuilder notificationText = new StringBuilder();
-                notificationText.append(eventNotified.getName());
-                notificationText.append(" has an event today at ");
-                notificationText.append(eventNotified.getTimeString());
+                String notificationText = eventNotified.getName() + " has an event today at "
+                        + eventNotified.getTimeString();
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(getApplicationContext())
                                 .setSmallIcon(R.drawable.basketball_ball)
