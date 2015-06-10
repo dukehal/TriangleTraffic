@@ -106,6 +106,39 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
             }
         };
         sharedPref.registerOnSharedPreferenceChangeListener(listener);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(getApplicationContext())
+                                .setSmallIcon(R.drawable.basketball_ball)
+                                .setContentTitle("My notification 430")
+                                .setContentText("Hello World!")
+                                .setTicker("TriangleTrafficApp");
+
+                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                if (alarmSound == null) {
+                    alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                    if (alarmSound == null) {
+                        alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    }
+                }
+
+                mBuilder.setSound(alarmSound);
+                mBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+                mBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+
+                int mNotificationId = 001;
+// Gets an instance of the NotificationManager service
+                NotificationManager mNotifyMgr =
+                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                mBuilder.setDefaults(Notification.DEFAULT_SOUND);
+// Builds the notification and issues it.
+                mNotifyMgr.notify(mNotificationId, mBuilder.build());
+            }
+        }, 8000);
     }
 
 
@@ -433,45 +466,3 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         return eventNotified;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                NotificationCompat.Builder mBuilder =
-//                        new NotificationCompat.Builder(getApplicationContext())
-//                                .setSmallIcon(R.drawable.basketball_ball)
-//                                .setContentTitle("My notification 430")
-//                                .setContentText("Hello World!");
-//
-//                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-//                if (alarmSound == null) {
-//                    alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-//                    if (alarmSound == null) {
-//                        alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//                    }
-//                }
-//
-//                mBuilder.setSound(alarmSound);
-//                mBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-//
-//                int mNotificationId = 001;
-//// Gets an instance of the NotificationManager service
-//                NotificationManager mNotifyMgr =
-//                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//                mBuilder.setDefaults(Notification.DEFAULT_SOUND);
-//// Builds the notification and issues it.
-//                mNotifyMgr.notify(mNotificationId, mBuilder.build());
-//            }
-//        }, 8000);
