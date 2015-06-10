@@ -1,5 +1,8 @@
 package edu.duke.pratt.hal.triangletraffic;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -43,8 +46,6 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
 
         new DatabaseConnection(this);
 
-
-
         buildGoogleApiClient();
 
     }
@@ -61,6 +62,11 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
         TextView venueDistance = (TextView) tableRow.findViewById(R.id.venueDistance);
         TextView eventTimer = (TextView) tableRow.findViewById(R.id.eventTimer);
         ImageView trafficStatusImage = (ImageView) tableRow.findViewById(R.id.trafficStatusImage);
+            // Drawable drawable = this.getResources().getDrawable(R.drawable.traffic_indication_circle);
+            // drawable.setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP);
+
+            trafficStatusImage.setImageDrawable(R.drawable.traffic_indication_circle);
+
 
         venueName.setText(venue.getName());
         venueDistance.setText("---");
@@ -126,7 +132,6 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
 
         createLocationRequest();
         startLocationUpdates();
-
 
     }
 
