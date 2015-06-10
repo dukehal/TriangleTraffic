@@ -53,6 +53,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     public ArrayList<Marker> myMarkers = new ArrayList<>();
     HashMap <String, Integer> mMarkers = new HashMap<String, Integer>();
     HashMap<Event, Long> eventsNotified = new HashMap<Event, Long>();
+    HashMap<Marker, Venue> markerToVenue = new HashMap<>();
     GoogleApiClient client;
     Location location;
     private LocationRequest locationRequest;
@@ -223,6 +224,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
             Marker marker = mMap.addMarker(markerOptions);
             myMarkers.add(marker);
+            markerToVenue.put(marker, venues.get(i));
 
             // Instantiates a new CircleOptions object and defines the center and radius
             CircleOptions circleOptions = new CircleOptions()
@@ -252,7 +254,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
         if (isMarker) {
             Intent intent = new Intent(this, InfoActivity.class);
-            intent.putExtra("Marker", i);
+            intent.putExtra("Venue ID", markerToVenue.get(myMarker).getId());
             startActivity(intent);
         }
         return true;
