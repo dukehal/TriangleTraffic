@@ -20,8 +20,8 @@
         android:layout_centerHorizontal="true"
         android:clickable="true"
         android:enabled="true"
-        android:textOff="All Notifications On"
-        android:textOn="All Notifications Off">
+        android:textOff="All Notifications Off"
+        android:textOn="All Notifications On">
     </ToggleButton>
 
     <ScrollView
