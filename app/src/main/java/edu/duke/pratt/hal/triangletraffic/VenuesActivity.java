@@ -1,5 +1,6 @@
 package edu.duke.pratt.hal.triangletraffic;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -62,10 +63,26 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
         TextView venueDistance = (TextView) tableRow.findViewById(R.id.venueDistance);
         TextView eventTimer = (TextView) tableRow.findViewById(R.id.eventTimer);
         ImageView trafficStatusImage = (ImageView) tableRow.findViewById(R.id.trafficStatusImage);
-            // Drawable drawable = this.getResources().getDrawable(R.drawable.traffic_indication_circle);
-            // drawable.setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP);
+            Drawable statusImage = getResources().getDrawable(R.drawable.traffic_indication_circle);
+            // programatically change color:
+            statusImage.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
 
-            trafficStatusImage.setImageDrawable(R.drawable.traffic_indication_circle);
+            trafficStatusImage.setImageDrawable(statusImage);
+
+        ImageView venueInfoLink = (ImageView) tableRow.findViewById(R.id.venueInfoLink);
+            Drawable infoLink = getResources().getDrawable(R.drawable.ic_chevron_right_black_36dp);
+            venueInfoLink.setImageDrawable(infoLink);
+            // venueInfoLink.setOnClickListener(new View.OnClickListener() {
+
+            //    @Override
+            //    public void onClick(View view) {
+            //        Intent intent = new Intent(this, InfoActivity.class);
+            //        intent.putExtra("VenueID", i);
+            //        startActivity(intent);
+            //    }
+            //
+            // });
+
 
 
         venueName.setText(venue.getName());
