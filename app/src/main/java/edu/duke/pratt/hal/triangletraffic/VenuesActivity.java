@@ -65,7 +65,7 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
             // Drawable drawable = this.getResources().getDrawable(R.drawable.traffic_indication_circle);
             // drawable.setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP);
 
-            trafficStatusImage.setImageDrawable(R.drawable.traffic_indication_circle);
+            //trafficStatusImage.setImageDrawable(R.drawable.traffic_indication_circle);
 
 
         venueName.setText(venue.getName());

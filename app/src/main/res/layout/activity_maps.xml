@@ -25,10 +25,8 @@
         android:layout_height="match_parent"
         android:text="Hello World!\n"
         android:id="@+id/dlog"
-        android:lines="30"
-        android:nestedScrollingEnabled="true"
         android:singleLine="false"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical" android:gravity="bottom"/>
 
 </LinearLayout>
 

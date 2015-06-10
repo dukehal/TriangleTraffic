@@ -20,6 +20,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -125,6 +126,13 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         SimpleDateFormat f = new SimpleDateFormat("h:mm:ss");
         String pre = f.format(cal.getTime());
         dlog.append(" " + pre + "  " + text + "\n");
+        dlog.post(new Runnable() {
+            public void run() {
+                final int scrollAmount = dlog.getLayout().getLineTop(dlog.getLineCount()) - dlog.getHeight();
+                if (scrollAmount > 0) { dlog.scrollTo(0, scrollAmount); }
+                else { dlog.scrollTo(0, 0); }
+            }
+        });
     }
 
 
@@ -325,6 +333,9 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     @Override
     public void onLocationChanged(Location location) {
         currentLocation = location;
+        if (lastRecordedLocation == null) {
+            lastRecordedLocation = location;
+        }
         Log.w("current lat", Double.toString(currentLocation.getLatitude()));
         Log.w("current long", Double.toString(currentLocation.getLongitude()));
 
@@ -376,11 +387,11 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                 }
 
                 int mNotificationId = eventNotified.getVenueId();
-// Gets an instance of the NotificationManager service
+                // Gets an instance of the NotificationManager service
                 NotificationManager mNotifyMgr =
                         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 mBuilder.setDefaults(Notification.DEFAULT_SOUND);
-// Builds the notification and issues it.
+                // Builds the notification and issues it.
                 mNotifyMgr.notify(mNotificationId, mBuilder.build());
             }
         }
