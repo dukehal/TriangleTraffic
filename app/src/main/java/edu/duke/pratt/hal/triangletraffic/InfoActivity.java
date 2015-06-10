@@ -74,7 +74,7 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         checkBox.setChecked(true);
 
-        ArrayList<Event> eventInfoList = venueInfo.getEvents();
+        ArrayList<Event> eventInfoList = venueInfo.getPresentEvents();
         Collections.sort(eventInfoList);
         TableLayout eventTable = (TableLayout)findViewById(R.id.eventTable);
         for (int i = 0; i < eventInfoList.size(); i++) {

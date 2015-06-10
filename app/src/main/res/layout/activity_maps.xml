@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <fragment
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:map="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="755dp"
+        android:layout_height="wrap_content"
         android:id="@+id/TriangleTraffic" tools:context=".MapsActivity"
         class="com.google.android.gms.maps.SupportMapFragment"
         map:mapType="normal"
@@ -18,16 +18,43 @@
         map:uiScrollGestures="true"
         map:uiTiltGestures="true"
         map:uiZoomControls="true"
-        map:uiZoomGestures="true" />
+        map:uiZoomGestures="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="0dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:layout_above="@+id/dlog" />
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="150dp"
         android:text="Hello World!\n"
         android:id="@+id/dlog"
         android:singleLine="false"
-        android:scrollbars="vertical" android:gravity="bottom"/>
+        android:scrollbars="vertical" android:gravity="bottom"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true" />
 
-</LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test Mock Notification"
+        android:id="@+id/mockNotificationDisplay"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="#c8d1ffb0"
+        android:layout_margin="10dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:visibility="invisible"
+        android:minHeight="60dp" />
+
+</RelativeLayout>
 
 
