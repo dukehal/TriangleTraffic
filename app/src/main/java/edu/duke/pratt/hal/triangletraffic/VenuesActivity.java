@@ -71,8 +71,8 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
         trafficStatusImage.setImageDrawable(statusImage);
 
         ImageView venueInfoLink = (ImageView) tableRow.findViewById(R.id.venueInfoLink);
-        Drawable infoLink = getResources().getDrawable(R.drawable.ic_chevron_right_black_36dp);
-        venueInfoLink.setImageDrawable(infoLink);
+
+
         venueClickRow.setOnClickListener(this);
         venueClickRowToVenue.put(venueClickRow, venue);
 
