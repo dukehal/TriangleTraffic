@@ -57,6 +57,7 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
         venueToTableRow.put(venue, tableRow);
 
         CheckBox notificationCheckbox = (CheckBox) tableRow.findViewById(R.id.notificationCheckBox);
+            notificationCheckbox.setChecked(true);
         TextView venueName = (TextView) tableRow.findViewById(R.id.venueName);
         TextView venueDistance = (TextView) tableRow.findViewById(R.id.venueDistance);
         TextView eventTimer = (TextView) tableRow.findViewById(R.id.eventTimer);

@@ -15,12 +15,13 @@
     <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/venue_notifications_toggle"
         android:checked="true"
         android:id="@+id/toggleNotifications"
         android:layout_centerHorizontal="true"
         android:clickable="true"
-        android:enabled="false">
+        android:enabled="true"
+        android:textOff="All Notifications On"
+        android:textOn="All Notifications Off">
     </ToggleButton>
 
     <ScrollView
