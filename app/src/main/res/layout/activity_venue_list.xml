@@ -21,7 +21,8 @@
         android:clickable="true"
         android:enabled="true"
         android:textOff="All Notifications Off"
-        android:textOn="All Notifications On">
+        android:textOn="All Notifications On"
+        android:onClick="onVenueNotificationsClick">
     </ToggleButton>
 
     <ScrollView
