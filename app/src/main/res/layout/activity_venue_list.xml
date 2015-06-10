@@ -43,5 +43,28 @@
 
     </ScrollView>
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/toggleNotifications"
+        android:id="@+id/venueListLoading"
+        android:layout_marginTop="20dp">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/venueListProgressBar"
+            android:layout_alignTop="@+id/scrollView2"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loading..."
+            android:id="@+id/textView" />
+    </LinearLayout>
+
 
 </RelativeLayout>

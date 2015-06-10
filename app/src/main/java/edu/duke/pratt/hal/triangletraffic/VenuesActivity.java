@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -98,6 +99,7 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        setTitle("Venues");
         getMenuInflater().inflate(R.menu.menu_venues, menu);
         return true;
     }
@@ -111,7 +113,8 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -180,6 +183,10 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
                 TextView venueDistance = (TextView) tableRow.findViewById(R.id.venueDistance);
                 venueDistance.setText(distance.getDisplayString());
             }
+
+            // Remove the Progress Bar.
+            View venueListLoading = (View) findViewById(R.id.venueListLoading);
+            venueListLoading.setVisibility(View.GONE);
 
             tableIsSetup = true;
 
