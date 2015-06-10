@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -26,6 +27,7 @@ import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class VenuesActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
@@ -49,6 +51,19 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
         buildGoogleApiClient();
 
     }
+
+    public void onVenueNotificationsClick(View view) {
+        boolean on = ((ToggleButton) view).isChecked();
+
+        for(Map.Entry<Venue, TableRow> entry : venueToTableRow.entrySet()) {
+            Venue key = entry.getKey();
+            TableRow value = entry.getValue();
+
+            CheckBox checkBox = (CheckBox) value.findViewById(R.id.notificationCheckBox);
+            checkBox.setChecked(on);
+        }
+    }
+
 
     private TableRow getVenueRow(final Venue venue) {
 
