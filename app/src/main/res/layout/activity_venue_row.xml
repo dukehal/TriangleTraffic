@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
     android:minHeight="80dp">
 
     <!--<CheckBox />-->
@@ -16,63 +16,76 @@
     <!--<CircleImageView />-->
     <!--<ImageView />-->
 
-    <CheckBox
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/notificationCheckBox"
-        android:button="@xml/customdrawablecheckbox" />
+        android:id="@+id/ed">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/venueClickRow">
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/notificationCheckBox"
+            android:button="@xml/customdrawablecheckbox"
+            android:layout_alignParentLeft="true" />
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/venueName"
-                android:textSize="20dp"
-                android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/notificationCheckBox"
+            android:id="@+id/venueClickRow">
 
             <LinearLayout
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="..."
-                    android:id="@+id/venueDistance"
-                    android:minWidth="100dp" />
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="New Text"
-                    android:id="@+id/eventTimer" />
+                    android:id="@+id/venueName"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/venueDetails">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="..."
+                        android:id="@+id/venueDistance"
+                        android:minWidth="100dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="New Text"
+                        android:id="@+id/eventTimer" />
+                </LinearLayout>
             </LinearLayout>
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/trafficStatusImage"
+                android:src="@drawable/traffic_indication_circle" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/venueInfoLink"
+                android:src="@drawable/ic_chevron_right_black_36dp"
+                android:layout_alignParentRight="false" />
+
         </LinearLayout>
-    </LinearLayout>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/trafficStatusImage"
-        android:src="@drawable/traffic_indication_circle" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/venueInfoLink"
-        android:src="@drawable/ic_chevron_right_black_36dp" />
+    </RelativeLayout>
 
 </TableRow>

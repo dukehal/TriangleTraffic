@@ -24,7 +24,7 @@
     </ToggleButton>
 
     <ScrollView
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/scrollView2"
         android:layout_alignParentLeft="true"
@@ -35,7 +35,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/relativeLayout"
-            android:id="@+id/venueTable">
+            android:id="@+id/venueTable"
+            android:stretchColumns="0">
         </TableLayout>
 
     </ScrollView>
