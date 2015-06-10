@@ -51,8 +51,8 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     ArrayList<Venue> venues;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public ArrayList<Marker> myMarkers = new ArrayList<>();
-    HashMap <String, Integer> mMarkers = new HashMap<String, Integer>();
-    HashMap<Event, Long> eventsNotified = new HashMap<Event, Long>();
+    HashMap <String, Integer> mMarkers = new HashMap<>();
+    HashMap<Event, Long> eventsNotified = new HashMap<>();
     HashMap<Marker, Venue> markerToVenue = new HashMap<>();
     GoogleApiClient client;
     Location location;
