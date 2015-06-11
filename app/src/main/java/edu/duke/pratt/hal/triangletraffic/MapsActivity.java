@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.location.Location;
-import android.location.LocationListener;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -39,9 +38,6 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -380,15 +376,12 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
     @Override
     public void onLocationChanged(Location location) {
-
         locationUpdateCount++;
 
         currentLocation = location;
         if (lastRecordedLocation == null) {
             lastRecordedLocation = location;
         }
-
-
 
         Log.w("current lat", Double.toString(currentLocation.getLatitude()));
         Log.w("current long", Double.toString(currentLocation.getLongitude()));
@@ -419,18 +412,15 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
         }
 
-
-
-
-
         if(lastRecordedLocation == null) {
             lastRecordedLocation = currentLocation;
             lastRecordedTime = System.currentTimeMillis();
         } else {
-            Event eventNotified = null; //shouldSendNotification();
-            if (eventNotified != null) {
-                String notificationText = eventNotified.getName() + " has an event today at "
-                        + eventNotified.getTimeString();
+             //shouldSendNotification();
+            if (notificationToSend != null) {
+                Event event = notificationToSend.getEvent();
+                String notificationText = event.getName() + " has an event today at "
+                        + event.getTimeString();
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(getApplicationContext())
                                 .setSmallIcon(R.drawable.basketball_ball)
@@ -458,7 +448,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                     mBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
                 }
 
-                int mNotificationId = eventNotified.getVenueId();
+                int mNotificationId = event.getVenueId();
                 // Gets an instance of the NotificationManager service
                 NotificationManager mNotifyMgr =
                         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

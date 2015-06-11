@@ -23,7 +23,7 @@
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
     <ListPreference
         android:key="radius_list"
-        android:title="Radius"
+        android:title="Radius from venues"
         android:defaultValue="1"
         android:entries="@array/pref_radius_list_titles"
         android:entryValues="@array/pref_radius_list_values"
@@ -32,7 +32,7 @@
 
     <ListPreference
         android:key="timing_list"
-        android:title="Timing"
+        android:title="Notification time before event"
         android:defaultValue="60"
         android:entries="@array/pref_timing_list_titles"
         android:entryValues="@array/pref_timing_list_values"

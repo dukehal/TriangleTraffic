@@ -34,7 +34,7 @@
 34;11;Counting Crows;1439418600000;0
 35;1;Mock Time Crossing Event1;1433927745000;0
 36;1;Mock Time Crossing Event2;1433927805000;0
-37;1;Mock Time Crossing Event3;1433927865000;0
+37;1;Mock Time Crossing Event3;1433968800000;0
 38;2;Mock Distance Crossing Event1;1433949538000;0
 39;2;Mock Distance Crossing Event2;1433950258000;0
-40;2;Mock Distance Crossing Event3;1433951158000;0
+40;2;Mock Distance Crossing Event3;1433968800000;0
