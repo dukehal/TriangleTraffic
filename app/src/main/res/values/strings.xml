@@ -12,5 +12,6 @@
     <string name="title_activity_info_window">infoWindow</string>
     <string name="venue_notifications_toggle">Select All</string>
     <string name="title_activity_venues">VenuesActivity</string>
+    <string name="title_activity_settings_two">SettingsTwoActivity</string>
 
 </resources>

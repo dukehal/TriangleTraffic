@@ -2,6 +2,7 @@ package edu.duke.pratt.hal.triangletraffic;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
@@ -15,6 +16,7 @@ import android.os.Handler;
 import android.preference.ListPreference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBarActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -38,6 +40,14 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -153,6 +163,86 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 //                mNotifyMgr.notify(mNotificationId, mBuilder.build());
 //            }
 //        }, 8000);
+
+
+        if (false) {
+            File attachmentsPath = new File(this.getCacheDir(), "attachments");
+            attachmentsPath.mkdirs();
+
+            File feedbackData = new File(attachmentsPath, "test.txt");
+
+            try {
+                feedbackData.createNewFile();
+
+                FileOutputStream fos = null;
+                try {
+                    fos = new FileOutputStream(feedbackData);
+
+                    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+
+                    try {
+                        bw.write("Timestamp: " + System.currentTimeMillis());
+                        bw.newLine();
+                        bw.write("Test ");
+                        bw.close();
+                    } catch (IOException e) {
+                        // Log.w("dbug:warn", "BufferedWriter coudln't write, flush, or close.");
+                        e.printStackTrace();
+                    }
+
+                } catch (FileNotFoundException e) {
+                    // Log.w("dbug:warn", "feedbackData coudln't create new file.");
+                    e.printStackTrace();
+                }
+
+                fos.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+
+            File file2 = new File(attachmentsPath, "test.txt");
+            //Read text from file
+            StringBuilder text = new StringBuilder();
+
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(file2));
+                String line;
+
+                while ((line = br.readLine()) != null) {
+                    text.append(line);
+                    text.append('\n');
+                }
+
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Log.w("dbug file", text.toString());
+
+
+
+            Uri contentUri = FileProvider.getUriForFile(this, "edu.duke.pratt.hal.triangletraffic.fileprovider", feedbackData);
+            Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            // set the type to 'email'
+            emailIntent .setType("vnd.android.cursor.dir/email");
+            String to[] = {"tedz2usa@gmail.com"};
+            emailIntent .putExtra(Intent.EXTRA_EMAIL, to);
+            // the attachment
+            emailIntent .putExtra(Intent.EXTRA_STREAM, contentUri);
+            // the mail subject
+            emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
+            startActivity(Intent.createChooser(emailIntent , "Send email..."));
+
+        }
+
+
+
+
+
     }
 
     private void initializeDisplayLog() {
