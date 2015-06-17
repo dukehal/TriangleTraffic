@@ -239,6 +239,9 @@ public class FeedbackActivity extends ActionBarActivity implements GoogleApiClie
         } else if (id == R.id.action_venues) {
             Intent intent = new Intent(this, VenuesActivity.class);
             startActivity(intent);
+        } else if (id == R.id.action_map) {
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
         } else if (id == android.R.id.home) {
             this.finish();
             return true;

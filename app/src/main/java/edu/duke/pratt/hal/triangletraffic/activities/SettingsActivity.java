@@ -39,6 +39,9 @@ public class SettingsActivity extends ActionBarActivity {
         }  else if (id == R.id.action_feedback) {
             Intent intent = new Intent(this, FeedbackActivity.class);
             startActivity(intent);
+        } else if (id == R.id.action_map) {
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
         } else if (id == android.R.id.home) {
             this.finish();
             return true;

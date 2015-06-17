@@ -135,6 +135,9 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
+        } else if (id == R.id.action_map) {
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
         } else if (id == android.R.id.home) {
             this.finish();
             return true;
