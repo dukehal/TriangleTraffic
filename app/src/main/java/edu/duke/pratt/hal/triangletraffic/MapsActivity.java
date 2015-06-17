@@ -164,85 +164,6 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 //            }
 //        }, 8000);
 
-
-        if (false) {
-            File attachmentsPath = new File(this.getCacheDir(), "attachments");
-            attachmentsPath.mkdirs();
-
-            File feedbackData = new File(attachmentsPath, "test.txt");
-
-            try {
-                feedbackData.createNewFile();
-
-                FileOutputStream fos = null;
-                try {
-                    fos = new FileOutputStream(feedbackData);
-
-                    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-
-                    try {
-                        bw.write("Timestamp: " + System.currentTimeMillis());
-                        bw.newLine();
-                        bw.write("Test ");
-                        bw.close();
-                    } catch (IOException e) {
-                        // Log.w("dbug:warn", "BufferedWriter coudln't write, flush, or close.");
-                        e.printStackTrace();
-                    }
-
-                } catch (FileNotFoundException e) {
-                    // Log.w("dbug:warn", "feedbackData coudln't create new file.");
-                    e.printStackTrace();
-                }
-
-                fos.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-
-            File file2 = new File(attachmentsPath, "test.txt");
-            //Read text from file
-            StringBuilder text = new StringBuilder();
-
-            try {
-                BufferedReader br = new BufferedReader(new FileReader(file2));
-                String line;
-
-                while ((line = br.readLine()) != null) {
-                    text.append(line);
-                    text.append('\n');
-                }
-
-                br.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            Log.w("dbug file", text.toString());
-
-
-
-            Uri contentUri = FileProvider.getUriForFile(this, "edu.duke.pratt.hal.triangletraffic.fileprovider", feedbackData);
-            Intent emailIntent = new Intent(Intent.ACTION_SEND);
-            // set the type to 'email'
-            emailIntent .setType("vnd.android.cursor.dir/email");
-            String to[] = {"tedz2usa@gmail.com"};
-            emailIntent .putExtra(Intent.EXTRA_EMAIL, to);
-            // the attachment
-            emailIntent .putExtra(Intent.EXTRA_STREAM, contentUri);
-            // the mail subject
-            emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
-            startActivity(Intent.createChooser(emailIntent , "Send email..."));
-
-        }
-
-
-
-
-
     }
 
     private void initializeDisplayLog() {
@@ -412,6 +333,9 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
             startActivity(intent);
         } else if (id == R.id.action_venues) {
             Intent intent = new Intent(this, VenuesActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.action_feedback) {
+            Intent intent = new Intent(this, FeedbackActivity.class);
             startActivity(intent);
         }
 
