@@ -1,5 +1,6 @@
 package edu.duke.pratt.hal.triangletraffic;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,12 +13,13 @@ public class SettingsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_settings_two, menu);
+        getMenuInflater().inflate(R.menu.menu_settings, menu);
         return true;
     }
 
@@ -29,7 +31,11 @@ public class SettingsActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_venues) {
+            Intent intent = new Intent(this, VenuesActivity.class);
+            startActivity(intent);
+        } else if (id == android.R.id.home) {
+            this.finish();
             return true;
         }
 

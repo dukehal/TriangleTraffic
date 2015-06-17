@@ -2,18 +2,14 @@ package edu.duke.pratt.hal.triangletraffic;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.preference.ListPreference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.FileProvider;
@@ -82,6 +78,10 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Set default values for settings.
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
         setContentView(R.layout.activity_maps);
 
         initializeDisplayLog();
@@ -117,15 +117,15 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                 }
 
                 if(key.equals("text_mode")) {
-                    textPref = Boolean.parseBoolean(sharedPref.getString("text_mode", "true"));
+                    textPref = sharedPref.getBoolean("text_mode", true); // Boolean.parseBoolean(sharedPref.getString("text_mode", "true"));
                 }
 
                 if(key.equals("audio_mode")) {
-                    audioPref = Boolean.parseBoolean(sharedPref.getString("audio_mode", "true"));
+                    audioPref = sharedPref.getBoolean("audio_mode", true);
                 }
 
                 if(key.equals("vibrate_mode")) {
-                    vibratePref = Boolean.parseBoolean(sharedPref.getString("vibrate_mode", "true"));
+                    vibratePref = sharedPref.getBoolean("vibrate_mode", true);
                 }
             }
         };

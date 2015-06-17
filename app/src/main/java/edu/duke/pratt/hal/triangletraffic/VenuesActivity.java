@@ -45,6 +45,7 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue_list);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         new DatabaseConnection(this);
 
@@ -114,7 +115,6 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        setTitle("Venues");
         getMenuInflater().inflate(R.menu.menu_venues, menu);
         return true;
     }
@@ -130,6 +130,9 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
+        } else if (id == android.R.id.home) {
+            this.finish();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
