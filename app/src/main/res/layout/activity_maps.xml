@@ -35,7 +35,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:visibility="gone" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -54,6 +55,17 @@
         android:textSize="30dp"
         android:visibility="invisible"
         android:minHeight="60dp" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New ToggleButton"
+        android:id="@+id/toggle_diagnostics"
+        android:layout_alignBottom="@+id/TriangleTraffic"
+        android:layout_alignLeft="@+id/TriangleTraffic"
+        android:layout_alignStart="@+id/mockNotificationDisplay"
+        android:textOff="Diagnostics Off"
+        android:textOn="Diagnostics On" />
 
 </RelativeLayout>
 

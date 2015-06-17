@@ -19,9 +19,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -48,7 +50,7 @@ import edu.duke.pratt.hal.triangletraffic.utility.DatabaseConnection;
 import edu.duke.pratt.hal.triangletraffic.utility.Distance;
 
 public class MapsActivity extends ActionBarActivity implements OnMarkerClickListener,GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener, SharedPreferences.OnSharedPreferenceChangeListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener {
     ArrayList<Venue> venues;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public ArrayList<Marker> myMarkers = new ArrayList<>();
@@ -168,6 +170,9 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         dlog = (TextView) findViewById(R.id.dlog);
         dlog.setMovementMethod(new ScrollingMovementMethod());
         dlog("Display Log Initialized.");
+        ToggleButton toggleDiagnostics = (ToggleButton) findViewById(R.id.toggle_diagnostics);
+        toggleDiagnostics.setOnClickListener(this);
+
     }
 
     private void dlog(String text) {
@@ -604,4 +609,11 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         }
     }
 
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.toggle_diagnostics) {
+            ToggleButton toggleDiagnostics = (ToggleButton) view;
+            dlog.setVisibility(toggleDiagnostics.isChecked() ? View.VISIBLE : View.GONE);
+        }
+    }
 }
