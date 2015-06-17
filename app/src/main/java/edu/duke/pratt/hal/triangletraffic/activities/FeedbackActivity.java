@@ -32,7 +32,7 @@ import edu.duke.pratt.hal.triangletraffic.R;
 
 public class FeedbackActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
-    Location currentLocation;
+    Location lastLocation;
     GoogleApiClient client;
     private LocationRequest locationRequest;
 
@@ -58,6 +58,12 @@ public class FeedbackActivity extends ActionBarActivity implements GoogleApiClie
     public void onConnected(Bundle bundle) {
         createLocationRequest();
         startLocationUpdates();
+        lastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                client);
+        if (lastLocation != null) {
+            Log.w("current lat feedback", Double.toString(lastLocation.getLatitude()));
+            Log.w("current long feedback", Double.toString(lastLocation.getLongitude()));
+        }
 
     }
 
@@ -82,31 +88,8 @@ public class FeedbackActivity extends ActionBarActivity implements GoogleApiClie
         LocationServices.FusedLocationApi.requestLocationUpdates(client, locationRequest, this);
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        currentLocation = location;
-        Log.w("current lat feedback", Double.toString(currentLocation.getLatitude()));
-        Log.w("current long feedback", Double.toString(currentLocation.getLongitude()));
-    }
-
     public void sendFeedback(View view) {
-
-        final Handler handler = new Handler(Looper.getMainLooper());
-
-        Runnable tryGetLocation = new Runnable() {
-            @Override
-            public void run() {
-                if (currentLocation != null) {
-                    Log.w("dbug", "Location set, creating file");
-                    generateFile();
-                } else {
-                    Log.w("dbug", "Location not set");
-                    handler.postDelayed(this, 100);
-                }
-            }
-        };
-
-        handler.postDelayed(tryGetLocation, 100);
+        generateFile();
     }
 
     private void generateFile(){
@@ -173,17 +156,24 @@ public class FeedbackActivity extends ActionBarActivity implements GoogleApiClie
                     bw.newLine();
                     bw.write("LOCATION:");
                     bw.newLine();
-                    bw.write("Latitude:  " + Double.toString(currentLocation.getLatitude()));
-                    bw.newLine();
-                    bw.write("Longitude:  " + Double.toString(currentLocation.getLongitude()));
-                    bw.newLine();
-                    bw.write("Accuracy:  " + Float.toString(currentLocation.getAccuracy()));
-                    bw.newLine();
-                    bw.write("Provider:  " + currentLocation.getProvider());
-                    bw.newLine();
-                    bw.write("Speed:  " + Float.toString(currentLocation.getSpeed()));
-                    bw.newLine();
-                    bw.write("Bearing:  " + Float.toString(currentLocation.getBearing()));
+
+                    if (lastLocation != null) {
+                        bw.write("Latitude:  " + Double.toString(lastLocation.getLatitude()));
+                        bw.newLine();
+                        bw.write("Longitude:  " + Double.toString(lastLocation.getLongitude()));
+                        bw.newLine();
+                        bw.write("Accuracy:  " + Float.toString(lastLocation.getAccuracy()));
+                        bw.newLine();
+                        bw.write("Provider:  " + lastLocation.getProvider());
+                        bw.newLine();
+                        bw.write("Speed:  " + Float.toString(lastLocation.getSpeed()));
+                        bw.newLine();
+                        bw.write("Bearing:  " + Float.toString(lastLocation.getBearing()));
+
+                    } else {
+                        bw.write("LAST LOCATION NOT STORED/AVAILABLE!");
+                    }
+
                     bw.close();
                 } catch (IOException e) {
                     // Log.w("dbug:warn", "BufferedWriter coudln't write, flush, or close.");
@@ -250,4 +240,8 @@ public class FeedbackActivity extends ActionBarActivity implements GoogleApiClie
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
 }
