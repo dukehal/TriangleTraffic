@@ -255,7 +255,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                     .center(venue.getLatLng())
                     .radius(Math.abs(AppPref.getRadiusMeters())) // In meters
                     .strokeColor(venue.getCircleStrokeColor())
-                    .strokeWidth(5)
+                    .strokeWidth(3)
                     .fillColor(venue.getCircleFillColor());
             // Get back the mutable Circle
             mMap.addCircle(circleOptions);

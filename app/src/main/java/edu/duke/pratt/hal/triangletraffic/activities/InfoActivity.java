@@ -168,7 +168,7 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
                 .center(venueInfo.getLatLng())
                 .radius(Math.abs(AppPref.getRadiusMeters())) // In meters
                 .strokeColor(venueInfo.getCircleStrokeColor())
-                .strokeWidth(5)
+                .strokeWidth(3)
                 .fillColor(venueInfo.getCircleFillColor());
         // Get back the mutable Circle
         map.addCircle(circleOptions);
