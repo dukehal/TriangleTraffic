@@ -1,4 +1,4 @@
-package edu.duke.pratt.hal.triangletraffic;
+package edu.duke.pratt.hal.triangletraffic.activities;
 
 import android.content.Intent;
 import android.location.Location;
@@ -19,8 +19,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -28,7 +26,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
+
+import edu.duke.pratt.hal.triangletraffic.R;
 
 
 public class FeedbackActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks,

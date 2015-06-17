@@ -1,6 +1,4 @@
-package edu.duke.pratt.hal.triangletraffic;
-
-import android.util.Log;
+package edu.duke.pratt.hal.triangletraffic.model;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

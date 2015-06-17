@@ -1,4 +1,4 @@
-package edu.duke.pratt.hal.triangletraffic;
+package edu.duke.pratt.hal.triangletraffic.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.preference.PreferenceManager;
 
 import java.util.Map;
 import java.util.Set;
+
+import edu.duke.pratt.hal.triangletraffic.R;
 
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 

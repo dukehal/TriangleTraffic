@@ -1,4 +1,4 @@
-package edu.duke.pratt.hal.triangletraffic;
+package edu.duke.pratt.hal.triangletraffic.utility;
 
 /**
  * Created by tedzhu on 6/2/15.

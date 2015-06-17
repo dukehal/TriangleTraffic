@@ -1,10 +1,12 @@
-package edu.duke.pratt.hal.triangletraffic;
+package edu.duke.pratt.hal.triangletraffic.activities;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import edu.duke.pratt.hal.triangletraffic.R;
 
 
 public class SettingsActivity extends ActionBarActivity {
@@ -33,6 +35,9 @@ public class SettingsActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_venues) {
             Intent intent = new Intent(this, VenuesActivity.class);
+            startActivity(intent);
+        }  else if (id == R.id.action_feedback) {
+            Intent intent = new Intent(this, FeedbackActivity.class);
             startActivity(intent);
         } else if (id == android.R.id.home) {
             this.finish();

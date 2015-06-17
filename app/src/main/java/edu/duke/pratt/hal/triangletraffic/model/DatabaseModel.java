@@ -1,4 +1,4 @@
-package edu.duke.pratt.hal.triangletraffic;
+package edu.duke.pratt.hal.triangletraffic.model;
 
 import java.util.Collection;
 import java.util.HashMap;

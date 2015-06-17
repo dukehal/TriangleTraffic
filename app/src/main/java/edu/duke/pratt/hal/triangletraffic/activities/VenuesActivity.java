@@ -1,4 +1,4 @@
-package edu.duke.pratt.hal.triangletraffic;
+package edu.duke.pratt.hal.triangletraffic.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -28,6 +27,12 @@ import com.google.android.gms.location.LocationServices;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import edu.duke.pratt.hal.triangletraffic.R;
+import edu.duke.pratt.hal.triangletraffic.model.Event;
+import edu.duke.pratt.hal.triangletraffic.model.Venue;
+import edu.duke.pratt.hal.triangletraffic.utility.DatabaseConnection;
+import edu.duke.pratt.hal.triangletraffic.utility.Distance;
 
 
 public class VenuesActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {

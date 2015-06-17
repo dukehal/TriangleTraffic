@@ -32,7 +32,7 @@
             android:value="AIzaSyBR6n33O8Gadwikn0FiJGJsmPcKemN9LmQ" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".activities.MapsActivity"
             android:label="Triangle Traffic" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,19 +41,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".InfoActivity"
+            android:name=".activities.InfoActivity"
             android:label="Triangle Traffic" >
         </activity>
         <activity
-            android:name=".SettingsActivityOLD"
-            android:label="Settings" >
-        </activity>
-        <activity
-            android:name=".VenuesActivity"
+            android:name=".activities.VenuesActivity"
             android:label="Venues" >
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:label="Settings" >
         </activity>
 
@@ -68,7 +64,7 @@
         </provider>
 
         <activity
-            android:name=".FeedbackActivity"
+            android:name=".activities.FeedbackActivity"
             android:label="@string/title_activity_feedback" >
         </activity>
     </application>

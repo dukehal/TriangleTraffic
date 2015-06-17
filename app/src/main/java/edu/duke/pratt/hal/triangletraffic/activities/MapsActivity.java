@@ -1,4 +1,4 @@
-package edu.duke.pratt.hal.triangletraffic;
+package edu.duke.pratt.hal.triangletraffic.activities;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBarActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -36,18 +35,17 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+
+import edu.duke.pratt.hal.triangletraffic.model.NotificationInfo;
+import edu.duke.pratt.hal.triangletraffic.R;
+import edu.duke.pratt.hal.triangletraffic.model.Event;
+import edu.duke.pratt.hal.triangletraffic.model.Venue;
+import edu.duke.pratt.hal.triangletraffic.utility.DatabaseConnection;
+import edu.duke.pratt.hal.triangletraffic.utility.Distance;
 
 public class MapsActivity extends ActionBarActivity implements OnMarkerClickListener,GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener, SharedPreferences.OnSharedPreferenceChangeListener {

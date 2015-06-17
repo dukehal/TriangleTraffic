@@ -1,4 +1,4 @@
-package edu.duke.pratt.hal.triangletraffic;
+package edu.duke.pratt.hal.triangletraffic.utility;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -7,6 +7,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import edu.duke.pratt.hal.triangletraffic.model.Event;
+import edu.duke.pratt.hal.triangletraffic.model.Venue;
 
 
 public class DatabaseConnection {

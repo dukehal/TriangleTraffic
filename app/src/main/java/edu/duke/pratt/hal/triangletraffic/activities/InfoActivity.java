@@ -1,4 +1,4 @@
-package edu.duke.pratt.hal.triangletraffic;
+package edu.duke.pratt.hal.triangletraffic.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -30,6 +30,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import edu.duke.pratt.hal.triangletraffic.R;
+import edu.duke.pratt.hal.triangletraffic.model.Event;
+import edu.duke.pratt.hal.triangletraffic.model.Venue;
+import edu.duke.pratt.hal.triangletraffic.utility.DatabaseConnection;
+import edu.duke.pratt.hal.triangletraffic.utility.Distance;
 
 
 public class InfoActivity extends ActionBarActivity implements OnMapReadyCallback,

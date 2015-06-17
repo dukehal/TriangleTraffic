@@ -1,7 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="edu.duke.pratt.hal.triangletraffic.SettingsActivity">
+    tools:context="edu.duke.pratt.hal.triangletraffic.activities.SettingsActivity">
     <item android:id="@+id/action_venues" android:title="@string/action_venues"
+        android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_feedback" android:title="@string/action_feedback"
         android:orderInCategory="100" app:showAsAction="never" />
 </menu>
