@@ -284,9 +284,9 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
             CircleOptions circleOptions = new CircleOptions()
                     .center(venue.getLatLng())
                     .radius(Math.abs(radiusPref)) // In meters
-                    .strokeColor(Color.RED)
+                    .strokeColor(venue.getCircleStrokeColor())
                     .strokeWidth(5)
-                    .fillColor(0x50ff0000);
+                    .fillColor(venue.getCircleFillColor());
             // Get back the mutable Circle
             mMap.addCircle(circleOptions);
         }

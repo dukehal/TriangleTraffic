@@ -1,6 +1,7 @@
 package edu.duke.pratt.hal.triangletraffic.model;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Location;
 import android.util.Log;
 
@@ -34,6 +35,7 @@ public class Venue extends DatabaseModel {
     private double traffic;
     private ArrayList<Event> events;
     private boolean notifications;
+    private int baseCircleColor = 0;
 
     // Database Model Static and Constructor Definitions (return type cast to relevant subclass)
 
@@ -255,5 +257,37 @@ public class Venue extends DatabaseModel {
 
     public LatLng getLatLng() {
         return new LatLng(this.getLatitude(), this.getLongitude());
+    }
+
+    public int getCircleFillColor() {
+        setBaseColorIfNeeded();
+        return setColorAlpha(baseCircleColor, 0.3);
+    }
+
+    public int getCircleStrokeColor() {
+        setBaseColorIfNeeded();
+        return setColorAlpha(baseCircleColor, 1);
+    }
+
+    private void setBaseColorIfNeeded() {
+        if (baseCircleColor == 0) {
+            int level = (int) (Math.random() * 3 + 1);
+            if (level == 1) {
+                baseCircleColor = Color.GREEN;
+            } else if (level == 2) {
+                baseCircleColor = Color.YELLOW;
+            } else { // (level == 3)
+                baseCircleColor = Color.RED;
+            }
+        }
+    }
+
+
+    private int setColorAlpha(int color, double alpha) {
+        int alphaValue = (int) (alpha * 255);
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        return (alphaValue << 24) | (red << 16) | (green << 8) | blue;
     }
 }
