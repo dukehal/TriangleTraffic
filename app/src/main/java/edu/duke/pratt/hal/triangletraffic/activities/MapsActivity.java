@@ -288,7 +288,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                     .strokeWidth(5)
                     .fillColor(0x50ff0000);
             // Get back the mutable Circle
-            Circle circle = mMap.addCircle(circleOptions);
+            mMap.addCircle(circleOptions);
         }
     }
 
