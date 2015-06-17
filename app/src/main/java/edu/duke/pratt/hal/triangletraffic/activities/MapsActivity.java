@@ -3,8 +3,6 @@ package edu.duke.pratt.hal.triangletraffic.activities;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.location.Location;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -32,7 +30,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
@@ -42,15 +39,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import edu.duke.pratt.hal.triangletraffic.PreferenceConnection;
 import edu.duke.pratt.hal.triangletraffic.model.NotificationInfo;
 import edu.duke.pratt.hal.triangletraffic.R;
 import edu.duke.pratt.hal.triangletraffic.model.Event;
 import edu.duke.pratt.hal.triangletraffic.model.Venue;
 import edu.duke.pratt.hal.triangletraffic.utility.DatabaseConnection;
 import edu.duke.pratt.hal.triangletraffic.utility.Distance;
+import edu.duke.pratt.hal.triangletraffic.utility.TTPref;
 
 public class MapsActivity extends ActionBarActivity implements OnMarkerClickListener,GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, SharedPreferences.OnSharedPreferenceChangeListener, View.OnClickListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
     ArrayList<Venue> venues;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public ArrayList<Marker> myMarkers = new ArrayList<>();
@@ -61,8 +60,8 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     Location location;
     private LocationRequest locationRequest;
     Location currentLocation;
-    double radiusPref;
-    long timePref;
+    //double radiusPref;
+    //long timePref;
     boolean audioPref;
     boolean textPref;
     boolean vibratePref;
@@ -70,10 +69,10 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     private Location lastRecordedLocation;
     private int locationUpdateCount = 0;
 
-    SharedPreferences sharedPref;
-    SharedPreferences.OnSharedPreferenceChangeListener listener;
+    //SharedPreferences sharedPref;
 
     private TextView dlog;
+    private boolean googleApiClientconnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,48 +87,21 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
         buildGoogleApiClient();
 
-        // Initialize preference variables.
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        radiusPref = 1609.34*Double.parseDouble(sharedPref.getString("radius_list", "0"));
-        radiusPref = 1609.34*Double.parseDouble(sharedPref.getString("radius_list", "0"));
-        long time = (long) Integer.parseInt(sharedPref.getString("timing_list", "60"));
-        timePref = time*60*1000;
+
+        //radiusPref = TTPref.getRadiusMeters();
+        //timePref = TTPref.getTimeMillis();
 
         new DatabaseConnection(this);
+        new PreferenceConnection(this);
+
         venues = Venue.asArrayList();
 
-        listener = new SharedPreferences.OnSharedPreferenceChangeListener(){
-            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                sharedPref = prefs;
-                sharedPref.registerOnSharedPreferenceChangeListener(this);
-                if (key.equals("radius_list")) {
-//                    Log.w("key equals radius list", Integer.toString(radiusPref));
-                    radiusPref = Double.parseDouble(sharedPref.getString("radius_list", "0"))*
-                            1609.34;
-                    Log.w("keyequalsradius2", Double.toString(radiusPref));
-                    setUpMap();
-                }
-                Log.w("are you getting this?", Double.toString(radiusPref));
-
-                if (key.equals("timing_list")) {
-                    long time = (long) Integer.parseInt(sharedPref.getString("timing_list", "60"));
-                    timePref = time*60*1000;
-                }
-
-                if(key.equals("text_mode")) {
-                    textPref = sharedPref.getBoolean("text_mode", true); // Boolean.parseBoolean(sharedPref.getString("text_mode", "true"));
-                }
-
-                if(key.equals("audio_mode")) {
-                    audioPref = sharedPref.getBoolean("audio_mode", true);
-                }
-
-                if(key.equals("vibrate_mode")) {
-                    vibratePref = sharedPref.getBoolean("vibrate_mode", true);
-                }
-            }
-        };
-        sharedPref.registerOnSharedPreferenceChangeListener(listener);
+//        listener = new SharedPreferences.OnSharedPreferenceChangeListener(){
+//            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+//                // Moved to class method defined later in this file.
+//            }
+//        };
+//        TTPref.registerOnSharedPreferenceChangeListener(this);
 
 //        Handler handler = new Handler();
 //        handler.postDelayed(new Runnable() {
@@ -196,15 +168,19 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     @Override
     protected void onResume() {
         super.onResume();
-        sharedPref.registerOnSharedPreferenceChangeListener(this);
+        Log.w("dbug", "ONRESUME Called");
 
+        if (googleApiClientconnected) {
+            setUpMap();
+        }
+
+        // Settings could have changed. Setup the map again.
         client.connect();
     }
 
     protected void onPause() {
         super.onPause();
-//        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPref.unregisterOnSharedPreferenceChangeListener(this);
+        Log.w("dbug", "ONPAUSE Called");
     }
 
     /**
@@ -283,7 +259,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
             // Instantiates a new CircleOptions object and defines the center and radius
             CircleOptions circleOptions = new CircleOptions()
                     .center(venue.getLatLng())
-                    .radius(Math.abs(radiusPref)) // In meters
+                    .radius(Math.abs(TTPref.getRadiusMeters())) // In meters
                     .strokeColor(venue.getCircleStrokeColor())
                     .strokeWidth(5)
                     .fillColor(venue.getCircleFillColor());
@@ -358,6 +334,8 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
     @Override
     public void onConnected(Bundle connectionHint) {
+        googleApiClientconnected = true;
+        Log.w("dbug", "in ONCONECTED.");
         if(location != null) {
             Log.w("info", Double.toString(location.getLatitude()));
             Log.w("info", Double.toString(location.getLongitude()));
@@ -374,9 +352,6 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {}
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {}
 
     protected void createLocationRequest() {
         locationRequest = new LocationRequest();
@@ -479,7 +454,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         long eventTime;
         long notificationTime;
         long currentTime = System.currentTimeMillis();
-        Double notificationRadius = radiusPref;
+        Double notificationRadius = TTPref.getRadiusMeters();
 
 
         float[] results = new float[2];
@@ -537,7 +512,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                 for (Event event : venueEvents) {
 
                     eventTime = event.getUnixTimeMillis();
-                    notificationTime = eventTime - timePref;
+                    notificationTime = eventTime - TTPref.getTimeMillis();
 
                     boolean timeCrossing =
                             (lastRecordedTimeLocalCopy <= notificationTime
