@@ -44,9 +44,9 @@ import edu.duke.pratt.hal.triangletraffic.model.NotificationInfo;
 import edu.duke.pratt.hal.triangletraffic.R;
 import edu.duke.pratt.hal.triangletraffic.model.Event;
 import edu.duke.pratt.hal.triangletraffic.model.Venue;
+import edu.duke.pratt.hal.triangletraffic.utility.AppPref;
 import edu.duke.pratt.hal.triangletraffic.utility.DatabaseConnection;
 import edu.duke.pratt.hal.triangletraffic.utility.Distance;
-import edu.duke.pratt.hal.triangletraffic.utility.TTPref;
 
 public class MapsActivity extends ActionBarActivity implements OnMarkerClickListener,GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
@@ -88,20 +88,14 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         buildGoogleApiClient();
 
 
-        //radiusPref = TTPref.getRadiusMeters();
-        //timePref = TTPref.getTimeMillis();
+        //radiusPref = AppPref.getRadiusMeters();
+        //timePref = AppPref.getTimeMillis();
 
         new DatabaseConnection(this);
         new PreferenceConnection(this);
 
         venues = Venue.asArrayList();
 
-//        listener = new SharedPreferences.OnSharedPreferenceChangeListener(){
-//            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-//                // Moved to class method defined later in this file.
-//            }
-//        };
-//        TTPref.registerOnSharedPreferenceChangeListener(this);
 
 //        Handler handler = new Handler();
 //        handler.postDelayed(new Runnable() {
@@ -259,7 +253,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
             // Instantiates a new CircleOptions object and defines the center and radius
             CircleOptions circleOptions = new CircleOptions()
                     .center(venue.getLatLng())
-                    .radius(Math.abs(TTPref.getRadiusMeters())) // In meters
+                    .radius(Math.abs(AppPref.getRadiusMeters())) // In meters
                     .strokeColor(venue.getCircleStrokeColor())
                     .strokeWidth(5)
                     .fillColor(venue.getCircleFillColor());
@@ -454,7 +448,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         long eventTime;
         long notificationTime;
         long currentTime = System.currentTimeMillis();
-        Double notificationRadius = TTPref.getRadiusMeters();
+        Double notificationRadius = AppPref.getRadiusMeters();
 
 
         float[] results = new float[2];
@@ -512,7 +506,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                 for (Event event : venueEvents) {
 
                     eventTime = event.getUnixTimeMillis();
-                    notificationTime = eventTime - TTPref.getTimeMillis();
+                    notificationTime = eventTime - AppPref.getTimeMillis();
 
                     boolean timeCrossing =
                             (lastRecordedTimeLocalCopy <= notificationTime

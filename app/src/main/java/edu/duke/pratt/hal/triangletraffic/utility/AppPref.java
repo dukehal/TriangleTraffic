@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 
 import java.util.ArrayList;
 
-public class TTPref {
+public class AppPref {
 
     private static ArrayList<SharedPreferences> sharedPreferencesArrayList = new ArrayList<>();
 

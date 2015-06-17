@@ -25,15 +25,18 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
+import edu.duke.pratt.hal.triangletraffic.PreferenceConnection;
 import edu.duke.pratt.hal.triangletraffic.R;
 import edu.duke.pratt.hal.triangletraffic.model.Event;
 import edu.duke.pratt.hal.triangletraffic.model.Venue;
+import edu.duke.pratt.hal.triangletraffic.utility.AppPref;
 import edu.duke.pratt.hal.triangletraffic.utility.DatabaseConnection;
 import edu.duke.pratt.hal.triangletraffic.utility.Distance;
 
@@ -53,6 +56,7 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         new DatabaseConnection(this);
+        new PreferenceConnection(this);
 
         venues = Venue.asArrayList();
 
@@ -158,6 +162,17 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         map.addMarker(markerOptions)
                 .showInfoWindow();
+
+        // Instantiates a new CircleOptions object and defines the center and radius
+        CircleOptions circleOptions = new CircleOptions()
+                .center(venueInfo.getLatLng())
+                .radius(Math.abs(AppPref.getRadiusMeters())) // In meters
+                .strokeColor(venueInfo.getCircleStrokeColor())
+                .strokeWidth(5)
+                .fillColor(venueInfo.getCircleFillColor());
+        // Get back the mutable Circle
+        map.addCircle(circleOptions);
+
     }
 
     @Override
