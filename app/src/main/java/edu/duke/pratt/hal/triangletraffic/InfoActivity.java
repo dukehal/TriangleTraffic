@@ -174,6 +174,9 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         } else if (id == R.id.action_venues) {
             Intent intent = new Intent(this, VenuesActivity.class);
             startActivity(intent);
+        }  else if (id == R.id.action_feedback) {
+            Intent intent = new Intent(this, FeedbackActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
