@@ -89,7 +89,7 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
 
         Drawable statusImage = getResources().getDrawable(R.drawable.traffic_indication_circle);
         // programatically change color:
-        statusImage.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
+        statusImage.setColorFilter(venue.getCircleStrokeColor(), PorterDuff.Mode.SRC_ATOP);
 
         trafficStatusImage.setImageDrawable(statusImage);
 
