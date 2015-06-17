@@ -4,6 +4,8 @@ import android.content.Context;
 import android.location.Location;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -249,5 +251,9 @@ public class Venue extends DatabaseModel {
         Collections.sort(result, new VenueByLocationComparator());
         return result;
 
+    }
+
+    public LatLng getLatLng() {
+        return new LatLng(this.getLatitude(), this.getLongitude());
     }
 }

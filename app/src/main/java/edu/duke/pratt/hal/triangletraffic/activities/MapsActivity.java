@@ -245,46 +245,44 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         mMap.clear();
         location = LocationServices.FusedLocationApi.getLastLocation(client);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 12));
-        final LatLng [] positions = new LatLng[venues.size()];
         mMap.setTrafficEnabled(true);
         mMap.setMyLocationEnabled(true);
         mMap.setOnMarkerClickListener(this);
 
-//        Log.w("radius", Integer.toString(radiusPref));
-//        Log.w("radius2", sharedPref.getString("radius_list", "0"));
-//        int radiusPref = 1;
-
-        for(int i = 0; i<venues.size();i++) {
-            positions[i] = new LatLng(venues.get(i).getLatitude(), venues.get(i).getLongitude());
+        for (Venue venue : venues) {
 
             MarkerOptions markerOptions = new MarkerOptions();
             if (!venues.isEmpty()) {
-                if (venues.get(i).getVenueType().equals("Arena") || venues.get(i).getVenueType().equals("Stadium")) {
-                    markerOptions.position(positions[i])
-                            .title(venues.get(i).getName())
+                if (venue.getVenueType().equals("Arena") || venue.getVenueType().equals("Stadium")) {
+                    markerOptions
+                            .position(venue.getLatLng())
+                            .title(venue.getName())
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.basketball_ball));
-                } else if (venues.get(i).getVenueType().equals("Concert Hall") || venues.get(i).getVenueType().equals("Theater")) {
-                    markerOptions.position(positions[i])
-                            .title(venues.get(i).getName())
+                } else if (venue.getVenueType().equals("Concert Hall") || venue.getVenueType().equals("Theater")) {
+                    markerOptions
+                            .position(venue.getLatLng())
+                            .title(venue.getName())
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.theater));
                 } else {
-                    markerOptions.position(positions[i])
+                    markerOptions
+                            .position(venue.getLatLng())
                             .title("Arena type not working!!")
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.basketball_ball));
                 }
             } else {
-                markerOptions.position(positions[i])
+                markerOptions
+                        .position(venue.getLatLng())
                         .title("List not working")
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.basketball_ball));
             }
 
             Marker marker = mMap.addMarker(markerOptions);
             myMarkers.add(marker);
-            markerToVenue.put(marker, venues.get(i));
+            markerToVenue.put(marker, venue);
 
             // Instantiates a new CircleOptions object and defines the center and radius
             CircleOptions circleOptions = new CircleOptions()
-                    .center(positions[i])
+                    .center(venue.getLatLng())
                     .radius(Math.abs(radiusPref)) // In meters
                     .strokeColor(Color.RED)
                     .strokeWidth(5)
