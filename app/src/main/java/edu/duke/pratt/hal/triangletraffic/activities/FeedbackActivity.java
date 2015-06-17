@@ -41,6 +41,7 @@ public class FeedbackActivity extends ActionBarActivity implements GoogleApiClie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         buildGoogleApiClient();
     }
 
@@ -238,6 +239,9 @@ public class FeedbackActivity extends ActionBarActivity implements GoogleApiClie
         } else if (id == R.id.action_venues) {
             Intent intent = new Intent(this, VenuesActivity.class);
             startActivity(intent);
+        } else if (id == android.R.id.home) {
+            this.finish();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
