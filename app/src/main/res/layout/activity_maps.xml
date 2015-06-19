@@ -73,12 +73,14 @@
         android:id="@+id/trafficSwitch"
         android:layout_alignParentRight="false"
         android:layout_alignParentTop="false"
-        android:background="#c8ffffff"
+        android:background="#ffd4d4d4"
         android:enabled="true"
         android:layout_toRightOf="@+id/toggle_diagnostics"
-        android:layout_alignBottom="@+id/toggle_diagnostics"
-        android:padding="5dp"
-        android:layout_margin="10dp" />
+        android:layout_alignBottom="@+id/TriangleTraffic"
+        android:padding="7dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp" />
 
 </RelativeLayout>
 
