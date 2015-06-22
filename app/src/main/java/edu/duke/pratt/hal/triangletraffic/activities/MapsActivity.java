@@ -167,12 +167,12 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         super.onResume();
         Log.w("dbug", "ONRESUME Called");
 
+        // Settings could have changed. Setup the map again.
+        client.connect();
+
         if (googleApiClientconnected) {
             setUpMap();
         }
-
-        // Settings could have changed. Setup the map again.
-        client.connect();
     }
 
     protected void onPause() {
@@ -351,7 +351,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
             Log.w("info", Double.toString(location.getLatitude()));
             Log.w("info", Double.toString(location.getLongitude()));
         } else {
-            Log.w("info", "Unable to get location coordinates");
+            Log.w("info", "Unable to get location coordinates ");
         }
         createLocationRequest();
         startLocationUpdates();
