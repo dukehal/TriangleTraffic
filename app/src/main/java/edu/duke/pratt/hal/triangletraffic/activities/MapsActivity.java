@@ -381,10 +381,11 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         dlog(logMessage);
 
         NotificationInfo notificationToSend = shouldSendNotification();
+        Event event;
 
         if (notificationToSend != null) {
 
-            Event event = notificationToSend.getEvent();
+            event = notificationToSend.getEvent();
 
             if (notificationToSend.isDueToTimeCrossing()) {
                 dlog("sending time crossing notification...");
@@ -402,7 +403,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         } else {
              //shouldSendNotification();
             if (notificationToSend != null) {
-                Event event = notificationToSend.getEvent();
+                event = notificationToSend.getEvent();
                 String notificationText = event.getName() + " has an event today at "
                         + event.getTimeString();
                 NotificationCompat.Builder mBuilder =
@@ -528,6 +529,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
                     if (timeCrossing && distanceCrossed) {
                         // Notification due to time crossing.
+
                         dlog("Pending new Time Crossing Notification.");
                         return new NotificationInfo(event, true, false);
 

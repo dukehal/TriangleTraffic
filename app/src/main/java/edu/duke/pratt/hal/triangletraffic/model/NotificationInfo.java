@@ -28,4 +28,5 @@ public class NotificationInfo {
     public boolean isDueToDistanceCrossing() {
         return dueToDistanceCrossing;
     }
+
 }
