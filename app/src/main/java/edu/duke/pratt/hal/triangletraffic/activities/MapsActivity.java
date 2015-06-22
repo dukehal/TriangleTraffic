@@ -566,7 +566,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                         return new NotificationInfo(event, true, true);
 
                     } else {
-                        return new NotificationInfo(null, false, false);
+                        //return new NotificationInfo(null, false, false);
                         // No notification should be sent, continue to next iteration.
                     }
 
