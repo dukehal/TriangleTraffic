@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -68,6 +70,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     private long lastRecordedTime;
     private Location lastRecordedLocation;
     private int locationUpdateCount = 0;
+    private Switch trafficSwitch;
 
     //SharedPreferences sharedPref;
 
@@ -215,6 +218,20 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         mMap.clear();
         location = LocationServices.FusedLocationApi.getLastLocation(client);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 12));
+
+        trafficSwitch = (Switch) findViewById(R.id.trafficSwitch);
+        trafficSwitch.setChecked(true);
+        trafficSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    mMap.setTrafficEnabled(true);
+                } else {
+                    mMap.setTrafficEnabled(false);
+                }
+            }
+        });
+
         mMap.setTrafficEnabled(true);
         mMap.setMyLocationEnabled(true);
         mMap.setOnMarkerClickListener(this);
