@@ -414,10 +414,6 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
         }
 
-        if(lastRecordedLocation == null) {
-            lastRecordedLocation = currentLocation;
-            lastRecordedTime = System.currentTimeMillis();
-        } else {
              //shouldSendNotification();
             if (notificationToSend != null) {
                 event = notificationToSend.getEvent();
@@ -458,7 +454,6 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                 // Builds the notification and issues it.
                 mNotifyMgr.notify(mNotificationId, mBuilder.build());
             }
-        }
     }
 
     public NotificationInfo shouldSendNotification() {
