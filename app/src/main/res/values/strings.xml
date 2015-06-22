@@ -17,4 +17,9 @@
     <string name="title_activity_settings_two">SettingsTwoActivity</string>
     <string name="title_activity_feedback">Feedback</string>
 
+    <string-array name="sortBy_array">
+        <item>Distance</item>
+        <item>Alphabet</item>
+    </string-array>
+
 </resources>

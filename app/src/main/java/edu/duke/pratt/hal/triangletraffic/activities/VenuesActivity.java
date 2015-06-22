@@ -7,12 +7,17 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -35,9 +40,12 @@ import edu.duke.pratt.hal.triangletraffic.utility.DatabaseConnection;
 import edu.duke.pratt.hal.triangletraffic.utility.Distance;
 
 
-public class VenuesActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
+public class VenuesActivity extends ActionBarActivity implements
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        LocationListener, View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-    private ArrayList<Venue> venues;
+    private ArrayList<Venue> venuesDistance;
+    private ArrayList<Venue> venuesAlphabet;
     private GoogleApiClient client;
     private LocationRequest locationRequest;
     private Location currentLocation;
@@ -56,6 +64,14 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
 
         buildGoogleApiClient();
 
+        Spinner spinner = (Spinner) findViewById(R.id.sortBy_spinner);
+        spinner.setOnItemSelectedListener(this);
+
+        populateSortBySpinner();
+
+        venuesAlphabet = Venue.sortedVenuesByAlphabet();
+        updateTable(venuesAlphabet);
+
     }
 
     public void onVenueNotificationsClick(View view) {
@@ -70,6 +86,36 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
         }
     }
 
+    public void populateSortBySpinner() {
+        Spinner sortBySpinner = (Spinner) findViewById(R.id.sortBy_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.sortBy_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        sortBySpinner.setAdapter(adapter);
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        // parent.getItemAtPosition(pos)
+//        if (parent.getItemAtPosition(pos).toString().equals("Distance")) {
+//            Log.w("dbug", "Distance selected");
+//            Log.w("dbug", parent.getItemAtPosition(pos).toString());
+//            updateTable(venuesDistance);
+//        }
+//        if (parent.getItemAtPosition(pos).toString().equals("Alphabet")) {
+//            Log.w("dbug", "Alphabet selected");
+//            updateTable(venuesAlphabet);
+//        }
+//        Log.w("dbug", parent.getItemAtPosition(pos).toString());
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
+    }
 
     private TableRow getVenueRow(final Venue venue) {
 
@@ -191,20 +237,39 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
     public void onLocationChanged(Location location) {
 
         currentLocation = location;
-        
-        if (!tableIsSetup) {
 
-            this.venues = Venue.sortedVenuesByDistanceTo(currentLocation);
+        venuesDistance = Venue.sortedVenuesByDistanceTo(currentLocation);
+
+//        updateTable(venuesDistance);
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        Venue venue = venueClickRowToVenue.get(view);
+        Intent intent = new Intent(this, InfoActivity.class);
+        intent.putExtra("Venue ID", venue.getId());
+        startActivity(intent);
+    }
+
+    public void updateTable (ArrayList<Venue> venues) {
+        if (!tableIsSetup) {
 
             // Get reference to the Venue Table.
             TableLayout tableLayout = (TableLayout) findViewById(R.id.venueTable);
 
             // Populate the Venue Table with venue rows.
-            for (Venue venue : this.venues) {
+            for (Venue venue : venues) {
                 TableRow row = this.getVenueRow(venue);
                 tableLayout.addView(row);
+                Distance distance;
 
-                Distance distance = venue.distanceFrom(currentLocation);
+                if (currentLocation == null) {
+                    distance = new Distance(0);
+                } else {
+                    distance = venue.distanceFrom(currentLocation);
+                }
+
                 TableRow tableRow = venueToTableRow.get(venue);
                 TextView venueDistance = (TextView) tableRow.findViewById(R.id.venueDistance);
                 venueDistance.setText(distance.getDisplayString());
@@ -226,15 +291,5 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
             }
 
         }
-
-
-    }
-
-    @Override
-    public void onClick(View view) {
-        Venue venue = venueClickRowToVenue.get(view);
-        Intent intent = new Intent(this, InfoActivity.class);
-        intent.putExtra("Venue ID", venue.getId());
-        startActivity(intent);
     }
 }

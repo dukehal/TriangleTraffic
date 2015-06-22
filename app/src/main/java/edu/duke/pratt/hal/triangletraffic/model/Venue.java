@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.lang.String;
 
 import edu.duke.pratt.hal.triangletraffic.utility.Distance;
 
@@ -253,6 +254,20 @@ public class Venue extends DatabaseModel {
         Collections.sort(result, new VenueByLocationComparator());
         return result;
 
+    }
+
+    public static ArrayList<Venue> sortedVenuesByAlphabet () {
+        ArrayList<Venue> result = new ArrayList<>(Venue.asArrayList());
+
+        class VenueByAlphabetComparator implements Comparator<Venue> {
+            @Override
+            public int compare(Venue s1, Venue s2) {
+                return s1.getName().compareToIgnoreCase(s2.getName());
+            }
+        }
+
+        Collections.sort(result, new VenueByAlphabetComparator());
+        return result;
     }
 
     public LatLng getLatLng() {
