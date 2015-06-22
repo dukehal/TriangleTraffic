@@ -217,7 +217,12 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     private void setUpMap() {
         mMap.clear();
         location = LocationServices.FusedLocationApi.getLastLocation(client);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 12));
+        if (location == null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(0, 0), 0));
+        } else {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 12));
+
+        }
 
         trafficSwitch = (Switch) findViewById(R.id.trafficSwitch);
         trafficSwitch.setChecked(true);
