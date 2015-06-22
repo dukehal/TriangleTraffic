@@ -14,9 +14,8 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <android:uses-permission
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="22" />
 
@@ -33,7 +32,7 @@
             android:value="AIzaSyBR6n33O8Gadwikn0FiJGJsmPcKemN9LmQ" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".activities.MapsActivity"
             android:label="Triangle Traffic" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,16 +41,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".InfoActivity"
+            android:name=".activities.InfoActivity"
             android:label="Triangle Traffic" >
         </activity>
         <activity
-            android:name=".SettingsActivity"
-            android:label="Settings" >
+            android:name=".activities.VenuesActivity"
+            android:label="Venues" >
         </activity>
         <activity
-            android:name=".VenuesActivity"
-            android:label="@string/title_activity_venues" >
+            android:name=".activities.SettingsActivity"
+            android:label="Settings" >
+        </activity>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="edu.duke.pratt.hal.triangletraffic.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+
+        <activity
+            android:name=".activities.FeedbackActivity"
+            android:label="@string/title_activity_feedback" >
         </activity>
     </application>
 

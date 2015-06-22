@@ -1,26 +1,26 @@
-package edu.duke.pratt.hal.triangletraffic;
+package edu.duke.pratt.hal.triangletraffic.model;
 
 import android.content.Context;
-import android.content.res.AssetManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+
+import edu.duke.pratt.hal.triangletraffic.utility.Distance;
 
 
 public class Venue extends DatabaseModel {
@@ -35,6 +35,7 @@ public class Venue extends DatabaseModel {
     private double traffic;
     private ArrayList<Event> events;
     private boolean notifications;
+    private int baseCircleColor = 0;
 
     // Database Model Static and Constructor Definitions (return type cast to relevant subclass)
 
@@ -252,5 +253,41 @@ public class Venue extends DatabaseModel {
         Collections.sort(result, new VenueByLocationComparator());
         return result;
 
+    }
+
+    public LatLng getLatLng() {
+        return new LatLng(this.getLatitude(), this.getLongitude());
+    }
+
+    public int getCircleFillColor() {
+        setBaseColorIfNeeded();
+        return setColorAlpha(baseCircleColor, 0.3);
+    }
+
+    public int getCircleStrokeColor() {
+        setBaseColorIfNeeded();
+        return setColorAlpha(baseCircleColor, 1);
+    }
+
+    private void setBaseColorIfNeeded() {
+        if (baseCircleColor == 0) {
+            int level = (int) (Math.random() * 3 + 1);
+            if (level == 1) {
+                baseCircleColor = Color.GREEN;
+            } else if (level == 2) {
+                baseCircleColor = Color.YELLOW;
+            } else { // (level == 3)
+                baseCircleColor = Color.RED;
+            }
+        }
+    }
+
+
+    private int setColorAlpha(int color, double alpha) {
+        int alphaValue = (int) (alpha * 255);
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        return (alphaValue << 24) | (red << 16) | (green << 8) | blue;
     }
 }

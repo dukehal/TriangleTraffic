@@ -1,4 +1,4 @@
-package edu.duke.pratt.hal.triangletraffic;
+package edu.duke.pratt.hal.triangletraffic.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -28,6 +27,12 @@ import com.google.android.gms.location.LocationServices;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import edu.duke.pratt.hal.triangletraffic.R;
+import edu.duke.pratt.hal.triangletraffic.model.Event;
+import edu.duke.pratt.hal.triangletraffic.model.Venue;
+import edu.duke.pratt.hal.triangletraffic.utility.DatabaseConnection;
+import edu.duke.pratt.hal.triangletraffic.utility.Distance;
 
 
 public class VenuesActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
@@ -45,6 +50,7 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue_list);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         new DatabaseConnection(this);
 
@@ -83,7 +89,7 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
 
         Drawable statusImage = getResources().getDrawable(R.drawable.traffic_indication_circle);
         // programatically change color:
-        statusImage.setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_ATOP);
+        statusImage.setColorFilter(venue.getCircleStrokeColor(), PorterDuff.Mode.SRC_ATOP);
 
         trafficStatusImage.setImageDrawable(statusImage);
 
@@ -114,7 +120,6 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        setTitle("Venues");
         getMenuInflater().inflate(R.menu.menu_venues, menu);
         return true;
     }
@@ -130,6 +135,12 @@ public class VenuesActivity extends ActionBarActivity implements GoogleApiClient
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
+        } else if (id == R.id.action_map) {
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
+        } else if (id == android.R.id.home) {
+            this.finish();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

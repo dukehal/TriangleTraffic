@@ -9,8 +9,8 @@
     <string-array name="pref_radius_list_titles">
         <item>0.25 mile</item>
         <item>0.50 mile</item>
-        <item>1.00 mile</item>
-        <item>2.00 miles</item>
+        <item>1 mile</item>
+        <item>2 miles</item>
         <item>3 miles</item>
         <item>4 miles</item>
         <item>5 miles</item>
@@ -35,9 +35,6 @@
         <item>2 hours</item>
         <item>3 hours</item>
         <item>4 hours</item>
-        <item>5 hours</item>
-        <item>6 hours</item>
-        <item>7 hours</item>
         <item>Never</item>
     </string-array>
 
@@ -48,9 +45,6 @@
         <item>120</item>
         <item>180</item>
         <item>240</item>
-        <item>300</item>
-        <item>360</item>
-        <item>420</item>
         <item>-1</item>
     </string-array>
 

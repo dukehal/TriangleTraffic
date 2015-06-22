@@ -1,4 +1,6 @@
-package edu.duke.pratt.hal.triangletraffic;
+package edu.duke.pratt.hal.triangletraffic.model;
+
+import edu.duke.pratt.hal.triangletraffic.model.Event;
 
 /**
  * Created by tedzhu on 6/10/15.

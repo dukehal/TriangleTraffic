@@ -1,18 +1,13 @@
-package edu.duke.pratt.hal.triangletraffic;
+package edu.duke.pratt.hal.triangletraffic.activities;
 
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.AssetManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.preference.ListPreference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
@@ -22,9 +17,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,7 +30,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
@@ -43,8 +39,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import edu.duke.pratt.hal.triangletraffic.PreferenceConnection;
+import edu.duke.pratt.hal.triangletraffic.model.NotificationInfo;
+import edu.duke.pratt.hal.triangletraffic.R;
+import edu.duke.pratt.hal.triangletraffic.model.Event;
+import edu.duke.pratt.hal.triangletraffic.model.Venue;
+import edu.duke.pratt.hal.triangletraffic.utility.AppPref;
+import edu.duke.pratt.hal.triangletraffic.utility.DatabaseConnection;
+import edu.duke.pratt.hal.triangletraffic.utility.Distance;
+
 public class MapsActivity extends ActionBarActivity implements OnMarkerClickListener,GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener, SharedPreferences.OnSharedPreferenceChangeListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, View.OnClickListener {
     ArrayList<Venue> venues;
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     public ArrayList<Marker> myMarkers = new ArrayList<>();
@@ -55,8 +60,8 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     Location location;
     private LocationRequest locationRequest;
     Location currentLocation;
-    double radiusPref;
-    long timePref;
+    //double radiusPref;
+    //long timePref;
     boolean audioPref;
     boolean textPref;
     boolean vibratePref;
@@ -64,62 +69,33 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     private Location lastRecordedLocation;
     private int locationUpdateCount = 0;
 
-    SharedPreferences sharedPref;
-    SharedPreferences.OnSharedPreferenceChangeListener listener;
+    //SharedPreferences sharedPref;
 
     private TextView dlog;
+    private boolean googleApiClientconnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Set default values for settings.
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+
         setContentView(R.layout.activity_maps);
 
         initializeDisplayLog();
 
         buildGoogleApiClient();
 
-        // Initialize preference variables.
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        radiusPref = 1609.34*Double.parseDouble(sharedPref.getString("radius_list", "0"));
-        radiusPref = 1609.34*Double.parseDouble(sharedPref.getString("radius_list", "0"));
-        long time = (long) Integer.parseInt(sharedPref.getString("timing_list", "60"));
-        timePref = time*60*1000;
+
+        //radiusPref = AppPref.getRadiusMeters();
+        //timePref = AppPref.getTimeMillis();
 
         new DatabaseConnection(this);
+        new PreferenceConnection(this);
+
         venues = Venue.asArrayList();
 
-        listener = new SharedPreferences.OnSharedPreferenceChangeListener(){
-            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                sharedPref = prefs;
-                sharedPref.registerOnSharedPreferenceChangeListener(this);
-                if (key.equals("radius_list")) {
-//                    Log.w("key equals radius list", Integer.toString(radiusPref));
-                    radiusPref = Double.parseDouble(sharedPref.getString("radius_list", "0"))*
-                            1609.34;
-                    Log.w("keyequalsradius2", Double.toString(radiusPref));
-                    setUpMap();
-                }
-                Log.w("are you getting this?", Double.toString(radiusPref));
-
-                if (key.equals("timing_list")) {
-                    long time = (long) Integer.parseInt(sharedPref.getString("timing_list", "60"));
-                    timePref = time*60*1000;
-                }
-
-                if(key.equals("text_mode")) {
-                    textPref = Boolean.parseBoolean(sharedPref.getString("text_mode", "true"));
-                }
-
-                if(key.equals("audio_mode")) {
-                    audioPref = Boolean.parseBoolean(sharedPref.getString("audio_mode", "true"));
-                }
-
-                if(key.equals("vibrate_mode")) {
-                    vibratePref = Boolean.parseBoolean(sharedPref.getString("vibrate_mode", "true"));
-                }
-            }
-        };
-        sharedPref.registerOnSharedPreferenceChangeListener(listener);
 
 //        Handler handler = new Handler();
 //        handler.postDelayed(new Runnable() {
@@ -153,12 +129,16 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 //                mNotifyMgr.notify(mNotificationId, mBuilder.build());
 //            }
 //        }, 8000);
+
     }
 
     private void initializeDisplayLog() {
         dlog = (TextView) findViewById(R.id.dlog);
         dlog.setMovementMethod(new ScrollingMovementMethod());
         dlog("Display Log Initialized.");
+        ToggleButton toggleDiagnostics = (ToggleButton) findViewById(R.id.toggle_diagnostics);
+        toggleDiagnostics.setOnClickListener(this);
+
     }
 
     private void dlog(String text) {
@@ -182,15 +162,19 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     @Override
     protected void onResume() {
         super.onResume();
-        sharedPref.registerOnSharedPreferenceChangeListener(this);
+        Log.w("dbug", "ONRESUME Called");
 
+        if (googleApiClientconnected) {
+            setUpMap();
+        }
+
+        // Settings could have changed. Setup the map again.
         client.connect();
     }
 
     protected void onPause() {
         super.onPause();
-//        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPref.unregisterOnSharedPreferenceChangeListener(this);
+        Log.w("dbug", "ONPAUSE Called");
     }
 
     /**
@@ -231,52 +215,50 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         mMap.clear();
         location = LocationServices.FusedLocationApi.getLastLocation(client);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 12));
-        final LatLng [] positions = new LatLng[venues.size()];
         mMap.setTrafficEnabled(true);
         mMap.setMyLocationEnabled(true);
         mMap.setOnMarkerClickListener(this);
 
-//        Log.w("radius", Integer.toString(radiusPref));
-//        Log.w("radius2", sharedPref.getString("radius_list", "0"));
-//        int radiusPref = 1;
-
-        for(int i = 0; i<venues.size();i++) {
-            positions[i] = new LatLng(venues.get(i).getLatitude(), venues.get(i).getLongitude());
+        for (Venue venue : venues) {
 
             MarkerOptions markerOptions = new MarkerOptions();
             if (!venues.isEmpty()) {
-                if (venues.get(i).getVenueType().equals("Arena") || venues.get(i).getVenueType().equals("Stadium")) {
-                    markerOptions.position(positions[i])
-                            .title(venues.get(i).getName())
+                if (venue.getVenueType().equals("Arena") || venue.getVenueType().equals("Stadium")) {
+                    markerOptions
+                            .position(venue.getLatLng())
+                            .title(venue.getName())
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.basketball_ball));
-                } else if (venues.get(i).getVenueType().equals("Concert Hall") || venues.get(i).getVenueType().equals("Theater")) {
-                    markerOptions.position(positions[i])
-                            .title(venues.get(i).getName())
+                } else if (venue.getVenueType().equals("Concert Hall") || venue.getVenueType().equals("Theater")) {
+                    markerOptions
+                            .position(venue.getLatLng())
+                            .title(venue.getName())
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.theater));
                 } else {
-                    markerOptions.position(positions[i])
+                    markerOptions
+                            .position(venue.getLatLng())
                             .title("Arena type not working!!")
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.basketball_ball));
                 }
             } else {
-                markerOptions.position(positions[i])
+                markerOptions
+                        .position(venue.getLatLng())
                         .title("List not working")
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.basketball_ball));
             }
 
             Marker marker = mMap.addMarker(markerOptions);
             myMarkers.add(marker);
-            markerToVenue.put(marker, venues.get(i));
+            markerToVenue.put(marker, venue);
 
             // Instantiates a new CircleOptions object and defines the center and radius
             CircleOptions circleOptions = new CircleOptions()
-                    .center(positions[i])
-                    .radius(Math.abs(radiusPref)) // In meters
-                    .strokeColor(Color.RED)
-                    .strokeWidth(5)
-                    .fillColor(0x50ff0000);
+                    .center(venue.getLatLng())
+                    .radius(Math.abs(AppPref.getRadiusMeters())) // In meters
+                    .strokeColor(venue.getCircleStrokeColor())
+                    .strokeWidth(3)
+                    .fillColor(venue.getCircleFillColor());
             // Get back the mutable Circle
-            Circle circle = mMap.addCircle(circleOptions);
+            mMap.addCircle(circleOptions);
         }
     }
 
@@ -323,6 +305,9 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         } else if (id == R.id.action_venues) {
             Intent intent = new Intent(this, VenuesActivity.class);
             startActivity(intent);
+        } else if (id == R.id.action_feedback) {
+            Intent intent = new Intent(this, FeedbackActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -343,6 +328,8 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
     @Override
     public void onConnected(Bundle connectionHint) {
+        googleApiClientconnected = true;
+        Log.w("dbug", "in ONCONECTED.");
         if(location != null) {
             Log.w("info", Double.toString(location.getLatitude()));
             Log.w("info", Double.toString(location.getLongitude()));
@@ -359,9 +346,6 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {}
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {}
 
     protected void createLocationRequest() {
         locationRequest = new LocationRequest();
@@ -464,7 +448,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         long eventTime;
         long notificationTime;
         long currentTime = System.currentTimeMillis();
-        Double notificationRadius = radiusPref;
+        Double notificationRadius = AppPref.getRadiusMeters();
 
 
         float[] results = new float[2];
@@ -522,7 +506,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                 for (Event event : venueEvents) {
 
                     eventTime = event.getUnixTimeMillis();
-                    notificationTime = eventTime - timePref;
+                    notificationTime = eventTime - AppPref.getTimeMillis();
 
                     boolean timeCrossing =
                             (lastRecordedTimeLocalCopy <= notificationTime
@@ -593,4 +577,11 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         }
     }
 
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.toggle_diagnostics) {
+            ToggleButton toggleDiagnostics = (ToggleButton) view;
+            dlog.setVisibility(toggleDiagnostics.isChecked() ? View.VISIBLE : View.GONE);
+        }
+    }
 }
