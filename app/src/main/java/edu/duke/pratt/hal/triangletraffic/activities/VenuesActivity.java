@@ -49,7 +49,6 @@ public class VenuesActivity extends ActionBarActivity implements
     private Location currentLocation;
     private HashMap<Venue, TableRow> venueToTableRow = new HashMap<>();
     private HashMap<View, Venue> venueClickRowToVenue = new HashMap<>();
-    private boolean tableIsSetup = false;
     private boolean sortByDistance;
 
 
@@ -100,14 +99,6 @@ public class VenuesActivity extends ActionBarActivity implements
 
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
-
-        //Log.w("dbug", parent.getItemAtPosition(pos).toString());
-        //String a = ((TextView) parent.getItemAtPosition(pos)).getText();
-
-
-
         if (parent.getItemAtPosition(pos).toString().equals("Distance")) {
             Log.w("dbug", "Distance selected");
             //Log.w("dbug", parent.getItemAtPosition(pos).toString());
@@ -120,7 +111,6 @@ public class VenuesActivity extends ActionBarActivity implements
             sortByDistance = false;
         }
         updateTable();
-//        Log.w("dbug", parent.getItemAtPosition(pos).toString());
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
@@ -300,46 +290,5 @@ public class VenuesActivity extends ActionBarActivity implements
         // Remove the Progress Bar.
         View venueListLoading = (View) findViewById(R.id.venueListLoading);
         venueListLoading.setVisibility(View.GONE);
-
-
-//
-//        if (!tableIsSetup) {
-//
-//            // Get reference to the Venue Table.
-//            TableLayout tableLayout = (TableLayout) findViewById(R.id.venueTable);
-//
-//            // Populate the Venue Table with venue rows.
-//            for (Venue venue : venues) {
-//                TableRow row = this.getVenueRow(venue);
-//                tableLayout.addView(row);
-//                Distance distance;
-//
-//                if (currentLocation == null) {
-//                    distance = new Distance(0);
-//                } else {
-//                    distance = venue.distanceFrom(currentLocation);
-//                }
-//
-//                TableRow tableRow = venueToTableRow.get(venue);
-//                TextView venueDistance = (TextView) tableRow.findViewById(R.id.venueDistance);
-//                venueDistance.setText(distance.getDisplayString());
-//            }
-//
-//            // Remove the Progress Bar.
-//            View venueListLoading = (View) findViewById(R.id.venueListLoading);
-//            venueListLoading.setVisibility(View.GONE);
-//
-//            tableIsSetup = true;
-//
-//        } else {
-//
-//            for (Venue venue : venues) {
-//                Distance distance = venue.distanceFrom(currentLocation);
-//                TableRow tableRow = venueToTableRow.get(venue);
-//                TextView venueDistance = (TextView) tableRow.findViewById(R.id.venueDistance);
-//                venueDistance.setText(distance.getDisplayString());
-//            }
-//
-//        }
     }
 }

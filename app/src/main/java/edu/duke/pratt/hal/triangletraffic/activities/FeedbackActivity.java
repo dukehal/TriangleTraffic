@@ -195,7 +195,7 @@ public class FeedbackActivity extends ActionBarActivity implements GoogleApiClie
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         // set the type to 'email'
         emailIntent.setType("vnd.android.cursor.dir/email");
-        String to[] = {"joshua.furth@duke.edu"};
+        String to[] = {"triangletrafficapp@gmail.com"};
         emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
         // the attachment
         emailIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
