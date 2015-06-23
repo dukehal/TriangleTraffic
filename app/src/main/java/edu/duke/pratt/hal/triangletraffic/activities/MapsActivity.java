@@ -2,6 +2,7 @@ package edu.duke.pratt.hal.triangletraffic.activities;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.location.Location;
 import android.media.Ringtone;
@@ -388,29 +389,28 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                 String notificationText = event.getName() + " has an event today at "
                         + event.getTimeString();
                 NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(getApplicationContext())
-                                .setSmallIcon(R.drawable.basketball_ball)
-                                .setContentTitle("Triangle Traffic")
-                                .setContentText(notificationText)
-                                .setTicker(notificationText);
+                        new NotificationCompat.Builder(getApplicationContext());
 
-                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                if (alarmSound == null) {
-                    alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                    if (alarmSound == null) {
-                        alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    }
+                Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
+                        + "://" + getPackageName() + "/raw/notification");
+//                if (alarmSound == null) {
+//                    alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+//                }
+
+                if (AppPref.textMode()) {
+                    mBuilder.setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
+                            .setSmallIcon(R.drawable.basketball_ball)
+                            .setContentTitle("Triangle Traffic")
+                            .setContentText(notificationText)
+                            .setTicker(notificationText);
                 }
 
-                if (textPref) {
-                    mBuilder.setVisibility(NotificationCompat.VISIBILITY_PRIVATE);
+                if (AppPref.audioMode()) {
+//                    mBuilder.setSound(alarmSound);
+                    mBuilder.setDefaults(Notification.DEFAULT_SOUND);
                 }
 
-                if (audioPref) {
-                    mBuilder.setSound(alarmSound);
-                }
-
-                if (vibratePref) {
+                if (AppPref.vibrateMode()) {
                     mBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
                 }
 
@@ -418,7 +418,6 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                 // Gets an instance of the NotificationManager service
                 NotificationManager mNotifyMgr =
                         (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                mBuilder.setDefaults(Notification.DEFAULT_SOUND);
                 // Builds the notification and issues it.
                 mNotifyMgr.notify(mNotificationId, mBuilder.build());
             }
@@ -499,6 +498,20 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                             lastRecordedTimeLocalCopy >= notificationTime &&
                             currentTime <= eventTime);
 
+                    boolean booleanWait;
+
+                    long waitTime = 0;
+
+                    if (eventsNotified.containsKey(event)) {
+                        waitTime = currentTime - eventsNotified.get(event) - 20 * 1000 * 60;
+                    }
+
+                    if (waitTime < 0) {
+                        booleanWait = false;
+                    } else {
+                        booleanWait = true;
+                    }
+
                     if (event.getId() == 40) {
                         dlog("Wallace timeCrossing: " + timeCrossing + ",     Wallace timeCrossed: " + timeCrossed);
                         dlog("currentTime: " + currentTime + " us,     notificatonTime: " + notificationTime + " us");
@@ -510,9 +523,10 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
                     if (timeCrossing && distanceCrossed) {
                         // Notification due to time crossing.
-
-                        dlog("Pending new Time Crossing Notification.");
-                        return new NotificationInfo(event, true, false);
+//                        if(booleanWait) {
+                            dlog("Pending new Time Crossing Notification.");
+                            return new NotificationInfo(event, true, false);
+//                        }
 
                     } else if (distanceCrossing && timeCrossed) {
                         // Notification due to distance crossing.
@@ -550,13 +564,13 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         }, 10000);
 
         // Play a notification sound.
-        try {
-            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
-            r.play();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+//            r.play();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
