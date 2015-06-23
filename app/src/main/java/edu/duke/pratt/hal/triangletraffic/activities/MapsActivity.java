@@ -62,8 +62,6 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     Location location;
     private LocationRequest locationRequest;
     Location currentLocation;
-    //double radiusPref;
-    //long timePref;
     boolean audioPref;
     boolean textPref;
     boolean vibratePref;
@@ -71,8 +69,6 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     private Location lastRecordedLocation;
     private int locationUpdateCount = 0;
     private Switch trafficSwitch;
-
-    //SharedPreferences sharedPref;
 
     private TextView dlog;
     private boolean googleApiClientconnected = false;
@@ -91,47 +87,10 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         buildGoogleApiClient();
 
 
-        //radiusPref = AppPref.getRadiusMeters();
-        //timePref = AppPref.getTimeMillis();
-
         new DatabaseConnection(this);
         new PreferenceConnection(this);
 
         venues = Venue.asArrayList();
-
-
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                NotificationCompat.Builder mBuilder =
-//                        new NotificationCompat.Builder(getApplicationContext())
-//                                .setSmallIcon(R.drawable.basketball_ball)
-//                                .setContentTitle("My notification 430")
-//                                .setContentText("Hello World!")
-//                                .setTicker("TriangleTrafficApp");
-//
-//                Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-//                if (alarmSound == null) {
-//                    alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-//                    if (alarmSound == null) {
-//                        alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//                    }
-//                }
-//
-//                mBuilder.setSound(alarmSound);
-//                mBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-//                mBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-//
-//                int mNotificationId = 001;
-//// Gets an instance of the NotificationManager service
-//                NotificationManager mNotifyMgr =
-//                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//                mBuilder.setDefaults(Notification.DEFAULT_SOUND);
-//// Builds the notification and issues it.
-//                mNotifyMgr.notify(mNotificationId, mBuilder.build());
-//            }
-//        }, 8000);
 
     }
 
@@ -566,7 +525,6 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
                         return new NotificationInfo(event, true, true);
 
                     } else {
-                        //return new NotificationInfo(null, false, false);
                         // No notification should be sent, continue to next iteration.
                     }
 
