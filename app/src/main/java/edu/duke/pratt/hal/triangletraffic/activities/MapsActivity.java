@@ -71,7 +71,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     private int locationUpdateCount = 0;
     private Switch trafficSwitch;
 
-    private TextView dlog;
+    private TextView dlogView;
     private boolean googleApiClientconnected = false;
 
     @Override
@@ -82,6 +82,8 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         setContentView(R.layout.activity_maps);
+        Intent notificationIntent = new Intent(this, NotificationService.class);
+        startService(notificationIntent);
 
         initializeDisplayLog();
 
@@ -96,8 +98,8 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     }
 
     private void initializeDisplayLog() {
-        dlog = (TextView) findViewById(R.id.dlog);
-        dlog.setMovementMethod(new ScrollingMovementMethod());
+        dlogView = (TextView) findViewById(R.id.dlog);
+        dlogView.setMovementMethod(new ScrollingMovementMethod());
         dlog("Display Log Initialized.");
         ToggleButton toggleDiagnostics = (ToggleButton) findViewById(R.id.toggle_diagnostics);
         toggleDiagnostics.setOnClickListener(this);
@@ -108,14 +110,14 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat f = new SimpleDateFormat("h:mm:ss");
         String pre = f.format(cal.getTime());
-        dlog.append(" (" + locationUpdateCount + ") " + pre + "  " + text + "\n");
-        dlog.post(new Runnable() {
+        dlogView.append(" (" + locationUpdateCount + ") " + pre + "  " + text + "\n");
+        dlogView.post(new Runnable() {
             public void run() {
-                final int scrollAmount = dlog.getLayout().getLineTop(dlog.getLineCount()) - dlog.getHeight();
+                final int scrollAmount = dlogView.getLayout().getLineTop(dlogView.getLineCount()) - dlogView.getHeight();
                 if (scrollAmount > 0) {
-                    dlog.scrollTo(0, scrollAmount);
+                    dlogView.scrollTo(0, scrollAmount);
                 } else {
-                    dlog.scrollTo(0, 0);
+                    dlogView.scrollTo(0, 0);
                 }
             }
         });
@@ -379,49 +381,49 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
 
         }
 
-        if(lastRecordedLocation == null) {
-            lastRecordedLocation = currentLocation;
-            lastRecordedTime = System.currentTimeMillis();
-        } else {
-             //shouldSendNotification();
-            if (notificationToSend != null) {
-                event = notificationToSend.getEvent();
-                String notificationText = event.getName() + " has an event today at "
-                        + event.getTimeString();
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(getApplicationContext());
-
-                Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
-                        + "://" + getPackageName() + "/raw/notification");
-//                if (alarmSound == null) {
-//                    alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+//        if(lastRecordedLocation == null) {
+//            lastRecordedLocation = currentLocation;
+//            lastRecordedTime = System.currentTimeMillis();
+//        } else {
+//             //shouldSendNotification();
+//            if (notificationToSend != null) {
+//                event = notificationToSend.getEvent();
+//                String notificationText = event.getName() + " has an event today at "
+//                        + event.getTimeString();
+//                NotificationCompat.Builder mBuilder =
+//                        new NotificationCompat.Builder(getApplicationContext());
+//
+//                Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
+//                        + "://" + getPackageName() + "/raw/notification");
+////                if (alarmSound == null) {
+////                    alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+////                }
+//
+//                if (AppPref.textMode()) {
+//                    mBuilder.setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
+//                            .setSmallIcon(R.drawable.basketball_ball)
+//                            .setContentTitle("Triangle Traffic")
+//                            .setContentText(notificationText)
+//                            .setTicker(notificationText);
 //                }
-
-                if (AppPref.textMode()) {
-                    mBuilder.setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
-                            .setSmallIcon(R.drawable.basketball_ball)
-                            .setContentTitle("Triangle Traffic")
-                            .setContentText(notificationText)
-                            .setTicker(notificationText);
-                }
-
-                if (AppPref.audioMode()) {
-//                    mBuilder.setSound(alarmSound);
-                    mBuilder.setDefaults(Notification.DEFAULT_SOUND);
-                }
-
-                if (AppPref.vibrateMode()) {
-                    mBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-                }
-
-                int mNotificationId = event.getVenueId();
-                // Gets an instance of the NotificationManager service
-                NotificationManager mNotifyMgr =
-                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                // Builds the notification and issues it.
-                mNotifyMgr.notify(mNotificationId, mBuilder.build());
-            }
-        }
+//
+//                if (AppPref.audioMode()) {
+////                    mBuilder.setSound(alarmSound);
+//                    mBuilder.setDefaults(Notification.DEFAULT_SOUND);
+//                }
+//
+//                if (AppPref.vibrateMode()) {
+//                    mBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+//                }
+//
+//                int mNotificationId = event.getVenueId();
+//                // Gets an instance of the NotificationManager service
+//                NotificationManager mNotifyMgr =
+//                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                // Builds the notification and issues it.
+//                mNotifyMgr.notify(mNotificationId, mBuilder.build());
+//            }
+//        }
     }
 
     public NotificationInfo shouldSendNotification() {
@@ -577,7 +579,7 @@ public class MapsActivity extends ActionBarActivity implements OnMarkerClickList
     public void onClick(View view) {
         if (view.getId() == R.id.toggle_diagnostics) {
             ToggleButton toggleDiagnostics = (ToggleButton) view;
-            dlog.setVisibility(toggleDiagnostics.isChecked() ? View.VISIBLE : View.GONE);
+            dlogView.setVisibility(toggleDiagnostics.isChecked() ? View.VISIBLE : View.GONE);
         }
     }
 }

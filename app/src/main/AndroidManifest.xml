@@ -67,6 +67,12 @@
             android:name=".activities.FeedbackActivity"
             android:label="@string/title_activity_feedback" >
         </activity>
+
+        <service
+            android:name=".activities.NotificationService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>
