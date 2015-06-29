@@ -43,7 +43,7 @@ import edu.duke.pratt.hal.triangletraffic.utility.Distance;
 
 
 public class InfoActivity extends ActionBarActivity implements OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnMapClickListener {
     Venue venueInfo;
     Location currentLocation;
     GoogleApiClient client;
@@ -161,7 +161,7 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.getUiSettings().setAllGesturesEnabled(false);
 
-        MarkerOptions markerOptions = new MarkerOptions();
+        final MarkerOptions markerOptions = new MarkerOptions();
         if (venueInfo.getVenueType().equals("Arena") || venueInfo.getVenueType().equals("Stadium")) {
             markerOptions.position(new LatLng(venueInfo.getLatitude(), venueInfo.getLongitude()));
             markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.basketball_ball));
@@ -189,6 +189,8 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
                 .fillColor(venueInfo.getCircleFillColor());
         // Get back the mutable Circle
         map.addCircle(circleOptions);
+
+        map.setOnMapClickListener(this);
 
     }
 
@@ -285,4 +287,11 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
 
     }
 
+    @Override
+    public void onMapClick(LatLng latLng) {
+        if (latLng != new LatLng(venueInfo.getLatitude(), venueInfo.getLongitude())) {
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
+        }
+    }
 }
