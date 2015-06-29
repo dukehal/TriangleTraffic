@@ -25,26 +25,28 @@ public class Distance {
 
             double distanceMiles = this.meters * toMiles;
 
-            if (distanceMiles > 1.0) {
-                // Return miles.
-                return String.format("%.2f", distanceMiles) + " mi";
-            } else if (distanceMiles > 0.094697) {
-                // Return yards. (0.094697 mi == 500 ft)
-                double distanceYards = this.meters * toYards;
-                return String.format("%.0f", distanceYards) + " yds";
-            } else if (this.meters * toFeet > 1.0) {
-                // Return feet.
-                double distanceFeet = this.meters * toFeet;
-                return String.format("%.0f", distanceFeet) + " ft";
-            } else if (this.meters * toInches > 1.0) {
-                // Return whole inches.
-                double distanceInches = this.meters * toInches;
-                return String.format("%.0f", distanceInches) + " in";
-            } else {
-                // Return decimal inches.
-                double distanceInches = this.meters * toInches;
-                return String.format("%.1f", distanceInches) + " in";
-            }
+            return String.format("%.2f", distanceMiles) + " mi";
+
+//            if (distanceMiles > 1.0) {
+//                // Return miles.
+//                return String.format("%.2f", distanceMiles) + " mi";
+//            } else if (distanceMiles > 0.094697) {
+//                // Return yards. (0.094697 mi == 500 ft)
+//                double distanceYards = this.meters * toYards;
+//                return String.format("%.0f", distanceYards) + " yds";
+//            } else if (this.meters * toFeet > 1.0) {
+//                // Return feet.
+//                double distanceFeet = this.meters * toFeet;
+//                return String.format("%.0f", distanceFeet) + " ft";
+//            } else if (this.meters * toInches > 1.0) {
+//                // Return whole inches.
+//                double distanceInches = this.meters * toInches;
+//                return String.format("%.0f", distanceInches) + " in";
+//            } else {
+//                // Return decimal inches.
+//                double distanceInches = this.meters * toInches;
+//                return String.format("%.1f", distanceInches) + " in";
+//            }
 
         }
 

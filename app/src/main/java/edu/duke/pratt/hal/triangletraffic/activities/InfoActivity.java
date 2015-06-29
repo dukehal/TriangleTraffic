@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -130,8 +131,24 @@ public class InfoActivity extends ActionBarActivity implements OnMapReadyCallbac
                     0, TableRow.LayoutParams.MATCH_PARENT, 1f));
             eventRow.addView(eventName);
 
-            eventTable.addView(eventRow);
+            // Create gray line after each event row
+//            View fillerRow = new View(this);
+//                fillerRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, 1));
+//                fillerRow.setBackgroundColor(Color.LTGRAY);
+//
+            View fillerRow2 = new View(this);
+            fillerRow2.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, 1));
+            fillerRow2.setBackgroundColor(Color.TRANSPARENT);
 
+            View fillerRow3 = new View(this);
+            fillerRow3.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, 1));
+            fillerRow3.setBackgroundColor(Color.TRANSPARENT);
+
+            eventTable.addView(eventRow);
+            // Display spacing and gray line after each event row
+            eventTable.addView(fillerRow2);
+//            eventTable.addView(fillerRow);
+            eventTable.addView(fillerRow3);
         }
         createLocationRequest();
     }

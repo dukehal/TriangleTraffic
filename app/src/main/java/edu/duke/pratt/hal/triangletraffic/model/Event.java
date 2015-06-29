@@ -84,7 +84,7 @@ public class Event extends DatabaseModel implements Comparable<Event> {
 
     public String getDateString() {
         Date utilDate = new Date(this.unixTimeMillis);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d");
         return dateFormat.format(utilDate);
     }
 
