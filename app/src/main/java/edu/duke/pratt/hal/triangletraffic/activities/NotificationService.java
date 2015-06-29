@@ -111,7 +111,7 @@ public class NotificationService extends Service implements  GoogleApiClient.Con
                         new NotificationCompat.Builder(getApplicationContext());
 
                 Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
-                        + "://" + getPackageName() + "/raw/notification");
+                        + "://" + getPackageName() + "/raw/swearingnotification");
 //                if (alarmSound == null) {
 //                    alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
 //                }
@@ -125,8 +125,8 @@ public class NotificationService extends Service implements  GoogleApiClient.Con
                 }
 
                 if (AppPref.audioMode()) {
-//                    mBuilder.setSound(alarmSound);
-                    mBuilder.setDefaults(Notification.DEFAULT_SOUND);
+                    mBuilder.setSound(alarmSound);
+//                    mBuilder.setDefaults(Notification.DEFAULT_SOUND);
                 }
 
                 if (AppPref.vibrateMode()) {
