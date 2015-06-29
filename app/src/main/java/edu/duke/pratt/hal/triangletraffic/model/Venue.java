@@ -285,16 +285,17 @@ public class Venue extends DatabaseModel {
     }
 
     private void setBaseColorIfNeeded() {
-        if (baseCircleColor == 0) {
-            int level = (int) (Math.random() * 3 + 1);
-            if (level == 1) {
-                baseCircleColor = Color.GREEN;
-            } else if (level == 2) {
-                baseCircleColor = Color.YELLOW;
-            } else { // (level == 3)
-                baseCircleColor = Color.RED;
-            }
-        }
+        baseCircleColor = Color.RED;
+//        if (baseCircleColor == 0) {
+//            int level = (int) (Math.random() * 3 + 1);
+//            if (level == 1) {
+//                baseCircleColor = Color.GREEN;
+//            } else if (level == 2) {
+//                baseCircleColor = Color.YELLOW;
+//            } else { // (level == 3)
+//                baseCircleColor = Color.RED;
+//            }
+//        }
     }
 
 
